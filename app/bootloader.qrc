@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>data/bootloader/wubildr</file>
+        <file>data/bootloader/wubildr.cfg</file>
+        <file>data/bootloader/wubildr.mbr</file>
+        <file>data/bootloader/wubildr.tar</file>
+        <file>data/bootloader/wubildr-bootstrap.cfg</file>
+        <file>data/install/grub.install.cfg</file>
+        <file>data/deepin-installer.conf</file>
+        <file>data/bootloader/grubx64.efi</file>
+    </qresource>
+</RCC>
