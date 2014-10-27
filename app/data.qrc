@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>data/imagemd5.list</file>
+    </qresource>
+</RCC>

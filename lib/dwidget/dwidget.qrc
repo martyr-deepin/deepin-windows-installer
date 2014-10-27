@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/window_close_hover.png</file>
+        <file>images/window_close_normal.png</file>
+        <file>images/window_close_press.png</file>
+        <file>images/transparent_button_hover.png</file>
+        <file>images/transparent_button_normal.png</file>
+        <file>images/transparent_button_press.png</file>
+        <file>images/arrow_down_hover.png</file>
+        <file>images/arrow_down_normal.png</file>
+        <file>images/setpedit_center.png</file>
+        <file>images/setpedit_tail.png</file>
+        <file>images/mask.png</file>
+        <file>images/water_back.png</file>
+        <file>images/water_front.png</file>
+        <file>images/stepedit/add-hover.png</file>
+        <file>images/stepedit/add-normal.png</file>
+        <file>images/stepedit/add-press.png</file>
+        <file>images/stepedit/sub-hover.png</file>
+        <file>images/stepedit/sub-normal.png</file>
+        <file>images/stepedit/sub-press.png</file>
+    </qresource>
+</RCC>

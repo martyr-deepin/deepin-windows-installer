@@ -15,7 +15,14 @@ public:
 
     static BackendFactory& Instance();
 
-    Backend* CreateBackend(BackendTpye, const QString&, const QString&);
+    Backend* CreateBackend(BackendTpye type,
+                           const QString &username,
+                           const QString &password,
+                           const QString &target,
+                           const QString &isoPath,
+                           int installSize);
+
+    Backend* CreateBackend(BackendTpye type);
 
 private:
     BackendFactory(){;}

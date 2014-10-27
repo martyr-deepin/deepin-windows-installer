@@ -9,7 +9,7 @@ namespace XUtils {
 void LoadMap(const QString &content, QMap<QString, QString> &map) {
     QStringList list = content.split(",");
 
-    for(const QString& locale: list) {
+    foreach(const QString& locale, list) {
         QStringList pair = locale.split(":");
         if (pair.first().isEmpty())
             continue;

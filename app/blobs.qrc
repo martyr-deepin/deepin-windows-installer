@@ -1,16 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>blobs/sevenz/sevnz.dll</file>
+        <file>blobs/sevenz/7z.dll</file>
         <file>blobs/sevenz/sevnz.exe</file>
-        <file>blobs/easyuefi/EasyUEFI.exe</file>
-        <file>blobs/easyuefi/EasyUEFI.ini</file>
-        <file>blobs/easyuefi/ExtractISO.dll</file>
-        <file>blobs/easyuefi/iconv.dll</file>
-        <file>blobs/easyuefi/libgcc_s_seh-1.dll</file>
-        <file>blobs/easyuefi/libintl-8.dll</file>
-        <file>blobs/easyuefi/libwim-9.dll</file>
-        <file>blobs/easyuefi/libxml2-2.dll</file>
-        <file>blobs/easyuefi/pthreadGC2.dll</file>
         <file>blobs/tools/mkisofs.exe</file>
     </qresource>
 </RCC>

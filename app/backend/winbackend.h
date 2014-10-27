@@ -1,21 +1,26 @@
 #pragma once
 
 #include "backend.h"
+#include "progressreporter.h"
 
 namespace  DeepinInstaller {
 
 class WindowsBackend: public Backend {
 public:
-    WindowsBackend(const QString &installTarget,
+    WindowsBackend(const QString &username,
+                   const QString &password,
+                   const QString &installTarget,
                    const QString &isoPath,
-                   const QString &username,
-                   const QString &password);
-
-    virtual int CreateUninstaller();
+                   int installSize,
+                   QObject *parent = 0);
 
     virtual bool HasInstalled();
 
-    virtual int  Uninstall();
+    static int PreFetchISO(QString &isopath);
+
+    virtual int UninstallApp();
+
+    virtual int CreateUninstaller();
 
     virtual int FetchISO();
 
@@ -28,13 +33,27 @@ public:
     virtual int InstallGrub();
 
 private:
-    bool verfiyMD5(const QString &root, const QString md5file);
+    bool VerfiyMD5(const QString &root, const QString md5file);
 
-    int installBCD();
-    int uninstallBCD();
+    int InstallBCD(QString &id);
+    int UninstallBCD();
 
-    int installUEFI();
-    int uninstallUEFI();
+    int InstallUEFI(QString &id);
+    int UninstallUEFI();
+
+    int InstallBootIni(QString &id);
+    int UninstallBootIni();
 };
 
+
 }
+
+enum BootloaderType{
+    BCD_UEFI,
+    BCD_BIOS,
+    BOOT_INI,
+    BL_UNKNOW,
+};
+
+BootloaderType WindowsBootLoaderType();
+

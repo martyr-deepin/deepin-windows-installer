@@ -11,6 +11,7 @@ class Blobs : public QObject
     Q_OBJECT
 public:
     explicit Blobs(QObject *parent = 0);
+    ~Blobs();
 
     QString Get(const QString& qurl);
 

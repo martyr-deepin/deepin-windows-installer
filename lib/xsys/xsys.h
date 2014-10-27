@@ -34,9 +34,9 @@ bool RmDir(const QString &dirpath);
 
 bool ImageDump(const QString& device, const QString& imagePath);
 
-QString PartitionGUID(const QString &mountPoint);
-
 QString GetPartitionGUID(QString targetDev);
+
+bool GetPartitionEx(QString targetDev, void* partInfo);
 
 bool GetPartition(QString targetDev, void* partInfo);
 
@@ -57,5 +57,16 @@ Blobs& GetBlobs();
 int DumpISO(QString targetDev, const QString &imagePath);
 
 QString GetFileMD5(const QString &filePath);
+
+void Reboot();
+
+enum Arch{
+    AMD64,
+    X86,
+    IA64,
+    UnknownArch,
+};
+
+Arch CpuArch ();
 
 }

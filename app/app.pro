@@ -3,20 +3,10 @@
 #
 #-------------------------------------------------
 
-CONFIG += c++11
-
-linux{
-    QMAKE_EXT_OBJ = .bc
-    QMAKE_CXXFLAGS += -emit-llvm
-    QMAKE_CXX = clang++
-    QMAKE_CC = clang
-    QMAKE_LIB = llvm-ld -link-as-library -o
-}
-
-QT       += core gui
+QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = deepin-installer
+TARGET = deepin-windows-installer
 TEMPLATE = app
 
 SOURCES += \
@@ -26,33 +16,62 @@ SOURCES += \
     config/config.cpp \
     backend/backendfactory.cpp \
     config/log.cpp \
-    backend/winuefi.cpp
+    fontend/widgets/dheaderwidget.cpp \
+    fontend/widgets/dfooterwidget.cpp \
+    backend/utils.cpp
 
-HEADERS += \ 
+HEADERS += \
     backend/backend.h \
     fontend/mainwindow.h \
     backend/backendfactory.h \
-    config/log.h
+    fontend/widgets/dheaderwidget.h \
+    fontend/widgets/dfooterwidget.h \
+    backend/utils.h \
+    config/log.h \
+    config/config.h \
+    backend/progressreporter.h
 
-win32 {
+RESOURCES += \
+    bootloader.qrc \
+    blobs.qrc \
+    ui.qrc \
+    data.qrc
+
+DESTDIR = ./
+
+win32-msvc* {
 SOURCES += \
     backend/winbackend.cpp
 
 HEADERS += \
     backend/winbackend.h
+
+DEFINES += _USING_V110_SDK71_
+QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator'uiAccess='false'"
+QMAKE_LFLAGS += /SUBSYSTEM:WINDOWS",5.1"
+
+RC_FILE += data\deepin-windows-installer.rc
+
 }
 
-RESOURCES += \
-     bootloader.qrc \
-    blobs.qrc
 
-DESTDIR = ./
+TRANSLATIONS += po/en_US.ts \
+    po/zh_CN.ts \
+    po/am.ts \
+    po/cs.ts \
+    po/de_DE.ts \
+    po/es.ts \
+    po/es_CL.ts \
+    po/es_MX.ts \
+    po/fr.ts \
+    po/it.ts \
+    po/nb.ts \
+    po/pt_BR.ts \
+    po/pt_PT.ts \
+    po/ru.ts \
+    po/tr.ts \
+    po/zh_TW.ts \
 
-win32-msvc* {
-    DEFINES += _USING_V110_SDK71_
-    QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator'uiAccess='false'"
-    QMAKE_LFLAGS += /SUBSYSTEM:WINDOWS",5.1"
-}
 
 #-------------------------------------------------
 # libxsys
@@ -88,11 +107,15 @@ win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/libuefi/ -llibu
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/libuefi/ -llibuefid
 else:unix: LIBS += -L$$OUT_PWD/../lib/libuefi/ -llibuefi
 
-INCLUDEPATH += $$PWD/../lib/libuefi
+INCLUDEPATH += $$PWD/../lib/libuefi/include
 DEPENDPATH += $$PWD/../lib/libuefi
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/libuefi/liblibuefi.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/libuefi/liblibuefid.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/libuefi/libuefi.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/libuefi/libuefid.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../lib/libuefi/liblibuefi.a
+else:unix: PRE_TARGETDEPS += $$OUT_PWD/../lib/libuefi/libuefi.a
+
+OTHER_FILES += \
+    data/deepin-windows-installer.ico \
+    data/deepin-windows-installer.rc

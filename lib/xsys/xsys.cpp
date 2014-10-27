@@ -6,179 +6,49 @@
 
 #ifdef Q_OS_WIN32
 #include <windows.h>
-#include <shellapi.h>
 
-#pragma comment(lib, "Advapi32.lib")
+#pragma comment(lib, "shell32.lib")
+#pragma comment(lib, "advapi32.lib")
 
 static QString RunApp(const QString &execPath, const QString &execParam, const QString &execPipeIn="") {
-    SECURITY_ATTRIBUTES sa={sizeof(sa),NULL,TRUE};
-    SECURITY_ATTRIBUTES *psa=&sa;
-    DWORD dwShareMode=FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE;
-    OSVERSIONINFO osVersion={0};
-    osVersion.dwOSVersionInfoSize=sizeof(osVersion);
-
-//    if(GetVersionEx(&osVersion)){
-//        if(osVersion.dwPlatformId==VER_PLATFORM_WIN32_NT){
-//        psa=&sa;
-//        dwShareMode|=FILE_SHARE_DELETE;
-//        }
-//    }
-
     QString outPipePath = Xapi::TmpFilePath("pipeOut");
-    HANDLE hConsoleCoutRedirect=CreateFile(
-        LPWSTR(outPipePath.utf16()),
-        GENERIC_WRITE,
-        dwShareMode,
-        psa,
-        OPEN_ALWAYS,
-        FILE_ATTRIBUTE_NORMAL,
-        NULL
-        );
 
-    if(hConsoleCoutRedirect==INVALID_HANDLE_VALUE)
-    {
-        qWarning()<<"cout error"<<GetLastError();
-    };
+    QProcess app;
+    app.setStandardInputFile(execPipeIn);
+    app.setStandardOutputFile(outPipePath);
+    app.setStandardErrorFile(outPipePath);
+    app.start(execPath + " " + execParam);
+    app.waitForFinished();
 
-    QString inPipePath = Xapi::TmpFilePath("pipeIn");
-    QFile inFile(inPipePath);
-    inFile.open(QIODevice::WriteOnly);
-    inFile.write(execPipeIn.toLatin1());
-    inFile.close();
+    if (QProcess::NormalExit != app.exitStatus())
+        qDebug()<<app.error()<<app.errorString()<<app.state();
 
-    HANDLE hConsoleCinRedirect=CreateFile(
-            LPWSTR(inPipePath.utf16()),
-            GENERIC_READ,
-            dwShareMode,
-            psa,
-            OPEN_ALWAYS,
-            FILE_ATTRIBUTE_NORMAL,
-            NULL
-            );
-
-    STARTUPINFO s={sizeof(s)};
-    s.dwFlags=STARTF_USESHOWWINDOW|STARTF_USESTDHANDLES;
-    s.hStdOutput=hConsoleCoutRedirect;
-    s.hStdError=hConsoleCoutRedirect;
-    s.hStdInput=hConsoleCinRedirect;
-    s.wShowWindow=SW_HIDE;
-    s.lpReserved = NULL;
-    s.lpDesktop = NULL;
-    s.lpTitle = NULL;
-    s.wShowWindow = SW_HIDE;
-    s.cbReserved2 = NULL;
-    s.lpReserved2 = NULL;
-    PROCESS_INFORMATION pi={0};
-
-    QString cmdline = execPath + " " + execParam;
-
-    if(CreateProcess(NULL,LPWSTR(cmdline.utf16()),NULL,NULL,TRUE,NULL,NULL,NULL,&s,&pi))
-    {
-        WaitForSingleObject(pi.hProcess,INFINITE);
-        CloseHandle(pi.hProcess);
-        CloseHandle(pi.hThread);
-
-        CloseHandle(hConsoleCoutRedirect);
-        CloseHandle(hConsoleCinRedirect);
-    }
-
-    QFile outFile(outPipePath);
-    outFile.open(QIODevice::ReadOnly);
-    QString ret = outFile.readAll();
-    outFile.close();
-
-    inFile.remove();
-    outFile.remove();
-
-    return ret.toLatin1();
-}
-
-QString getDeviceGUID(const QString &device){
-    DWORD  CharCount            = 0;
-    WCHAR  DeviceName[MAX_PATH] = L"";
-    DWORD  Error                = ERROR_SUCCESS;
-    HANDLE FindHandle           = INVALID_HANDLE_VALUE;
-    size_t Index                = 0;
-    BOOL   Success              = FALSE;
-    WCHAR  VolumeName[MAX_PATH] = L"";
-
-    //
-    //  Enumerate all volumes in the system.
-    FindHandle = FindFirstVolume(VolumeName, ARRAYSIZE(VolumeName));
-
-    if (FindHandle == INVALID_HANDLE_VALUE)
-    {
-        Error = GetLastError();
-        wprintf(L"FindFirstVolumeW failed with error code %d\n", Error);
+    QFile locale(outPipePath);
+    if (!locale.open(QIODevice::ReadOnly)) {
+        qDebug()<<"Open output pipe Fialed!"<<outPipePath;
         return "";
     }
+    QTextStream localets(&locale);
 
-    for (;;)
-    {
-        //
-        //  Skip the \\?\ prefix and remove the trailing backslash.
-        Index = wcslen(VolumeName) - 1;
-
-        if (VolumeName[0]     != L'\\' ||
-            VolumeName[1]     != L'\\' ||
-            VolumeName[2]     != L'?'  ||
-            VolumeName[3]     != L'\\' ||
-            VolumeName[Index] != L'\\')
-        {
-            Error = ERROR_BAD_PATHNAME;
-            wprintf(L"FindFirstVolumeW/FindNextVolumeW returned a bad path: %s\n", VolumeName);
-            break;
-        }
-
-        //
-        //  QueryDosDeviceW does not allow a trailing backslash,
-        //  so temporarily remove it.
-        VolumeName[Index] = L'\0';
-//{bdeb8709-b930-473e-a135-878cbdb820f1}
-        //"Volume{6def5e48-f5ef-4e77-b02d-4fe2b784966b}"
-        qDebug()<<QString("").fromWCharArray(&VolumeName[4]).toLatin1();
-        CharCount = QueryDosDevice(&VolumeName[4], DeviceName, ARRAYSIZE(DeviceName));
-
-        VolumeName[Index] = L'\\';
-
-        if ( CharCount == 0 )
-        {
-            Error = GetLastError();
-            wprintf(L"QueryDosDeviceW failed with error code %d\n", Error);
-            break;
-        }
-
-        QString deviceName = QString("").fromStdWString(DeviceName).toLatin1();
-        qDebug()<<QString("").fromStdWString(VolumeName).toLatin1();
-        qDebug()<<deviceName;
-        if (device == deviceName) {
-            return QString(QString("").fromStdWString(VolumeName).toLatin1()).remove("\\\\?\\Volume").remove("\\");
-        }
-        //
-        //  Move on to the next volume.
-        Success = FindNextVolumeW(FindHandle, VolumeName, ARRAYSIZE(VolumeName));
-
-        if ( !Success )
-        {
-            Error = GetLastError();
-
-            if (Error != ERROR_NO_MORE_FILES)
-            {
-                wprintf(L"FindNextVolumeW failed with error code %d\n", Error);
-                break;
-            }
-
-            //
-            //  Finished iterating
-            //  through all the volumes.
-            Error = ERROR_SUCCESS;
-            break;
-        }
+    QString outUtf8PipePath = Xapi::TmpFilePath("utf8pipeOut");
+    QFile utf8(outUtf8PipePath);
+    if (!utf8.open(QIODevice::WriteOnly)) {
+        qDebug()<<"Open utf8 output pipe Fialed!"<<outUtf8PipePath;
+        return "";
     }
+    QTextStream utf8ts(&utf8);
+    utf8ts.setCodec("utf8");
+    utf8ts<<localets.readAll();
+    locale.close();
+    utf8.close();
 
-    FindVolumeClose(FindHandle);
-    FindHandle = INVALID_HANDLE_VALUE;
-    return "";
+    utf8.open(QIODevice::ReadOnly);
+    QString ret = QString(utf8.readAll());
+    utf8.close();
+
+    locale.remove();
+    utf8.remove();
+    return ret;
 }
 
 QString getGUID(const QString &mountPoint) {
@@ -195,6 +65,13 @@ QString getUsername() {
     DWORD bufsize = 256;
     wchar_t buffer[256];
     GetUserName(buffer, &bufsize);
+    return QString("").fromWCharArray(buffer, bufsize).toLatin1();
+}
+
+QString getHostname() {
+    DWORD bufsize = 256;
+    wchar_t buffer[256];
+    GetComputerName(buffer, &bufsize);
     return QString("").fromWCharArray(buffer, bufsize).toLatin1();
 }
 
@@ -229,8 +106,7 @@ QString getKeyboardLayoutName() {
     GetKeyboardLayoutName(buffer);
     QString kbid = QString("").fromWCharArray(buffer).toLatin1();
     kbid = "0000" + kbid.right(4);
-    QSettings setting("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Keyboard Layout\\DosKeybCodes\\", QSettings::NativeFormat);
-    return setting.value(kbid).toString();
+    return XUtils::StandKBLayout(kbid);
 }
 
 QString getKeyboardLayoutVariant() {
@@ -326,7 +202,7 @@ QString TmpFilePath(const QString &filename) {
         ext = "";
     }
     QString newFilename = RandString(filename);
-    qDebug()<<"New tmpFilename"<<newFilename;
+//    qDebug()<<"New tmpFilename"<<newFilename;
     return QDir::toNativeSeparators(QString( tmpDir + "/"
             + newFilename + ext));
 }
@@ -345,7 +221,7 @@ QString InsertTmpFileList(const QString &subdir, const QStringList &fileurlList)
     QDir dir(tmpDir);
     dir.mkdir(".");
 
-    for (auto fileurl: fileurlList) {
+    foreach (QString fileurl, fileurlList) {
         QString filename = tmpDir + "/" + fileurl.split("/").last();
         QFile file(fileurl);
         file.open(QIODevice::ReadOnly);
@@ -449,13 +325,12 @@ void MoveDir(const QString &oldName, const QString &newName)
 #endif
 }
 
-
-QString PartitionGUID(const QString &mountPoint) {
-    return getDeviceGUID(mountPoint);
-}
-
 QString Username() {
     return getUsername();
+}
+
+QString Hostname() {
+    return getHostname();
 }
 
 QString Locale() {
@@ -499,5 +374,36 @@ QString GetFileMD5(const QString &filePath) {
     qDebug() << "Failed to open device!";
     return "";
 }
+
+void Reboot() {
+#ifdef Q_OS_WIN32
+    HANDLE hToken;
+    TOKEN_PRIVILEGES tkp;
+    OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken);
+    LookupPrivilegeValue(NULL, SE_SHUTDOWN_NAME, &tkp.Privileges[0].Luid);
+    tkp.PrivilegeCount = 1;
+    tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+    AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, (PTOKEN_PRIVILEGES)NULL, 0);
+    ExitWindowsEx(EWX_REBOOT, EWX_FORCE);
+#endif
+#ifdef Q_OS_LINUX
+    m_UnetbootinPtr->callexternapp("init", "6 &");
+#endif
+#ifdef Q_OS_MAC
+    unetbootinPtr->callexternapp("shutdown", "-r now &");
+#endif
+}
+
+
+#include <intrin.h>
+
+Arch CpuArch () {
+#ifdef Q_OS_WIN32
+    int CPUInfo[4];
+    __cpuid(CPUInfo, 0);
+    return  ((CPUInfo[3] & 0x20000000) || false) ? AMD64 : X86;
+#endif
+}
+
 
 }

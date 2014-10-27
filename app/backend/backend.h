@@ -1,17 +1,24 @@
 #pragma once
 
 #include <QString>
+#include <QObject>
+#include <QDebug>
+
+class QNetworkReply;
 
 namespace DeepinInstaller {
 
 struct InstallInfo {
 public:
     QString TargetDev;
+    QString InstallPrefix;
     QString InstallPath;
     QString ImagePath;
     QString DistroName;
     quint64 RootSize;
     quint64 SwapSize;
+    QString RootFilePath;
+    QString SwapFilePath;
 
     QString KeyboardVariant;
     QString KeyboardLayout;
@@ -25,42 +32,127 @@ public:
     QString Password;
     QString Hostname;
     QString Timezone;
+    QString Version;
+    QString ReleaseInfo;
 };
 
-class Backend {
+class Backend:public QObject {
+    Q_OBJECT
 public:
     enum ActionStatus {
         Success,
         Failed,
     };
-
-    Backend(const QString& installTarget,
+    explicit Backend(const QString &username,
+            const QString &password,
+            const QString& installTarget,
             const QString& isoPath,
-            const QString &username,
-            const QString &password);
+            int installSize,
+            QObject *parent = 0);
 
-    virtual int CreateInstallDir();
+    void SetInstallParam(const QString &username,
+                         const QString &password,
+                         const QString& installTarget,
+                         const QString& isoPath,
+                         int installSize);
 
-    virtual int CreateUninstaller() = 0;
+    int Go();
+
+    int GoBack();
+
+    int Progress() const;
+
+    const QString& Action() const;
+
+    const QString& Error() const;
 
     virtual bool HasInstalled() = 0;
 
-    virtual int  Uninstall() = 0;
+    //5
+    virtual int CreateInstallDir();
 
+    //5
+    virtual int CreateUninstaller() = 0;
+
+    //70
     virtual int FetchISO() = 0;
 
+    //10
     virtual int ExtractISO();
 
+    //5
     virtual int CreateVirtualDisks() = 0;
 
+    //1
     virtual int CreateConfig() = 0;
 
+    //3
     virtual int InstallBootloader() = 0;
 
+    //1
     virtual int InstallGrub() = 0;
 
+    virtual int  UninstallApp() = 0;
+
+    QString Release();
+
+    void Report(quint64 total, quint64 copyed);
+
+signals:
+    void Done(int);
+    void Install();
+    void Uninstall();
+
+    void ActionUpdate(const QString& act);
+    void ProgressUpdate(int progress);
+
+protected slots:
+    void AsyncInstall();
+    void AsyncUninstall();
+
+    void DownloadMD5ListFinish();
+
 protected:
+    void Init(const QString &username,
+              const QString &password,
+              const QString& installTarget,
+              const QString& isoPath,
+              int installSize);
+
+    void FetchMD5List();
+
+    QMap<QString, QString> m_MD5Map;
+    QNetworkReply *m_Reply;
+    bool m_DownloadFinsh;
+
+    QString FetchImageFiles();
+    QString GetRelesaseVersion(const QString& imagePath);
+
+    void SetError(const QString& err) {m_LastError = err;}
+
+    void SetAction(const QString& act) {
+        m_CurAction = act;
+        emit ActionUpdate(act);
+    }
+
+    void Increment(int deta) {
+        qDebug()<<"Increment"<<deta<<m_Progress;
+        m_Progress += deta;
+        m_Progress %= 100;
+        emit ProgressUpdate (m_Progress);
+    }
+
     InstallInfo m_Info;
+    QString     m_LastError;
+    QString     m_CurAction;
+
+    int         m_BasePersent;
+    int         m_BaseRange;
+    int         m_Progress;
 };
 
+
+typedef int (Backend::*InstallAction)(void);
+
+const QString Version = "0.10";
 }

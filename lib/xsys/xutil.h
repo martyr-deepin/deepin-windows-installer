@@ -13,5 +13,7 @@ QString StandTimezone(const QString &country, const QString &gmt);
 
 QString StandKBVariant(const QString& hkl);
 
+QString StandKBLayout(const QString& hkl);
+
 }
 

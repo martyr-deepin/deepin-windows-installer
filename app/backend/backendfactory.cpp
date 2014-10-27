@@ -15,15 +15,28 @@ BackendFactory& BackendFactory::Instance() {
     return factory;
 }
 
-Backend* BackendFactory::CreateBackend(BackendTpye type, const QString &target, const QString &isoPath) {
+Backend* BackendFactory::CreateBackend(BackendTpye type,
+                                       const QString &username,
+                                       const QString &password,
+                                       const QString &target,
+                                       const QString &isoPath,
+                                       int installSize) {
     switch(type) {
 #ifdef Q_OS_WIN32
     case Windows:
-        return new DeepinInstaller::WindowsBackend(target, isoPath, Xapi::Username(), "sdsc=");
+        return new WindowsBackend(username,
+                                  password,
+                                  target,
+                                  isoPath,
+                                  installSize);
 #endif
     default:
-        return nullptr;
+        return NULL;
     }
+}
+
+Backend* BackendFactory::CreateBackend(BackendTpye type) {
+    return CreateBackend(type, "", "", "", "", 0);
 }
 
 }

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fontend/images/logo.png</file>
+        <file>fontend/images/fail.png</file>
+        <file>fontend/images/success.png</file>
+        <file>fontend/images/warning.png</file>
+        <file>fontend/images/lock.png</file>
+        <file>fontend/images/user.png</file>
+    </qresource>
+</RCC>

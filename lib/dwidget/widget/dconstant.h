@@ -2,7 +2,7 @@
 
 #include <QColor>
 
-namespace DWidget {
+namespace DeepinWidget {
     const QColor BorderColor = QColor(216, 216, 216);
     const QColor ShadowColor = QColor(23, 23, 23, 128);
     const QColor BackgroundTopColor = QColor(49, 50, 52);

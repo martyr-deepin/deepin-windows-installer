@@ -7,7 +7,7 @@
 #include <QMouseEvent>
 #include <QGraphicsDropShadowEffect>
 
-namespace DWidget {
+namespace DeepinWidget {
 
 DMainWindow::DMainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -15,8 +15,7 @@ DMainWindow::DMainWindow(QWidget *parent) :
     setAttribute(Qt::WA_TranslucentBackground, true);
     setAttribute(Qt::WA_ShowWithoutActivating, true);
     setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
-    setFocusPolicy(Qt::NoFocus);
-
+    setFocusPolicy (Qt::NoFocus);
     m_ShaddowMargin = 10;
     m_Radius = 4;
 
@@ -70,5 +69,6 @@ void DMainWindow::mouseReleaseEvent(QMouseEvent *event)
     m_MousePressed = false;
     event->accept();
 }
+
 
 }

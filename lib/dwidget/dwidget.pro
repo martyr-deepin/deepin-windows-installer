@@ -14,11 +14,34 @@ CONFIG += staticlib
 
 
 SOURCES += \
-    widget/dmainwindow.cpp
+    widget/dmainwindow.cpp \
+    widget/dclosebutton.cpp \
+    widget/dpushbutton.cpp \
+    widget/dtips.cpp \
+    widget/dlineedit.cpp \
+    widget/dcombobox.cpp \
+    widget/dstepedit.cpp \
+    widget/dwidget.cpp \
+    widget/dwaterprogress.cpp
 HEADERS += \
     widget/dmainwindow.h \
     widget/dconstant.h \
-    include/DMainWindow
+    include/DMainWindow \
+    widget/dclosebutton.h \
+    include/DCloseButton \
+    include/DPushButton \
+    widget/dpushbutton.h \
+    widget/dtips.h \
+    widget/dlineedit.h \
+    include/DLineEdit \
+    widget/dcombobox.h \
+    include/DComboBox \
+    widget/dstepedit.h \
+    include/DStepEdit \
+    widget/dwidget.h \
+    include/DTips \
+    widget/dwaterprogress.h \
+    include/DWaterProgress
 
 unix {
     target.path = /usr/lib
@@ -36,3 +59,6 @@ win32-msvc* {
     QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator'uiAccess='false'"
     QMAKE_LFLAGS += /SUBSYSTEM:WINDOWS",5.1"
 }
+
+RESOURCES += \
+    dwidget.qrc
