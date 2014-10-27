@@ -18,6 +18,7 @@ BackendFactory& BackendFactory::Instance() {
 Backend* BackendFactory::CreateBackend(BackendTpye type,
                                        const QString &username,
                                        const QString &password,
+                                       const QString &locale,
                                        const QString &target,
                                        const QString &isoPath,
                                        int installSize) {
@@ -26,6 +27,7 @@ Backend* BackendFactory::CreateBackend(BackendTpye type,
     case Windows:
         return new WindowsBackend(username,
                                   password,
+                                  locale,
                                   target,
                                   isoPath,
                                   installSize);
@@ -36,7 +38,7 @@ Backend* BackendFactory::CreateBackend(BackendTpye type,
 }
 
 Backend* BackendFactory::CreateBackend(BackendTpye type) {
-    return CreateBackend(type, "", "", "", "", 0);
+    return CreateBackend(type, "", "", "", "", "", 0);
 }
 
 }

@@ -9,6 +9,7 @@ class DCloseButton : public QPushButton
 public:
     explicit DCloseButton(QWidget *parent = 0);
 
+    void enableClose(bool enbale=true);
 signals:
 
 public slots:

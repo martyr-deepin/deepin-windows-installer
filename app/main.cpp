@@ -18,7 +18,10 @@
 
 using namespace DeepinInstaller;
 
+void GenerateFontImage();
+
 int main(int argc, char**argv) {
+    Q_INIT_RESOURCE(xsys);
     Q_INIT_RESOURCE(dwidget);
     QApplication app(argc, argv);
     InstallLogHandler();

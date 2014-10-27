@@ -78,8 +78,7 @@ TRANSLATIONS += po/en_US.ts \
 #-------------------------------------------------
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/xsys/ -lxsys
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/xsys/ -lxsysd
-else:unix: LIBS += -L$$OUT_PWD/../lib/xsys/ -lxsys
-d
+else:unix: LIBS += -L$$OUT_PWD/../lib/xsys/ -lxsysd
 INCLUDEPATH += $$PWD/../lib/xsys
 DEPENDPATH += $$PWD/../lib/xsys
 

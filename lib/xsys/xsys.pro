@@ -43,3 +43,6 @@ win32-msvc* {
     QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator'uiAccess='false'"
     QMAKE_LFLAGS += /SUBSYSTEM:WINDOWS",5.1"
 }
+
+RESOURCES += \
+    xsys.qrc

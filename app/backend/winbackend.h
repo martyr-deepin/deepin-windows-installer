@@ -9,6 +9,7 @@ class WindowsBackend: public Backend {
 public:
     WindowsBackend(const QString &username,
                    const QString &password,
+                   const QString &locale,
                    const QString &installTarget,
                    const QString &isoPath,
                    int installSize,

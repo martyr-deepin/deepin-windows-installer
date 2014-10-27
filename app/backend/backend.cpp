@@ -26,11 +26,12 @@ static QString BlobAppSevenZ = "sevnz.exe";
 
 Backend::Backend(const QString &username,
         const QString &password,
+        const QString &locale,
         const QString& installTarget,
         const QString& isoPath,
         int installSize,
         QObject *parent):QObject(parent){
-    Init(username, password, installTarget, isoPath, installSize);
+    Init(username, password, locale, installTarget, isoPath, installSize);
 
     QStringList sevenzFileList;
     sevenzFileList.append(":/blobs/sevenz/sevnz.exe");
@@ -41,15 +42,17 @@ Backend::Backend(const QString &username,
 void Backend::SetInstallParam(
         const QString &username,
         const QString &password,
+        const QString &locale,
         const QString& installTarget,
         const QString& isoPath,
         int installSize) {
-    Init(username, password, installTarget, isoPath, installSize);
+    Init(username, password, locale, installTarget, isoPath, installSize);
 }
 
 void Backend::Init(
         const QString &username,
         const QString &password,
+        const QString &locale,
         const QString& installTarget,
         const QString& isoPath,
         int installSize) {
@@ -68,7 +71,7 @@ void Backend::Init(
     m_Info.SwapFilePath = QString("/%1/disks/swap.disk").arg(m_Info.InstallPrefix);
     m_Info.KeyboardVariant = Xapi::KeyboardLayoutVariant();
     m_Info.KeyboardLayout = Xapi::KeyboardLayoutName();
-    m_Info.Locale =Xapi::Locale();
+    m_Info.Locale = locale;
 
     m_Info.Username = ToDeepinUsername(username);
     m_Info.Password = password;
@@ -248,8 +251,12 @@ void Backend::DownloadMD5ListFinish (){
 
     QStringList list = imagemd5.split("\n").filter ("Deepin");
     foreach(QString info, list) {
-        qDebug()<<"Insert"<<info.right (info.length () -1 - 32);
-        m_MD5Map.insert (info.right (info.length () -1 - 32), info.left (32));
+        QString md5 = info.split(" ").first ();
+        QString rpath = info.split(" ")[1];
+        QString release = info.remove (md5 + " ").remove (rpath + " ");
+//        release = release.left (release.length () - 1);
+        qDebug()<<"Insert"<<release<<md5;
+        m_MD5Map.insert (release, md5);
     }
 
     m_DownloadFinsh = true;
@@ -257,7 +264,7 @@ void Backend::DownloadMD5ListFinish (){
 
 void Backend::FetchMD5List() {
     qDebug()<<"FetchMD5List";
-    QString url = "http://cdimage.linuxdeepin.com/releases/MD5SUMS";
+    QString url = "http://cdimage.inuxdeepin.com/releases/MD5SUMS";
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
     m_DownloadFinsh = false;
     m_Reply = manager->get(QNetworkRequest(url));

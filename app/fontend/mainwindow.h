@@ -1,5 +1,7 @@
 #pragma once
 
+#include <xutil.h>
+
 #include <DMainWindow>
 
 class DHeaderWidget;
@@ -54,6 +56,7 @@ public slots:
     void reinstallDone(int);
 
 private slots:
+    void installLanguageChanged(int);
     void installDevTextChanged(const QString&);
 
     void updateActions(const QString& act);
@@ -63,6 +66,8 @@ private slots:
 
 private:
     void EnableCloseButton(bool);
+
+    DHeaderWidget* Header();
 
     QWidget *InstallOptionBody();
     QWidget *InstallFooter();
@@ -105,9 +110,14 @@ private:
     QString     m_Username;
     QString     m_Password;
     QString     m_RepeatPassword;
+    QString     m_InstallLocale;
     QString     m_InstallDev;
     int         m_InstallSize;
     bool        m_DiskSizeEnough;
 
+    bool        m_EnableClose;
+
     DeepinInstaller::Backend* m_Backend;
+
+    QVector<XUtils::Language> m_Languages;
 };

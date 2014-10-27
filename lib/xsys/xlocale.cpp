@@ -3,6 +3,14 @@
 #include <QString>
 #include <QMap>
 
+
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QDebug>
+
+
 static QMap<QString, QString> s_LocaleMap;
 
 static QString s_LoacleContet =
@@ -214,7 +222,7 @@ static QString s_LoacleContet =
 "zh_TW:zh_TW.UTF-8,"
 "zu_ZA:zu_ZA.UTF-8,";
 
-static void LoadLocaleMap() {
+ static void LoadLocaleMap() {
     XUtils::LoadMap(s_LoacleContet, s_LocaleMap);
 }
 
@@ -225,5 +233,33 @@ QString StandLoacle(const QString& locale) {
     QString std = s_LocaleMap[locale];
     return std;
 }
+
+QVector<Language> LoadSupportLanguage() {
+    QFile json(":/support_languages.json");
+    qDebug()<<"Open File"<<json.open(QIODevice::ReadOnly);
+
+    QVector<Language> supportLanguagesList;
+    QJsonParseError json_error;
+    QJsonDocument supportLanguages = QJsonDocument::fromJson(json.readAll(), &json_error);
+    json.close();
+    if(json_error.error == QJsonParseError::NoError) {
+        if (supportLanguages.isArray()) {
+            QJsonArray languresArray = supportLanguages.array();
+            int size = languresArray.size();
+            for (int i = 0; i < size; ++i) {
+                Language language;
+                QJsonValue languageJson = languresArray.at(i);
+                QJsonObject languageObject = languageJson.toObject();
+                language.Locale =languageObject.take("Locale").toString();
+                language.Description = languageObject.take("Description").toString();
+                language.LanguageCode = languageObject.take("LanguageCode").toString();
+                language.CountryCode = languageObject.take("CountryCode").toString();
+                supportLanguagesList.push_back(language);
+            }
+        }
+    }
+    return supportLanguagesList;
+}
+
 
 }

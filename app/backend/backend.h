@@ -45,13 +45,15 @@ public:
     };
     explicit Backend(const QString &username,
             const QString &password,
+            const QString &locale,
             const QString& installTarget,
             const QString& isoPath,
             int installSize,
             QObject *parent = 0);
 
     void SetInstallParam(const QString &username,
-                         const QString &password,
+                         const QString &password,                         
+                         const QString &locale,
                          const QString& installTarget,
                          const QString& isoPath,
                          int installSize);
@@ -115,6 +117,7 @@ protected slots:
 protected:
     void Init(const QString &username,
               const QString &password,
+              const QString &locale,
               const QString& installTarget,
               const QString& isoPath,
               int installSize);

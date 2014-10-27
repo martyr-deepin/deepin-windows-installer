@@ -46,4 +46,3 @@ void InstallLogHandler() {
     qDebug()<<"Install Log to "<<g_LogPath;
     qInstallMessageHandler(crashMessageOutput);
 }
-

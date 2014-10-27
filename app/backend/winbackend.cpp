@@ -224,14 +224,16 @@ int UnpackBootXXXX(const QString &bootxxxx);
 
 WindowsBackend::WindowsBackend(
         const QString &username,
+        const QString &locale,
         const QString &password,
         const QString &installTarget,
         const QString &isoPath,
         int installSize,
         QObject *parent):
-    Backend(username, password, installTarget, isoPath, installSize, parent){
+    Backend(username, password, locale, installTarget, isoPath, installSize, parent){
     m_BasePersent = 0;
     m_BaseRange = 10;
+
     qDebug()<<SystemDirtory ();
 
     QSettings settings(RegistryKey, QSettings::NativeFormat);

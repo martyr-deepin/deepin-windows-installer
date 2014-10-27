@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QObject>
 #include <QString>
 #include <QMap>
 
@@ -14,6 +15,15 @@ QString StandTimezone(const QString &country, const QString &gmt);
 QString StandKBVariant(const QString& hkl);
 
 QString StandKBLayout(const QString& hkl);
+
+struct Language{
+    QString Locale;
+    QString Description;
+    QString LanguageCode;
+    QString CountryCode;
+};
+
+QVector<Language> LoadSupportLanguage();
 
 }
 

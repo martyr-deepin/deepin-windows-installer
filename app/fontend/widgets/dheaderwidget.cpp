@@ -11,11 +11,11 @@ DHeaderWidget::DHeaderWidget(QWidget *parent) :
     QWidget(parent)
 {
     QHBoxLayout *btlayout = new QHBoxLayout();
-    DCloseButton *m_closeButton = new DCloseButton();
-    connect(m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeClicked()));
+    m_CloseButton = new DCloseButton();
+    connect(m_CloseButton, SIGNAL(clicked()), this, SIGNAL(closeClicked()));
     btlayout->setMargin(0);
-    btlayout->addWidget(m_closeButton);
-    btlayout->setAlignment(m_closeButton, Qt::AlignRight);
+    btlayout->addWidget(m_CloseButton);
+    btlayout->setAlignment(m_CloseButton, Qt::AlignRight);
 
     QHBoxLayout *logolayout = new QHBoxLayout();
     QLabel *logolabel = new QLabel();
@@ -37,4 +37,9 @@ DHeaderWidget::DHeaderWidget(QWidget *parent) :
     layout->addLayout(logolayout);
     this->setLayout(layout);
     this->setFixedHeight(80);
+}
+
+
+void DHeaderWidget::enableClose(bool enable) {
+    m_CloseButton->enableClose(enable);
 }

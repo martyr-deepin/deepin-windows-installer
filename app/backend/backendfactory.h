@@ -18,6 +18,7 @@ public:
     Backend* CreateBackend(BackendTpye type,
                            const QString &username,
                            const QString &password,
+                           const QString &locale,
                            const QString &target,
                            const QString &isoPath,
                            int installSize);

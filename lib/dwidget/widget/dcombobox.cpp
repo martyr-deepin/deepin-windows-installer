@@ -16,6 +16,7 @@ static QString s_QComboBoxStyle =
     "stop:0.1 rgb(32, 32, 32),"
     "stop:1 rgb(24, 24, 24));"
 "}"
+"QAbstractItemView { outline: 0px;}"
 "QComboBox:editable {"
     "background: #232323;"
 "}"
@@ -85,5 +86,7 @@ DComboBox::DComboBox(QWidget *parent) :
     this->setStyleSheet(s_QComboBoxStyle);
     QListView * listView = new QListView(this);
     listView->setStyleSheet(s_QListViewStyle);
+    listView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setView(listView);
+
 }

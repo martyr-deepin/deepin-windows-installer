@@ -10,16 +10,12 @@
 #include "../config/config.h"
 
 #include <xsys.h>
+#include <xutil.h>
 
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QDebug>
 #include <QMessageBox>
-
-
-#include <QApplication>
-#include <QStandardPaths>
-#include <QProcess>
 
 #include <DWaterProgress>
 #include <DPushButton>
@@ -27,6 +23,11 @@
 #include <DComboBox>
 #include <DStepEdit>
 #include <DTips>
+
+#include <QApplication>
+#include <QStandardPaths>
+#include <QProcess>
+#include <QPainter>
 
 static const int DefaultWidgetHeight = 24;
 
@@ -43,15 +44,13 @@ using namespace DeepinInstaller;
 MainWindow::MainWindow(QWidget *parent) :
     DeepinWidget::DMainWindow(parent)
 {
-    setFixedSize(340, 490);
-
-//    new DHeaderWidget = new DHeaderWidget;
+    setFixedSize(340, 520);
 
     connect(this, SIGNAL(install()), this, SLOT(goInstall()));
     connect(this, SIGNAL(uninstall()), this, SLOT(goUninstall()));
 
     m_Backend = BackendFactory::Instance().CreateBackend(BackendFactory::Windows);
-
+    m_Languages = XUtils::LoadSupportLanguage();
     if (m_Backend->HasInstalled()) {
         emit uninstall();
     }else{
@@ -120,6 +119,31 @@ QWidget *MainWindow::InstallOptionBody(){
             repeatPasswordTips, SLOT(setText(QString)));
 
     setRepeatPassword("");
+
+    QString defaultLocale = Xapi::Locale();
+    DComboBox *installLang = new DComboBox;
+    installLang->setFixedSize(180, DefaultWidgetHeight);
+    layout->addSpacing(27);
+    layout->addWidget(installLang);
+    layout->setAlignment(installLang, Qt::AlignCenter);
+    installLang->setIconSize(QSize(130,14));
+    installLang->setContentsMargins(QMargins(0,0,0,0));
+    installLang->setMinimumContentsLength(0);
+    QVector<XUtils::Language>::Iterator langItor = m_Languages.begin();
+    int langIndex = 0;
+    int defalutLangIndex = 0;
+    for (;langItor != m_Languages.end(); ++langItor) {
+        installLang->addItem(QIcon(":/data/langicon/"+langItor->Locale+".png"),"");
+        if (defaultLocale.toLower() == langItor->Locale.toLower()) {
+            defalutLangIndex = langIndex;
+        }
+        ++langIndex;
+    }
+
+    connect(installLang, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(installLanguageChanged(int)));
+
+    installLang->setCurrentIndex(defalutLangIndex);
 
     DComboBox *installDev = new DComboBox;
     installDev->setFixedSize(180, DefaultWidgetHeight);
@@ -300,12 +324,19 @@ QWidget *MainWindow::InstallSuccessFooter() {
 }
 
 void MainWindow::EnableCloseButton(bool enable) {
-    if (enable) {
-        connect(new DHeaderWidget, SIGNAL(closeClicked()), this, SLOT(close()));
-        return;
-    }
+    m_EnableClose = enable;
+}
 
-    disconnect(new DHeaderWidget, SIGNAL(closeClicked()), this, SLOT(close()));
+DHeaderWidget *MainWindow::Header () {
+    DHeaderWidget *m_Heaer = new DHeaderWidget;
+    if (m_EnableClose) {
+        connect(m_Heaer, SIGNAL(closeClicked()), this, SLOT(close()));
+        m_Heaer->enableClose(true);
+        return m_Heaer;
+    }
+    disconnect(m_Heaer, SIGNAL(closeClicked()), this, SLOT(close()));
+    m_Heaer->enableClose(false);
+    return m_Heaer;
 }
 
 QWidget *MainWindow::FinishFooter(){
@@ -324,7 +355,7 @@ void MainWindow::goInstall() {
     setCentralWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
-    m_topLayout->addWidget(new DHeaderWidget);
+    m_topLayout->addWidget(Header());
     m_topLayout->addWidget(InstallOptionBody());
     if (m_DiskSizeEnough) {
         m_topLayout->addWidget(InstallFooter());
@@ -333,6 +364,7 @@ void MainWindow::goInstall() {
     }
 
     m_TopWidget->setLayout(m_topLayout);
+
 }
 
 void MainWindow::goReInstall() {
@@ -359,6 +391,7 @@ void MainWindow::goInstallOptionCheck(){
     m_Backend->SetInstallParam (
                     m_Username,
                     QByteArray(m_Password.toUtf8()).toBase64(),
+                    m_InstallLocale,
                     m_InstallDev,
                     "",
                     m_InstallSize
@@ -410,21 +443,12 @@ void MainWindow::goInstallProcess() {
     setCentralWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
-    m_topLayout->addWidget(new DHeaderWidget);
+    m_topLayout->addWidget(Header());
     m_topLayout->addWidget(InstallProcessBody());
     m_topLayout->addWidget(EmptyFooter());
 
-#ifdef _TEST
-    QPushButton *btS = new QPushButton("S");
-    m_topLayout->addWidget(btS);
-    connect(btS, SIGNAL(clicked()), this, SLOT(goInstallSuccess()));
-
-    QPushButton *btF = new QPushButton("F");
-    m_topLayout->addWidget(btF);
-    connect(btF, SIGNAL(clicked()), this, SLOT(goInstallFailed()));
-#endif
-
     m_TopWidget->setLayout(m_topLayout);
+
 }
 
 void MainWindow::goInstallSuccess() {
@@ -434,11 +458,12 @@ void MainWindow::goInstallSuccess() {
     setCentralWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
-    m_topLayout->addWidget(new DHeaderWidget);
+    m_topLayout->addWidget(Header());
     m_topLayout->addWidget(InstallSuccessBody());
     m_topLayout->addWidget(InstallSuccessFooter());
 
     m_TopWidget->setLayout(m_topLayout);
+
 }
 
 void MainWindow::goInstallFailed() {
@@ -447,11 +472,12 @@ void MainWindow::goInstallFailed() {
     setCentralWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
-    m_topLayout->addWidget(new DHeaderWidget);
+    m_topLayout->addWidget(Header());
     m_topLayout->addWidget(InstallFailedBody());
     m_topLayout->addWidget(FinishFooter());
 
     m_TopWidget->setLayout(m_topLayout);
+
 }
 
 QWidget *MainWindow::UninstallBody(){
@@ -506,11 +532,12 @@ void MainWindow::goUninstall() {
     setCentralWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
-    m_topLayout->addWidget(new DHeaderWidget);
+    m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallBody());
     m_topLayout->addWidget(UninstallFooter());
 
     m_TopWidget->setLayout(m_topLayout);
+
 }
 
 void MainWindow::goUninstallPre(){
@@ -525,11 +552,12 @@ void MainWindow::goUninstallProcess(){
     setCentralWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
-    m_topLayout->addWidget(new DHeaderWidget);
+    m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallProcessBody());
     m_topLayout->addWidget(EmptyFooter());
 
     m_TopWidget->setLayout(m_topLayout);
+
 }
 
 void MainWindow::installDevTextChanged(const QString &devtext) {
@@ -539,6 +567,15 @@ void MainWindow::installDevTextChanged(const QString &devtext) {
     }
     setInstallDev(devtext.left(2));
     emit maxInstallSizeChage(freeSize);
+}
+
+void MainWindow::installLanguageChanged(int index) {
+    qDebug()<<"Set index"<<index<<"/"<<m_Languages.size();
+    if ((index < 0) || (index >= m_Languages.size())){
+        index = 0;
+    }
+
+    m_InstallLocale = m_Languages.at(index).Locale;
 }
 
 void MainWindow::updateActions(const QString& /*act*/) {
@@ -560,11 +597,12 @@ void MainWindow::goUninstallSuccess(){
     setCentralWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
-    m_topLayout->addWidget(new DHeaderWidget);
+    m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallSuccessBody());
     m_topLayout->addWidget(FinishFooter());
 
     m_TopWidget->setLayout(m_topLayout);
+
 }
 
 void MainWindow::goUninstallFailed(){
@@ -574,11 +612,12 @@ void MainWindow::goUninstallFailed(){
     setCentralWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
-    m_topLayout->addWidget(new DHeaderWidget);
+    m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallFailedBody());
     m_topLayout->addWidget(FinishFooter());
 
     m_TopWidget->setLayout(m_topLayout);
+
 }
 
 
