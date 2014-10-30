@@ -7,6 +7,17 @@
 
 class QLabel;
 
+class DSimpleLineEdit:  public QLineEdit {
+    Q_OBJECT
+public:
+    explicit DSimpleLineEdit(QWidget *parent = 0):QLineEdit(parent) {}
+
+    virtual void focusInEvent(QFocusEvent *e);
+
+signals:
+    void focusIn(QFocusEvent *);
+};
+
 class DLineEdit : public DWidget
 {
     Q_OBJECT
@@ -36,19 +47,29 @@ public:
     QString text() const;
     QLineEdit::EchoMode echoMode() const;
 
+    bool hasFocus () const;
+
 signals:
     void textChanged(const QString &);
+    void textEdited(const QString &);
+    void cursorPositionChanged(int, int);
+    void returnPressed();
+    void editingFinished();
+    void editingBegin(const QString &);
 
 public slots:
     void setText(const QString& text);
+    void overwriteText(const QString& text);
     void setEchoMode(QLineEdit::EchoMode);
 
 private slots:
+    void editFocusIn(QFocusEvent *e);
 
 private:
-    QLineEdit   *m_LineEdit;
+    DSimpleLineEdit   *m_LineEdit;
     QLabel      *m_Label;
 
 };
+
 
 #endif // DLINEEDIT_H

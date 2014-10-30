@@ -22,8 +22,7 @@ SOURCES += \
     widget/dcombobox.cpp \
     widget/dstepedit.cpp \
     widget/dwidget.cpp \
-    widget/dwaterprogress.cpp \
-    widget/dlangcombobox.cpp
+    widget/dwaterprogress.cpp
 HEADERS += \
     widget/dmainwindow.h \
     widget/dconstant.h \
@@ -42,8 +41,7 @@ HEADERS += \
     widget/dwidget.h \
     include/DTips \
     widget/dwaterprogress.h \
-    include/DWaterProgress \
-    widget/dlangcombobox.h
+    include/DWaterProgress
 
 unix {
     target.path = /usr/lib

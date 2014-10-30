@@ -5,7 +5,7 @@
 #include <DMainWindow>
 
 class DHeaderWidget;
-
+class DLineEdit;
 class QLabel;
 
 namespace DeepinInstaller {
@@ -92,8 +92,14 @@ private:
 
  public slots:
     void setUsername(const QString&);
+    void editUsernameBegin(const QString&);
+    void editUsernameFinish();
     void setPassword(const QString&);
+    void editPasswordBegin(const QString&);
+    void editPasswordFinish();
     void setRepeatPassword (const QString&);
+    void editRepeatPasswordBegin(const QString&);
+    void editRepeatPasswordFinish();
     void setInstallDev(const QString&);
     void setInstallSize(int);
 

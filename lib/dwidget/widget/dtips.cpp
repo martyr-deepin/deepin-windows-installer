@@ -39,7 +39,6 @@ DTips::DTips(DWidget *parent):
     this->setFocusPolicy(Qt::NoFocus);
     this->setFrameStyle(Qt::FramelessWindowHint);
     this->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
 }
 
 QPainterPath DrawTipsPath(const QRect& rect, int radius) {
@@ -71,6 +70,7 @@ void DTips::paintEvent(QPaintEvent *e) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
+    this->adjustSize();
     QRect rect = this->rect();
 
     QPainterPath border = DrawTipsPath(rect, 4);
@@ -109,6 +109,7 @@ void DTips::doPop() {
     QPoint pos = m_parentDWidget->mapToGlobal(m_parentDWidget->pos()) - m_parentDWidget->pos();
     QSize szLabel = m_parentDWidget->size();
 
+    this->adjustSize();
     QSize sz = this->size();
     movie->setStartValue(QRect(pos.x(),
                                pos.y() + szLabel.height()/2 - 6,
@@ -134,6 +135,7 @@ void DTips::updateGeometry(){
 
     QPoint pos = m_parentDWidget->mapToGlobal(m_parentDWidget->pos()) - m_parentDWidget->pos();
     QSize szLabel = m_parentDWidget->size();
+    this->adjustSize();
     QSize sz = this->size();
     this->setGeometry(QRect(pos.x(),
                             pos.y() + szLabel.height() - 6,

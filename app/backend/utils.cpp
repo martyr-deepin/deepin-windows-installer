@@ -55,7 +55,7 @@ static bool isLegal(char val) {
     case '8':
     case '9':
     case '-':
-    case '.':
+    case '_':
         return true;
     }
     return false;
@@ -241,29 +241,49 @@ static QString s_ReserveUsername[] = {
 
 namespace DeepinInstaller {
 
+bool IsValidUsernameFirstChar(const QString& username, QString& error) {
+    for(int i = 0; i < username.length(); ++i) {
+        if (!isLowcase(username.at(i).toLatin1())) {
+            error = QObject::tr("The first character must be in lower case.");
+            return false;
+        }
+    }
+    return true;
+}
+
+
+bool IsValidUsernameChar(const QString& username, QString& error) {
+    for(int i = 0; i < username.length(); ++i) {
+        if (!isLegal(username.at(i).toLatin1())) {
+            error = QObject::tr("Username must comprise a~z, 0~9, - or _. ");
+            return false;
+        }
+    }
+    return true;
+}
+
 bool IsValidUsername(const QString& username, QString& error){
-    if ((username.length() < 3) || (username.length() > 32)) {
-        error = QObject::tr("Username length must be 3~32");
+    if (username.length() ==0) {
+        error = QObject::tr("Username can not be empty. ");
         return false;
     }
-
-    if (!isLowcase(username.at(0).toLatin1())) {
-        error = QObject::tr("First char must be lowercase");
-        return false;
-    }
-
 
     for(int i = 0; i < username.length(); ++i) {
         if (!isLegal(username.at(i).toLatin1())) {
-            error = QString(QObject::tr("Inlegal character %1, must be a~z 0~9 and -_")).arg(username.at(i));
+            error = QObject::tr("Username must comprise a~z, 0~9, - or _. ");
             return false;
         }
+    }
+
+    if (!isLowcase(username.at(0).toLatin1())) {
+        error = QObject::tr("The first character must be in lower case.");
+        return false;
     }
 
     size_t n = sizeof(s_ReserveUsername)/sizeof(s_ReserveUsername[0]);
     for (size_t i =0; i < n; ++i) {
         if(0 == username.compare(s_ReserveUsername[i])) {
-            error = QObject::tr("Reserve username ") + username;
+            error = QString(QObject::tr("You can not use the reserved username: %1.")).arg(username);
             return false;
         }
     }
@@ -288,10 +308,7 @@ QString ToDeepinUsername(const QString& username) {
         newstand.erase(newstand.begin());
     }
 
-    if (newstand.length()>32) {
-        return QString().fromStdString(newstand).left(32);
-    }
-    if (newstand.length()>=3) {
+    if (newstand.length()> 0 ) {
         return QString().fromStdString(newstand);
     }
     return "deepin";
@@ -323,10 +340,10 @@ QString ToDeepinHostname(const QString& hostname) {
     return "deepin-pc";
 }
 
-QList<QPair<QString, quint64> > GetLocalDiskList(quint64 minSizeInGb,
+QList<DiskInfo> GetLocalDiskList(quint64 minSizeInGb,
                                                  const QString &type,
                                                  const QString &table){
-    QList<QPair<QString, quint64> > disklist;
+    QList<DiskInfo> disklist;
     QFileInfoList devlist = QDir::drives();
     for (int i = 0; i < devlist.size(); ++i)
     {
@@ -346,8 +363,10 @@ QList<QPair<QString, quint64> > GetLocalDiskList(quint64 minSizeInGb,
             Xapi::GetPartitionEx (devname, &piex);
 
             QString format = "Unknow";
+            PartitonStyle style;
             switch (piex.PartitionStyle) {
             case PARTITION_STYLE_MBR:
+                style = MBRPartition;
                 if (!table.toUpper ().contains ("MBR")) {
                     qDebug()<<"Skip Disk"<<devname<<"MBR";
                     continue;
@@ -374,6 +393,7 @@ QList<QPair<QString, quint64> > GetLocalDiskList(quint64 minSizeInGb,
 
                 break;
             case PARTITION_STYLE_GPT:
+                style = GPTPartition;
                 if (!table.toUpper ().contains ("GPT")) {
                      qDebug()<<"Skip Disk"<<devname<<"GPT";
                      continue;
@@ -398,17 +418,22 @@ QList<QPair<QString, quint64> > GetLocalDiskList(quint64 minSizeInGb,
                 }
                 break;
             case PARTITION_STYLE_RAW:
+                style = RAWPartition;
                 if (!table.toUpper ().contains ("RAW")) {
                      continue;
                 }
                 break;
             default:
+                style = UnknowPartition;
                 qDebug()<<"Disk Type"<<devname<<"Unknow";
                 continue;
             }
 
-            qDebug()<<"Add  Disk"<<devname;
-            disklist.push_back(QPair<QString, quint64>(devname, FreeBytes.QuadPart/(1024*1024*1024)));
+            DiskInfo diskinfo;
+            diskinfo.Name = devname;
+            diskinfo.Style = style;
+            diskinfo.FreeSpace = FreeBytes.QuadPart/(1024*1024*1024);
+            disklist.push_back(diskinfo);
         }
     }
     return disklist;

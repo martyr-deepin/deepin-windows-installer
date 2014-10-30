@@ -36,8 +36,8 @@ static const int DefaultMaxInstallSize = 64;
 static const QString FailIconURL = ":/fontend/images/fail.png";
 static const QString SuccessIconURL = ":/fontend/images/success.png";
 static const QString WarningIconURL = ":/fontend/images/warning.png";
-static const QString PasswordHits = QObject::tr("Password must not empty");
-static const QString RepeatPasswordHits = QObject::tr("Please Repeat Password");
+static const QString PasswordHits = QObject::tr("Password can not be empty. ");
+static const QString RepeatPasswordHits = QObject::tr("The two passwords do not match.");
 
 using namespace DeepinInstaller;
 
@@ -64,14 +64,22 @@ QWidget *MainWindow::InstallOptionBody(){
     layout->setSpacing(0);
     layout->addSpacing(10);
 
-    DLineEdit *username = new DLineEdit(":/fontend/images/user.png", tr("Username"));
-    username->setFixedSize(180, DefaultWidgetHeight);
-    layout->addWidget(username);
-    layout->setAlignment(username, Qt::AlignCenter);
-    connect(username, SIGNAL(textChanged(QString)),
+    DLineEdit *usernameEdit = new DLineEdit(":/fontend/images/user.png", tr("Username"));
+    usernameEdit->setFixedSize(180, DefaultWidgetHeight);
+    layout->addWidget(usernameEdit);
+    layout->setAlignment(usernameEdit, Qt::AlignCenter);
+    connect(usernameEdit, SIGNAL(textChanged(QString)),
             this, SLOT(setUsername(QString)));
+    connect(usernameEdit, SIGNAL(editingFinished()),
+            this, SLOT(editUsernameFinish()));
+    connect(usernameEdit, SIGNAL(editingBegin(QString)),
+            this, SLOT(editUsernameBegin(QString)));
 
-    DTips *usernameTips = new DTips(username);
+    connect(this, SIGNAL(usernameChanged(QString)),
+            usernameEdit, SLOT(overwriteText(QString)));
+
+
+    DTips *usernameTips = new DTips(usernameEdit);
     connect(this, SIGNAL(showUsernameTips()),
             usernameTips, SLOT(pop()));
     connect(this, SIGNAL(hideUsernameTips()),
@@ -79,7 +87,7 @@ QWidget *MainWindow::InstallOptionBody(){
     connect(this, SIGNAL(setUsernameTips(QString)),
             usernameTips, SLOT(setText(QString)));
 
-    username->setText(ToDeepinUsername(Xapi::Username()));
+    usernameEdit->setText(ToDeepinUsername(Xapi::Username()));
 
     DLineEdit *password = new DLineEdit(":/fontend/images/lock.png", tr("Password"));
     password->setEchoMode(QLineEdit::Password);
@@ -89,6 +97,10 @@ QWidget *MainWindow::InstallOptionBody(){
     layout->setAlignment(password, Qt::AlignCenter);
     connect(password, SIGNAL(textChanged(QString)),
             this, SLOT(setPassword(QString)));
+    connect(password, SIGNAL(editingFinished()),
+            this, SLOT(editPasswordFinish()));
+    connect(password, SIGNAL(editingBegin(QString)),
+            this, SLOT(editPasswordBegin(QString)));
 
     DTips *passwordTips = new DTips(password);
     passwordTips->setText(PasswordHits);
@@ -108,6 +120,10 @@ QWidget *MainWindow::InstallOptionBody(){
     layout->setAlignment(repeatRassword, Qt::AlignCenter);
     connect(repeatRassword, SIGNAL(textChanged(QString)),
             this, SLOT(setRepeatPassword(QString)));
+    connect(repeatRassword, SIGNAL(editingFinished()),
+            this, SLOT(editRepeatPasswordFinish()));
+    connect(repeatRassword, SIGNAL(editingBegin(QString)),
+            this, SLOT(editRepeatPasswordBegin(QString)));
 
     DTips *repeatPasswordTips = new DTips(repeatRassword);
     repeatPasswordTips->setText(RepeatPasswordHits);
@@ -153,25 +169,43 @@ QWidget *MainWindow::InstallOptionBody(){
     connect(installDev, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(installDevTextChanged(QString)));
 
-    QString partitionTableFiter = "MBR,GPT";
-    if (BCD_UEFI != WindowsBootLoaderType ()) {
-        partitionTableFiter = "MBR";
+    QString partitionTableFiter = "GPT,MBR";
+    BootloaderType bootloader = WindowsBootLoaderType ();
+    PartitonStyle styleFiter = MBRPartition;
+    QString style = "MBR";
+    if (BCD_UEFI == bootloader) {
+        styleFiter = GPTPartition;
+        style = "GPT";
     }
+
+    bool hasMismatchPartitionStyle = false;
     //Init Dev List
     m_DiskSizeEnough = false;
-    QList<QPair<QString, quint64> > list = GetLocalDiskList(MiniInstallSize, "NTFS", partitionTableFiter);
-    QList<QPair<QString, quint64> >::iterator itor;
+    QList<DiskInfo> alldisklist = GetLocalDiskList(0, "NTFS", partitionTableFiter);
+    QList<DiskInfo> list;
+    QList<DiskInfo>::iterator itor;
+    for (itor = alldisklist.begin(); itor != alldisklist.end(); ++itor){
+        if(styleFiter == itor->Style) {
+            if (itor->FreeSpace > MiniInstallSize) {
+                qDebug()<<"Add  Disk"<<itor->Name;
+                list.push_back (*itor);
+            }
+        } else {
+            hasMismatchPartitionStyle = true;
+        }
+    }
+
     for (itor = list.begin(); itor != list.end(); ++itor){
-        if(itor->second > MiniInstallSize) {
+        if(itor->FreeSpace > MiniInstallSize) {
             m_DiskSizeEnough = true;
         }
-        installDev->addItem(QString("%1(%2GB)").arg(itor->first).arg(itor->second));
+        installDev->addItem(QString("%1(%2GB)").arg(itor->Name).arg(itor->FreeSpace));
     }
 
     DStepEdit *installSize = new DStepEdit;
     installSize->setMin(MiniInstallSize);
     if (!list.isEmpty ()) {
-        installSize->setMax(list.first().second);
+        installSize->setMax(list.first().FreeSpace);
     } else {
         installSize->setMax(MiniInstallSize+1);
     }
@@ -191,8 +225,7 @@ QWidget *MainWindow::InstallOptionBody(){
     hits->setFixedWidth(240);
     hits->setWordWrap(true);
     hits->setText("<p style='color:grey; font-size:10px;'>"+
-                 tr("Please ensure that the disk you select has more than 10G free space."
-                 "This operation will not affect any of your data. Please use it freely.") +
+                 tr("This operation will not affect any of your data. Please use it freely.") +
                  "</p>");
     layout->addSpacing(10);
     layout->addWidget(hits);
@@ -201,18 +234,23 @@ QWidget *MainWindow::InstallOptionBody(){
     //Disable if there is not enough disk size
     if (!m_DiskSizeEnough) {
         qDebug()<<"Disable all control";
-        username->setDisabled (true);
-        password->setDisabled (true);
-        repeatRassword->setDisabled (true);
+        usernameEdit->setVisible (false);
+        password->setVisible (false);
+        repeatRassword->setVisible (false);
         usernameTips->pack ();
         passwordTips->pack ();
-        installDev->setDisabled (true);
-        installSize->setDisabled (true);
-        QString errHits = tr("Please ensure that alest one disk has more than 10G free space.");
-        if (!partitionTableFiter.contains ("GPT")) {
-            errHits += tr(" And can not install on gpt disk when boot without uefi.");
+        installLang->setVisible (false);
+        installDev->setVisible (false);
+        installSize->setVisible (false);
+        if (!hasMismatchPartitionStyle) {
+            style = "";
+        } else {
+            style = " "+style;
         }
+
+        QString errHits = tr("Please ensure that there is at least one%1 disk having more than 10GB free space.").arg (style);
         hits->setText ("<p style='color:red; font-size:10px;'>" + errHits + "</p>");
+        layout->addStretch ();
     }
     widget->setLayout(layout);
     return widget;
@@ -570,7 +608,7 @@ void MainWindow::installDevTextChanged(const QString &devtext) {
 }
 
 void MainWindow::installLanguageChanged(int index) {
-    qDebug()<<"Set index"<<index<<"/"<<m_Languages.size();
+//    qDebug()<<"Set index"<<index<<"/"<<m_Languages.size();
     if ((index < 0) || (index >= m_Languages.size())){
         index = 0;
     }
@@ -621,28 +659,94 @@ void MainWindow::goUninstallFailed(){
 }
 
 
-void MainWindow::setUsername(const QString& v){
+void MainWindow::setUsername(const QString& value){
+    QString v = value.toLower ();
     QString err;
-    bool ret = IsValidUsername(v, err);
+    if (!v.isEmpty ()) {
+        if (1 == v.length() && !IsValidUsernameFirstChar(v, err)) {
+            v = v.left(value.length()-1);
+            emit setUsernameTips(err);
+            emit showUsernameTips();
+        } else {
+            bool ret = IsValidUsernameChar(v.right(1), err);
+            if (!ret) {
+                v = v.left(value.length()-1);
+    //            QString newerr;
+    //            if (!IsValidUsername(v, newerr)) {
+    //                err = newerr;
+    //            }
+                emit setUsernameTips(err);
+                emit showUsernameTips();
+            } else if (!IsValidUsername(v, err)) {
+                emit setUsernameTips(err);
+                emit showUsernameTips();
+            } else {
+                emit hideUsernameTips();
+            }
+        }
+    }
+
+    m_Username = v;
+    emit usernameChanged(m_Username);
+
+}
+
+void MainWindow::editUsernameBegin (const QString & v) {
+    if (v.isEmpty ()) {
+        emit hideUsernameTips();
+    }
+}
+
+void MainWindow::editUsernameFinish () {
+    QString err;
+    bool ret = IsValidUsername(m_Username, err);
     if (!ret) {
         emit setUsernameTips(err);
         emit showUsernameTips();
     } else {
         emit hideUsernameTips();
     }
-
-    m_Username = v;
 }
 
 void MainWindow::setPassword(const QString& v){
+    m_Password = v;
+
+    if (m_Password != m_RepeatPassword) {
+        emit setRepeatPasswordTips(RepeatPasswordHits);
+        emit showRepeatPasswordTips();
+    } else {
+        emit hideRepeatPasswordTips ();
+    }
+
     if (v.isEmpty()) {
+        return;
+    }
+
+    emit hidePasswordTips();
+}
+
+void MainWindow::editPasswordBegin (const QString & v) {
+    if (v.isEmpty ()) {
+        emit hidePasswordTips();
+    }
+}
+
+void MainWindow::editPasswordFinish () {
+    if (m_Password.isEmpty()) {
         emit setPasswordTips(PasswordHits);
         emit showPasswordTips();
     } else {
         emit hidePasswordTips();
     }
+}
 
-    m_Password = v;
+void MainWindow::setRepeatPassword(const QString& v){
+    m_RepeatPassword = v;
+
+    if (m_RepeatPassword.isEmpty ()) {
+        emit hideRepeatPasswordTips ();
+        return;
+    }
 
     if (m_Password != m_RepeatPassword) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
@@ -652,8 +756,13 @@ void MainWindow::setPassword(const QString& v){
     }
 }
 
-void MainWindow::setRepeatPassword(const QString& v){
-    m_RepeatPassword = v;
+void MainWindow::editRepeatPasswordBegin (const QString & v) {
+    if (v.isEmpty ()) {
+        emit hideRepeatPasswordTips ();
+    }
+}
+
+void MainWindow::editRepeatPasswordFinish () {
     if (m_Password != m_RepeatPassword) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();

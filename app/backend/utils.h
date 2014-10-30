@@ -13,13 +13,31 @@
 
 namespace DeepinInstaller{
 
+bool IsValidUsernameFirstChar(const QString& username, QString& error);
+
+bool IsValidUsernameChar(const QString& username, QString& error);
+
 bool IsValidUsername(const QString& username, QString& error);
 
 QString ToDeepinUsername(const QString& username);
 
 QString ToDeepinHostname(const QString& username);
 
-QList<QPair<QString, quint64> > GetLocalDiskList(quint64 minSizeInGb = 10,
+
+enum PartitonStyle {
+    GPTPartition,
+    MBRPartition,
+    RAWPartition,
+    UnknowPartition,
+};
+
+struct DiskInfo {
+    QString Name;
+    quint64 FreeSpace; //GB
+    PartitonStyle Style;
+};
+
+QList<DiskInfo> GetLocalDiskList(quint64 minSizeInGb = 10,
                                                  const QString &type="NTFS",
                                                  const QString &table="MBR,GPT,RAW");
 

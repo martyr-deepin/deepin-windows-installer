@@ -4,6 +4,13 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QSizePolicy>
+#include <QDebug>
+
+
+void DSimpleLineEdit::focusInEvent(QFocusEvent *e) {
+   emit focusIn (e);
+   QLineEdit::focusInEvent (e);
+}
 
 static QString s_LabelStyle =
 "QLabel {"
@@ -60,7 +67,7 @@ DLineEdit::DLineEdit(const QString& qurl, const QString& defaultText, QWidget *p
     m_Label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
     m_Label->setStyleSheet(s_LabelStyle);
 
-    m_LineEdit = new QLineEdit;
+    m_LineEdit = new DSimpleLineEdit;
     m_LineEdit->setStyleSheet(s_LineEditStyle);
     m_LineEdit->setPlaceholderText(defaultText);
     m_LineEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -72,7 +79,14 @@ DLineEdit::DLineEdit(const QString& qurl, const QString& defaultText, QWidget *p
     layout->addWidget(m_Label);
     layout->addWidget(m_LineEdit);
     this->setLayout(layout);
-    connect(m_LineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(textChanged(QString)));
+    connect(m_LineEdit, SIGNAL(textChanged(QString)),
+            this, SIGNAL(textChanged(QString)));
+    connect(m_LineEdit, SIGNAL(textEdited(QString)),
+            this, SIGNAL(textEdited(QString)));
+    connect(m_LineEdit, SIGNAL(editingFinished()),
+            this, SIGNAL(editingFinished()));
+    connect(m_LineEdit, SIGNAL(focusIn(QFocusEvent *)),
+            this, SLOT(editFocusIn(QFocusEvent *)));
 }
 
 QString DLineEdit::text() const {
@@ -83,10 +97,25 @@ void DLineEdit::setText(const QString &text){
     m_LineEdit->setText(text);
 }
 
+void DLineEdit::overwriteText(const QString &text){
+    m_LineEdit->blockSignals(true);
+    m_LineEdit->setText(text);
+    m_LineEdit->blockSignals(false);
+}
+
+
 QLineEdit::EchoMode DLineEdit::echoMode() const {
     return m_LineEdit->echoMode();
 }
 
 void DLineEdit::setEchoMode(QLineEdit::EchoMode mode) {
     return m_LineEdit->setEchoMode(mode);
+}
+
+bool DLineEdit::hasFocus () const {
+    return m_LineEdit->hasFocus ();
+}
+
+void DLineEdit::editFocusIn(QFocusEvent *) {
+    emit editingBegin (m_LineEdit->text ());
 }

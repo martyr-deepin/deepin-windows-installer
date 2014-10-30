@@ -45,4 +45,5 @@ win32-msvc* {
 }
 
 RESOURCES += \
-    xsys.qrc
+    xsys.qrc \
+
