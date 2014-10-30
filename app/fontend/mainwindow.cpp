@@ -343,7 +343,7 @@ QWidget *MainWindow::InstallSuccessBody(){
 
 QWidget *MainWindow::InstallFailedBody(){
     QString hits = "<p style='color:white; font-size:14px;'>" +
-                tr("Installed Failed.") +
+                tr("Installation Failed.") +
                    "</p>";
     return HitsBodyWidget(FailIconURL, hits);
 }
@@ -378,7 +378,7 @@ DHeaderWidget *MainWindow::Header () {
 }
 
 QWidget *MainWindow::FinishFooter(){
-    DPushButton *finish = new DPushButton(tr("Finish"));
+    DPushButton *finish = new DPushButton(tr("Finished"));
     connect(finish, SIGNAL(clicked()), this, SLOT(close()));
 
     QList<DPushButton*> btlist;
@@ -419,7 +419,6 @@ void MainWindow::goInstallOptionCheck(){
         setUsername(m_Username);
         return;
     }
-
     //checkPassword
     if (m_Password.isEmpty ()) {
         setPassword(m_Password);
@@ -543,23 +542,23 @@ QWidget *MainWindow::UninstallFooter(){
 }
 
 QWidget *MainWindow::UninstallProcessBody(){
-    QString hits = tr("<p style='color:white; font-size:14px;'>"
-                      "Being uninstalled. Please wait... "
-                      "</p>");
+    QString hits = "<p style='color:white; font-size:14px;'>" +
+                   tr("Being uninstalled. Please wait... ") +
+                   "</p>";
     return HitsBodyWidget(WarningIconURL, hits);
 }
 
 QWidget *MainWindow::UninstallSuccessBody(){
-    QString hits = tr("<p style='color:white; font-size:14px;'>"
-                      "Uninstalled Successfully. "
-                      "</p>");
+    QString hits ="<p style='color:white; font-size:14px;'>" +
+                  tr( "Uninstalled Successfully. ") +
+                  "</p>";
     return HitsBodyWidget(SuccessIconURL, hits);
 }
 
 QWidget *MainWindow::UninstallFailedBody(){
-    QString hits = tr("<p style='color:white; font-size:14px;'>"
-                      "Uninstalled Failed."
-                      "</p>");
+    QString hits = "<p style='color:white; font-size:14px;'>" +
+                   tr("Uninstallation Failed.") +
+                   "</p>";
     return HitsBodyWidget(FailIconURL, hits);
 }
 

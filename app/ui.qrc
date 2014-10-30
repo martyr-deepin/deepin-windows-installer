@@ -6,5 +6,6 @@
         <file>fontend/images/warning.png</file>
         <file>fontend/images/lock.png</file>
         <file>fontend/images/user.png</file>
+        <file>data/deepin-windows-installer.png</file>
     </qresource>
 </RCC>

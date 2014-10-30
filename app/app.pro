@@ -55,22 +55,17 @@ RC_FILE += data\deepin-windows-installer.rc
 }
 
 
-TRANSLATIONS += po/en_US.ts \
-    po/zh_CN.ts \
-    po/am.ts \
-    po/cs.ts \
-    po/de_DE.ts \
-    po/es.ts \
-    po/es_CL.ts \
-    po/es_MX.ts \
-    po/fr.ts \
-    po/it.ts \
-    po/nb.ts \
-    po/pt_BR.ts \
-    po/pt_PT.ts \
-    po/ru.ts \
-    po/tr.ts \
-    po/zh_TW.ts \
+TRANSLATIONS += \
+po/en_US.ts \
+po/zh_CN.ts \
+po/zh_TW.ts \
+po/fr.ts \
+po/ru.ts \
+po/it.ts \
+po/es.ts \
+po/pt_BR.ts \
+po/tr.ts \
+po/cs.ts \
 
 
 #-------------------------------------------------

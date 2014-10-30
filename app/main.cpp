@@ -39,6 +39,7 @@ int main(int argc, char**argv) {
 
     MainWindow w;
     w.setWindowTitle (QObject::tr("Deepin Windows Installer"));
+    w.setWindowIcon(QIcon(":/data/deepin-windows-installer.png"));
     w.show();
 
     int ret = app.exec();
