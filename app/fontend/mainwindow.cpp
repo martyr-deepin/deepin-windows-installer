@@ -36,14 +36,17 @@ static const int DefaultMaxInstallSize = 64;
 static const QString FailIconURL = ":/fontend/images/fail.png";
 static const QString SuccessIconURL = ":/fontend/images/success.png";
 static const QString WarningIconURL = ":/fontend/images/warning.png";
-static const QString PasswordHits = QObject::tr("Password can not be empty. ");
-static const QString RepeatPasswordHits = QObject::tr("The two passwords do not match.");
+static QString PasswordHits;
+static QString RepeatPasswordHits;
 
 using namespace DeepinInstaller;
 
 MainWindow::MainWindow(QWidget *parent) :
     DeepinWidget::DMainWindow(parent)
 {
+    PasswordHits = QObject::tr("Password can not be empty.");
+    RepeatPasswordHits = QObject::tr("The two passwords do not match.");
+
     setFixedSize(340, 520);
 
     connect(this, SIGNAL(install()), this, SLOT(goInstall()));

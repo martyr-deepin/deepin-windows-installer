@@ -6,6 +6,16 @@
         <file>fontend/images/warning.png</file>
         <file>fontend/images/lock.png</file>
         <file>fontend/images/user.png</file>
-        <file>data/deepin-windows-installer.png</file>
+        <file>data/deepin-system-installer.png</file>
+        <file>po/cs.qm</file>
+        <file>po/en_US.qm</file>
+        <file>po/es.qm</file>
+        <file>po/fr.qm</file>
+        <file>po/it.qm</file>
+        <file>po/pt_BR.qm</file>
+        <file>po/ru.qm</file>
+        <file>po/tr.qm</file>
+        <file>po/zh_CN.qm</file>
+        <file>po/zh_TW.qm</file>
     </qresource>
 </RCC>

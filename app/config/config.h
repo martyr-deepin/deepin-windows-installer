@@ -3,7 +3,11 @@
 #include <QFont>
 
 void LoadFonts();
+
+void LoadTranslate(QApplication& app);
+
 QFont CurrentFont();
+
 
 namespace DeepinInstaller {
 

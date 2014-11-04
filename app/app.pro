@@ -54,7 +54,6 @@ RC_FILE += data\deepin-windows-installer.rc
 
 }
 
-
 TRANSLATIONS += \
 po/en_US.ts \
 po/zh_CN.ts \
@@ -67,6 +66,9 @@ po/pt_BR.ts \
 po/tr.ts \
 po/cs.ts \
 
+win32 {
+    system(..\tools\importPo.bat app.pro)
+}
 
 #-------------------------------------------------
 # libxsys

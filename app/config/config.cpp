@@ -71,3 +71,58 @@ void GenerateFontImage() {
     }
 }
 
+#include <QTranslator>
+#include <QFile>
+
+void LoadTranslate(QApplication& app) {
+    QTranslator *translator = new QTranslator();
+    QString tnapplang;
+    QString tnappcoun;
+    QString clangcode = "";
+    QStringList allappargs = app.arguments();
+    QList<QPair<QString, QString> > oppairs;
+    for (QList<QString>::const_iterator i = allappargs.constBegin(); i < allappargs.constEnd(); ++i) {
+        if (i->count('=') == 1) {
+            oppairs.append(QPair<QString, QString>(i->section('=', 0, 0).simplified(), i->section('=',1, 1).simplified()));
+        }
+    }
+    for (QList<QPair<QString, QString> >::const_iterator i = oppairs.constBegin(); i < oppairs.constEnd(); ++i) {
+        if (i->first.contains("lang", Qt::CaseInsensitive))
+        {
+            clangcode = i->second;
+            tnapplang = clangcode.left(2);
+            if (clangcode.contains('_') && clangcode.size() == 5)
+            {
+                tnappcoun = clangcode.section('_', -1, -1);
+            }
+            break;
+        }
+    }
+    if (clangcode.isEmpty())
+    {
+        clangcode = QLocale::system().name();
+        tnapplang = clangcode.left(2);
+        if (clangcode.contains('_') && clangcode.size() == 5)
+        {
+            tnappcoun = clangcode.section('_', -1, -1);
+        }
+    }
+
+    QString tranlateUrl;
+    if (tnappcoun.isEmpty()) {
+        tranlateUrl = QString(":/po/%1.qm").arg(tnapplang);
+    } else {
+        tranlateUrl = QString(":/po/%1_%2.qm").arg(tnapplang).arg(tnappcoun);
+    }
+
+    if (!QFile::exists(tranlateUrl)) {
+        tranlateUrl = ":/po/en_US.qm";
+    }
+
+    qDebug()<<&app<<"Load translate file: "<<tranlateUrl<<endl;
+
+    if (!translator->load(tranlateUrl)){
+        qDebug()<<"Load Translater Failed";
+    }
+    app.installTranslator(translator);
+}

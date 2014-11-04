@@ -26,20 +26,11 @@ int main(int argc, char**argv) {
     QApplication app(argc, argv);
     InstallLogHandler();
     LoadFonts();
-
-//    if (WindowsBackend::HasInstalled ()
-//            &&
-//    && !QApplication::arguments().contains ("-uninstall")) {
-//        QString uninstallerPath = Xapi::InsertTmpFile (QApplication::applicationFilePath ());
-//        qDebug()<<"Create Uninstaller"<<uninstallerPath;
-//        QProcess uninstller;
-//        uninstller.startDetached (QString("\"%1\"").arg (uninstallerPath) + " -uninstall");
-//        return 0;
-//    }
+    LoadTranslate(app);
 
     MainWindow w;
-    w.setWindowTitle (QObject::tr("Deepin Windows Installer"));
-    w.setWindowIcon(QIcon(":/data/deepin-windows-installer.png"));
+    w.setWindowTitle (QObject::tr("Deepin System Installer"));
+    w.setWindowIcon(QIcon(":/data/deepin-system-installer.png"));
     w.show();
 
     int ret = app.exec();

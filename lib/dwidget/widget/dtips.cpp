@@ -32,7 +32,7 @@ DTips::DTips(DWidget *parent):
         "}";
     this->setStyleSheet(qss);
     this->setFixedHeight(8 + 24);
-    this->setMinimumWidth(100);
+    this->setMinimumWidth(40);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     this->setAttribute(Qt::WA_ShowWithoutActivating, true);
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
