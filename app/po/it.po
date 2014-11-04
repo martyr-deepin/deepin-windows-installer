@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
-"PO-Revision-Date: 2014-11-03 08:42+0000\n"
+"PO-Revision-Date: 2014-11-03 13:24+0000\n"
 "Last-Translator: Massimo Antonio Carofano <real.massimo@hotmail.it>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/deepin-windows-installer/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -154,5 +154,5 @@ msgstr "Le due password non corrispondono."
 
 #: ../main.cpp:41
 msgctxt "QObject|"
-msgid "Deepin System Installer"
-msgstr "Deepin System Installer"
+msgid "Deepin Windows Installer"
+msgstr "Deepin Windows Installer"
