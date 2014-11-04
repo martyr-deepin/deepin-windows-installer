@@ -728,6 +728,7 @@ int WindowsBackend::InstallGrub() {
     grubInfo.insert("acpi_workarounds_title", "ACPI workarounds");
     grubInfo.insert("verbose_mode_title", "Verbose mode");
     grubInfo.insert("demo_mode_title",  "Demo mode");
+    grubInfo.insert("intall_path",  m_Info.InstallPrefix);
 
     QMap<QString, QString>::iterator iter;
     iter = grubInfo.begin();
