@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
-"PO-Revision-Date: 2014-11-03 14:06+0000\n"
+"PO-Revision-Date: 2014-11-04 18:23+0000\n"
 "Last-Translator: Carl Andersen <carl@manjaro.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/projects/p/deepin-windows-installer/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -15,27 +15,27 @@ msgstr ""
 "X-Language: en_US\n"
 "X-Qt-Contexts: true\n"
 
-#: ../fontend/mainwindow.cpp:67
+#: ../fontend/mainwindow.cpp:70
 msgctxt "MainWindow|"
 msgid "Username"
 msgstr "Brugernavn"
 
-#: ../fontend/mainwindow.cpp:92
+#: ../fontend/mainwindow.cpp:95
 msgctxt "MainWindow|"
 msgid "Password"
 msgstr "Kodeord"
 
-#: ../fontend/mainwindow.cpp:115
+#: ../fontend/mainwindow.cpp:118
 msgctxt "MainWindow|"
 msgid "Repeat Password"
 msgstr "Gentag Kodeord"
 
-#: ../fontend/mainwindow.cpp:228
+#: ../fontend/mainwindow.cpp:231
 msgctxt "MainWindow|"
 msgid "This operation will not affect any of your data. Please use it freely."
 msgstr "Denne operation vil ikke påvirke nogen af ​​dine data. Brug det frit."
 
-#: ../fontend/mainwindow.cpp:251
+#: ../fontend/mainwindow.cpp:254
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
@@ -43,80 +43,80 @@ msgid ""
 "space."
 msgstr "Sikre dig, at der er mindst en%  hardisk med mere end 10 GB ledig plads."
 
-#: ../fontend/mainwindow.cpp:260
+#: ../fontend/mainwindow.cpp:263
 msgctxt "MainWindow|"
 msgid "Start"
 msgstr "Start"
 
-#: ../fontend/mainwindow.cpp:268
+#: ../fontend/mainwindow.cpp:271
 msgctxt "MainWindow|"
 msgid "Exit"
 msgstr "Log ud"
 
-#: ../fontend/mainwindow.cpp:300
+#: ../fontend/mainwindow.cpp:303
 msgctxt "MainWindow|"
 msgid "Being installed. Please wait... "
 msgstr "Bliver installeret. Vent venligst..."
 
-#: ../fontend/mainwindow.cpp:338
+#: ../fontend/mainwindow.cpp:341
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
 "Installed Successfully. You need to restart your computer to experience %1."
 msgstr "Installeret. Du er nødt til at genstarte computeren for at opleve dit nye OS %1."
 
-#: ../fontend/mainwindow.cpp:346
+#: ../fontend/mainwindow.cpp:349
 msgctxt "MainWindow|"
 msgid "Installation Failed."
 msgstr "Installationen mislykkedes."
 
-#: ../fontend/mainwindow.cpp:352
+#: ../fontend/mainwindow.cpp:355
 msgctxt "MainWindow|"
 msgid "Restart Later"
 msgstr "Genstart senere"
 
-#: ../fontend/mainwindow.cpp:355
+#: ../fontend/mainwindow.cpp:358
 msgctxt "MainWindow|"
 msgid "Restart Now"
 msgstr "Genstart nu"
 
-#: ../fontend/mainwindow.cpp:381
+#: ../fontend/mainwindow.cpp:384
 msgctxt "MainWindow|"
 msgid "Finished"
 msgstr "Færdig"
 
-#: ../fontend/mainwindow.cpp:522
+#: ../fontend/mainwindow.cpp:525
 #, qt-format
 msgctxt "MainWindow|"
 msgid "You have installed %1."
 msgstr "Du har installeret %1."
 
-#: ../fontend/mainwindow.cpp:528
+#: ../fontend/mainwindow.cpp:531
 msgctxt "MainWindow|"
 msgid "Cancel"
 msgstr "Annuller"
 
-#: ../fontend/mainwindow.cpp:531
+#: ../fontend/mainwindow.cpp:534
 msgctxt "MainWindow|"
 msgid "Uninstall"
 msgstr "Afinstaller"
 
-#: ../fontend/mainwindow.cpp:534
+#: ../fontend/mainwindow.cpp:537
 msgctxt "MainWindow|"
 msgid "Reinstall"
 msgstr "Geninstaller"
 
-#: ../fontend/mainwindow.cpp:546
+#: ../fontend/mainwindow.cpp:549
 msgctxt "MainWindow|"
 msgid "Being uninstalled. Please wait... "
 msgstr "Bliver afinstalleret. Vent venligst..."
 
-#: ../fontend/mainwindow.cpp:553
+#: ../fontend/mainwindow.cpp:556
 msgctxt "MainWindow|"
 msgid "Uninstalled Successfully. "
 msgstr "Afinstalleret med succes."
 
-#: ../fontend/mainwindow.cpp:560
+#: ../fontend/mainwindow.cpp:563
 msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
 msgstr "Afinstallationen mislykkedes."
@@ -142,17 +142,17 @@ msgctxt "QObject|"
 msgid "You can not use the reserved username: %1."
 msgstr "Du kan ikke bruge dette reserverede brugernavn: %1"
 
-#: ../fontend/mainwindow.cpp:39
+#: ../fontend/mainwindow.cpp:47
 msgctxt "QObject|"
-msgid "Password can not be empty. "
+msgid "Password can not be empty."
 msgstr "Kodeord kan ikke være tomt."
 
-#: ../fontend/mainwindow.cpp:40
+#: ../fontend/mainwindow.cpp:48
 msgctxt "QObject|"
 msgid "The two passwords do not match."
 msgstr "De to adgangskoder er ikke ens."
 
-#: ../main.cpp:41
+#: ../main.cpp:32
 msgctxt "QObject|"
 msgid "Deepin Windows Installer"
 msgstr "Deepin Windows Installeringsprogram"
