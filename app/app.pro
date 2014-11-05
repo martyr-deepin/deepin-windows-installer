@@ -6,7 +6,7 @@
 QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = deepin-windows-installer
+TARGET = deepin-system-installer
 TEMPLATE = app
 
 SOURCES += \
@@ -50,7 +50,7 @@ DEFINES += _USING_V110_SDK71_
 QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator'uiAccess='false'"
 QMAKE_LFLAGS += /SUBSYSTEM:WINDOWS",5.1"
 
-RC_FILE += data\deepin-windows-installer.rc
+RC_FILE += data\deepin-system-installer.rc
 
 }
 
@@ -113,5 +113,5 @@ else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../lib/libuefi/libuefi.a
 
 OTHER_FILES += \
-    data/deepin-windows-installer.ico \
-    data/deepin-windows-installer.rc
+    data/deepin-system-installer.ico \
+    data/deepin-system-installer.rc

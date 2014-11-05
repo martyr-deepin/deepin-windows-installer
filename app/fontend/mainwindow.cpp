@@ -628,6 +628,7 @@ void MainWindow::updateProgress(int progress) {
 
 void MainWindow::reboot(){
     Xapi::Reboot ();
+    this->close();
 }
 
 void MainWindow::goUninstallSuccess(){

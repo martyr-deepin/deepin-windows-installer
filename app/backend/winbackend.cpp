@@ -19,7 +19,7 @@
 using namespace DeepinInstaller;
 
 static const QString UninstallRegistryKey = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\";
-static const QString AppName = "DeepinWindowsInstaller";
+static const QString AppName = "DeepinSystemInstaller";
 static const QString BootloaderKey = "VistaBootDrive";
 static const QString UninstallString = "UninstallString";
 static const QString RegistryKey = UninstallRegistryKey + AppName;
