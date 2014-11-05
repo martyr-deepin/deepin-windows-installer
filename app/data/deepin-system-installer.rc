@@ -1,7 +1,7 @@
-#define RT_MANIFEST 24 
+#define RT_MANIFEST 24
 #define APP_MANIFEST 1
 
-IDI_ICON1 ICON DISCARDABLE "deepin-windows-installer.ico"
+IDI_ICON1 ICON DISCARDABLE "deepin-system-installer.ico"
 
 1 VERSIONINFO
 FILEVERSION 1,1,1,1
@@ -13,12 +13,12 @@ BLOCK "StringFileInfo"
     {
         VALUE "CompanyName", "Deepin"
         VALUE "FileVersion", " "
-        VALUE "FileDescription", "Deepin Windows Installer"
-        VALUE "InternalName", "Deepin Windows Installer"
+        VALUE "FileDescription", "Deepin System Installer"
+        VALUE "InternalName", "Deepin System Installer"
         VALUE "LegalCopyright", "Copyright - Deepin - License - GNU GPL v3"
         VALUE "LegalTrademarks", " "
-        VALUE "OriginalFilename", "deepin-windows-installer.exe"
-        VALUE "ProductName", "Windows Installer"
+        VALUE "OriginalFilename", "deepin-system-installer.exe"
+        VALUE "ProductName", "System Installer"
         VALUE "ProductVersion", " "
     }
 }
