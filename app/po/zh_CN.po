@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
-"PO-Revision-Date: 2014-11-04 06:32+0000\n"
-"Last-Translator: deepin_transifex <xiabin@linuxdeepin.com>\n"
+"PO-Revision-Date: 2014-11-05 08:35+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/deepin-windows-installer/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,7 +145,7 @@ msgstr "不能使用保留用户名 ：%1"
 #: ../fontend/mainwindow.cpp:47
 msgctxt "QObject|"
 msgid "Password can not be empty."
-msgstr ""
+msgstr "密码不能为空  "
 
 #: ../fontend/mainwindow.cpp:48
 msgctxt "QObject|"
@@ -154,5 +154,5 @@ msgstr "两次输入的密码不一致 "
 
 #: ../main.cpp:32
 msgctxt "QObject|"
-msgid "Deepin Windows Installer"
-msgstr ""
+msgid "Deepin System Installer"
+msgstr "深度系统安装器"
