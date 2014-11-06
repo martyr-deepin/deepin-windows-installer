@@ -158,6 +158,25 @@ QString ToRelativePath(const QString& windowsPath) {
 }
 
 bool CreateVirtualFile(const QString& filePath, quint64 size) {
+    HANDLE priHandle;
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY, &priHandle)) {
+        qDebug()<<"OpenProcessToken  Failed.";
+    }
+
+    LUID luid;
+    if (!LookupPrivilegeValue(NULL, SE_MANAGE_VOLUME_NAME, &(luid))) {
+        qDebug()<<"LookupPrivilegeValue Failed.";
+    }
+
+    TOKEN_PRIVILEGES token;
+    token.PrivilegeCount = 1;
+    token.Privileges[0].Luid = luid;
+    token.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+    if (! AdjustTokenPrivileges(priHandle, FALSE, &(token), 0, NULL, NULL)) {
+        qDebug()<<"AdjustTokenPrivileges Failed.";
+    }
+    CloseHandle(priHandle);
+
     HANDLE handle = CreateFile(
                 filePath.toStdWString().c_str(),
                 GENERIC_READ | GENERIC_WRITE,
@@ -194,15 +213,16 @@ bool CreateVirtualFile(const QString& filePath, quint64 size) {
     }
 
     //zero File
-    quint64 bufSize = 1024*1024;
+    quint64 bufSize = 1024*32;
     quint8 *writeBuf = new quint8[bufSize];
     quint64 writeBufSize = bufSize;
     memset(writeBuf, NULL, writeBufSize);
-
+    quint64 clearBytes = 1000000;
     quint64 byteCleared = 0;
     quint64 bytesWrite = writeBufSize;
     DWORD bytesWrited = 0;
-    while(byteCleared < 1000000) {
+    byteCleared += bytesWrited;
+    while(byteCleared < clearBytes) {
         bytesWrite = writeBufSize;
         if (bytesWrite > (fileBytes - byteCleared)) {
             bytesWrite = fileBytes - byteCleared;
@@ -213,9 +233,37 @@ bool CreateVirtualFile(const QString& filePath, quint64 size) {
             qDebug()<<"Failed WriteFile "<<filePath;
             return false;
         }
+
         byteCleared += bytesWrited;
     }
 
+    filePos.QuadPart = fileBytes - clearBytes;
+    if (!SetFilePointerEx(handle, filePos, 0, FILE_BEGIN)) {
+        qDebug()<<"Failed SetFilePointerEx 0"<<filePath;
+        return false;
+    }
+
+    byteCleared = 0;
+    writeBufSize = bufSize;
+    bytesWrite = writeBufSize;
+    bytesWrited = 0;
+    while(byteCleared < clearBytes) {
+        bytesWrite = writeBufSize;
+        if (bytesWrite > (fileBytes - byteCleared)) {
+            bytesWrite = fileBytes - byteCleared;
+        }
+
+        bool ret=WriteFile(handle, writeBuf, bytesWrite, &bytesWrited, NULL);
+        if (!ret || (0 == bytesWrited)) {
+            qDebug()<<"Failed WriteFile "<<filePath;
+            return false;
+        }
+
+        byteCleared += bytesWrited;
+    }
+
+    delete[] writeBuf;
+    CloseHandle(handle);
     return true;
 }
 

@@ -424,7 +424,8 @@ void MainWindow::goInstallOptionCheck(){
     }
     //checkPassword
     if (m_Password.isEmpty ()) {
-        setPassword(m_Password);
+        emit setPasswordTips(PasswordHits);
+        emit showPasswordTips();
         return;
     }
 
@@ -449,13 +450,13 @@ void MainWindow::goInstallOptionCheck(){
 }
 
 void MainWindow::installDone(int ret) {
-    emit progressDone();
     qDebug()<<"installDone";
     if (Backend::Success == ret) {
         goInstallSuccess();
-        return;
+    } else {
+        goInstallFailed();
     }
-    goInstallFailed();
+    emit progressDone();
 }
 
 void MainWindow::uninstallDone(int ret) {
