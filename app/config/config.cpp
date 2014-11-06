@@ -119,7 +119,7 @@ void LoadTranslate(QApplication& app) {
         tranlateUrl = ":/po/en_US.qm";
     }
 
-    qDebug()<<&app<<"Load translate file: "<<tranlateUrl<<endl;
+    qDebug()<<&app<<"Load translate file: "<<tranlateUrl;
 
     if (!translator->load(tranlateUrl)){
         qDebug()<<"Load Translater Failed";

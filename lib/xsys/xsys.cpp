@@ -397,13 +397,64 @@ void Reboot() {
 
 #include <intrin.h>
 
-Arch CpuArch () {
-#ifdef Q_OS_WIN32
-    int CPUInfo[4];
-    __cpuid(CPUInfo, 0);
-    return  ((CPUInfo[3] & 0x20000000) || false) ? AMD64 : X86;
+
+
+#ifdef _WIN32
+#include <limits.h>
+#include <intrin.h>
+typedef unsigned __int32  uint32_t;
+
+#else
+#include <stdint.h>
 #endif
+
+class CPUID {
+  uint32_t regs[4];
+
+public:
+  explicit CPUID(unsigned i) {
+#ifdef _WIN32
+    __cpuid((int *)regs, (int)i);
+
+#else
+    asm volatile
+      ("cpuid" : "=a" (regs[0]), "=b" (regs[1]), "=c" (regs[2]), "=d" (regs[3])
+       : "a" (i), "c" (0));
+    // ECX is set to zero for CPUID function 4
+#endif
+  }
+
+  const uint32_t &EAX() const {return regs[0];}
+  const uint32_t &EBX() const {return regs[1];}
+  const uint32_t &ECX() const {return regs[2];}
+  const uint32_t &EDX() const {return regs[3];}
+};
+
+
+#define bit_LM (1 << 29)
+
+bool Check64Bit () {
+  unsigned int maxLevel;
+  unsigned int extLevel;
+  bool hasLongmode = false;
+
+  CPUID cpuIDMax(0);
+  maxLevel = cpuIDMax.EAX();
+  if (maxLevel == 0)
+    return hasLongmode;
+
+  CPUID cpuIDExt(0x80000000);
+  extLevel = cpuIDExt.EAX();
+  if (extLevel < 0x80000000)
+    return hasLongmode;
+
+  CPUID cpuIDLM(0x80000001);
+  hasLongmode = !!(cpuIDLM.EDX() & bit_LM);
+  return hasLongmode;
 }
 
+Arch CpuArch () {
+    return Check64Bit()?AMD64:X86;
+}
 
 }

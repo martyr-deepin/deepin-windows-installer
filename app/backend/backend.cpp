@@ -130,7 +130,7 @@ void Backend::AsyncInstall() {
 
 void Backend::AsyncUninstall() {
     int ret = Failed;
-    FunctionLoger<int> log("AsyncInstall", ret);
+    FunctionLoger<int> log("AsyncUninstall", ret);
     ret = this->UninstallApp();
     emit Done(ret);
 }
@@ -281,24 +281,27 @@ QString Backend::GetRelesaseVersion(const QString& imagePath){
         + "\"" + imagePath + "\"";
     Xapi::SynExec(sevenz, cmdline);
 
-    qDebug()<<"Open File info";
-    QFile diskdefine(m_Info.InstallPath + "/install/boot/info");
-    diskdefine.open (QIODevice::ReadOnly);
-    QString content = QString(diskdefine.readAll()).split ("\n").first ();
+    QString infoPath = QDir::toNativeSeparators(m_Info.InstallPath + "/install/boot/info");
+    QFile diskdefine(infoPath);
+    if (!diskdefine.open (QIODevice::ReadOnly)) {
+        qDebug()<<"Open info failed"<<infoPath<<diskdefine.errorString();
+        return "";
+    }
+    QString content = QString(diskdefine.readAll());
     diskdefine.close ();
-    return content.remove ("\r");
 
-    // TODO: fiter 32 bit cpu
-//    QStringList releaselist = content.split ("\n").filter ("#define DISKNAME ").filter ("deepin");
+    Xapi::Arch arch = Xapi::CpuArch ();
+    if (Xapi::X86 == arch && !content.contains("i386")) {
+        qDebug()<<"Skip iso"<<content;
+        return "";
+    }
 
-////    Xapi::Arch arch = Xapi::CpuArch ();
-////    if (Xapi::X86 == arch) {
-////        releaselist = releaselist.filter ("i386");
-////    }
-//    if (releaselist.isEmpty ()) {
-//        return "";
-//    }
-//    return releaselist.first().remove("#define DISKNAME ");
+    if (!content.contains("Deepin")) {
+        qDebug()<<"Skip iso"<<content;
+        return "";
+    }
+
+    return content.remove ("\r").remove("\n");
 }
 
 QString Backend::FetchImageFiles() {

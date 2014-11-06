@@ -63,7 +63,6 @@ void Reboot();
 enum Arch{
     AMD64,
     X86,
-    IA64,
     UnknownArch,
 };
 
