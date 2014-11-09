@@ -1,10 +1,11 @@
 # 
 # Translators:
+# Marcell Lévai, 2014
 # SlazO <blum1866@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
-"PO-Revision-Date: 2014-11-05 06:22+0000\n"
+"PO-Revision-Date: 2014-11-17 05:32+0000\n"
 "Last-Translator: deepin_transifex <xiabin@linuxdeepin.com>\n"
 "Language-Team: Hungarian (http://www.transifex.com/projects/p/deepin-windows-installer/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -53,73 +54,78 @@ msgctxt "MainWindow|"
 msgid "Exit"
 msgstr "Kilépés"
 
-#: ../fontend/mainwindow.cpp:303
+#: ../fontend/mainwindow.cpp:308
 msgctxt "MainWindow|"
 msgid "Being installed. Please wait... "
 msgstr "A telepítés folyamatban van. Kérem várjon..."
 
-#: ../fontend/mainwindow.cpp:341
+#: ../fontend/mainwindow.cpp:346
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
 "Installed Successfully. You need to restart your computer to experience %1."
 msgstr "A telepítés sikeresen befejeződött. A %1 megismeréséhez újra kell indítani a számítógépet."
 
-#: ../fontend/mainwindow.cpp:349
+#: ../fontend/mainwindow.cpp:354
 msgctxt "MainWindow|"
 msgid "Installation Failed."
 msgstr "Telepítés sikertelen"
 
-#: ../fontend/mainwindow.cpp:355
+#: ../fontend/mainwindow.cpp:360
 msgctxt "MainWindow|"
 msgid "Restart Later"
 msgstr "Újraindítás később"
 
-#: ../fontend/mainwindow.cpp:358
+#: ../fontend/mainwindow.cpp:363
 msgctxt "MainWindow|"
 msgid "Restart Now"
 msgstr "Újraindítás most"
 
-#: ../fontend/mainwindow.cpp:384
+#: ../fontend/mainwindow.cpp:389
 msgctxt "MainWindow|"
 msgid "Finished"
 msgstr "Befejezve"
 
-#: ../fontend/mainwindow.cpp:525
+#: ../fontend/mainwindow.cpp:531
 #, qt-format
 msgctxt "MainWindow|"
 msgid "You have installed %1."
 msgstr "Telepítetted a %1-t"
 
-#: ../fontend/mainwindow.cpp:531
+#: ../fontend/mainwindow.cpp:537
 msgctxt "MainWindow|"
 msgid "Cancel"
 msgstr "Mégse"
 
-#: ../fontend/mainwindow.cpp:534
+#: ../fontend/mainwindow.cpp:540
 msgctxt "MainWindow|"
 msgid "Uninstall"
 msgstr "Eltávolítás"
 
-#: ../fontend/mainwindow.cpp:537
+#: ../fontend/mainwindow.cpp:543
 msgctxt "MainWindow|"
 msgid "Reinstall"
 msgstr "Újratelepítés"
 
-#: ../fontend/mainwindow.cpp:549
+#: ../fontend/mainwindow.cpp:555
 msgctxt "MainWindow|"
 msgid "Being uninstalled. Please wait... "
 msgstr "Az eltávolítás folyamatban van. Kérem várjon..."
 
-#: ../fontend/mainwindow.cpp:556
+#: ../fontend/mainwindow.cpp:562
 msgctxt "MainWindow|"
 msgid "Uninstalled Successfully. "
 msgstr "Sikeresen eltávolítva."
 
-#: ../fontend/mainwindow.cpp:563
+#: ../fontend/mainwindow.cpp:569
 msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
 msgstr "Az eltávolítás sikertelen."
+
+#: ../backend/backend.h:161
+msgctxt "QObject|"
+msgid "Deepin System Installer"
+msgstr "Deepin rendszer telepítő"
 
 #: ../backend/utils.cpp:247 ../backend/utils.cpp:279
 msgctxt "QObject|"
@@ -137,22 +143,16 @@ msgid "Username can not be empty. "
 msgstr "A felhasználónév nem lehet üres."
 
 #: ../backend/utils.cpp:286
-#, qt-format
 msgctxt "QObject|"
-msgid "You can not use the reserved username: %1."
-msgstr "Nem használhatod a kívánt felhasználónevet: %1."
+msgid "The username has been used by system."
+msgstr ""
 
 #: ../fontend/mainwindow.cpp:47
 msgctxt "QObject|"
 msgid "Password can not be empty."
-msgstr ""
+msgstr "A jelszó nem lehet üres."
 
 #: ../fontend/mainwindow.cpp:48
 msgctxt "QObject|"
 msgid "The two passwords do not match."
 msgstr "A két jelszó nem egyezik."
-
-#: ../main.cpp:32
-msgctxt "QObject|"
-msgid "Deepin System Installer"
-msgstr ""

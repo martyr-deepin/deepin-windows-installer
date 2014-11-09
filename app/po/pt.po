@@ -1,39 +1,39 @@
 # 
 # Translators:
-# Piotr Strębski <strebski@o2.pl>, 2014
+# Ricardo Simões <xmcorporation@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
 "PO-Revision-Date: 2014-11-17 05:32+0000\n"
 "Last-Translator: deepin_transifex <xiabin@linuxdeepin.com>\n"
-"Language-Team: Polish (http://www.transifex.com/projects/p/deepin-windows-installer/language/pl/)\n"
+"Language-Team: Portuguese (http://www.transifex.com/projects/p/deepin-windows-installer/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: pt\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Language: en_US\n"
 "X-Qt-Contexts: true\n"
 
 #: ../fontend/mainwindow.cpp:70
 msgctxt "MainWindow|"
 msgid "Username"
-msgstr "Nazwa użytkownika"
+msgstr "Nome de Utilizador"
 
 #: ../fontend/mainwindow.cpp:95
 msgctxt "MainWindow|"
 msgid "Password"
-msgstr "Hasło"
+msgstr "Palavra-passe"
 
 #: ../fontend/mainwindow.cpp:118
 msgctxt "MainWindow|"
 msgid "Repeat Password"
-msgstr "Powtórz hasło"
+msgstr "Repita Palavra-passe"
 
 #: ../fontend/mainwindow.cpp:231
 msgctxt "MainWindow|"
 msgid "This operation will not affect any of your data. Please use it freely."
-msgstr "Ta operacja nie wpłynie w żaden sposób na Twoje dane. Można ją bezpiecznie używać."
+msgstr "Esta operação não afetará nenhum dos seus dados. Por favor use-a livremente."
 
 #: ../fontend/mainwindow.cpp:254
 #, qt-format
@@ -41,105 +41,105 @@ msgctxt "MainWindow|"
 msgid ""
 "Please ensure that there is at least one%1 disk having more than 10GB free "
 "space."
-msgstr "Prosimy się upewnić, że co najmniej jeden %1 dysk posiada przynajmniej 10GB wolnej przestrzeni."
+msgstr "Por favor certifique-se que há pelo menos um%1 disco que tem mais do que 10GB de espaço livre. "
 
 #: ../fontend/mainwindow.cpp:263
 msgctxt "MainWindow|"
 msgid "Start"
-msgstr "Rozpocznij"
+msgstr "Iniciar"
 
 #: ../fontend/mainwindow.cpp:271
 msgctxt "MainWindow|"
 msgid "Exit"
-msgstr "Wyjdź"
+msgstr "Sair"
 
 #: ../fontend/mainwindow.cpp:308
 msgctxt "MainWindow|"
 msgid "Being installed. Please wait... "
-msgstr "Rozpoczęto instalację. Prosimy czekać..."
+msgstr "A ser instalado. Por favor espere..."
 
 #: ../fontend/mainwindow.cpp:346
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
 "Installed Successfully. You need to restart your computer to experience %1."
-msgstr "Instalacja zakończona pomyślnie. Musisz teraz ponownie uruchomić swój komputer, aby móc doświadczać %1."
+msgstr "Instalado com sucesso. Tem de reiniciar o seu computador para experimentar %1."
 
 #: ../fontend/mainwindow.cpp:354
 msgctxt "MainWindow|"
 msgid "Installation Failed."
-msgstr "Błąd instalacji."
+msgstr "Instalação Falhada."
 
 #: ../fontend/mainwindow.cpp:360
 msgctxt "MainWindow|"
 msgid "Restart Later"
-msgstr "Uruchom ponownie później"
+msgstr "Reiniciar Mais Tarde"
 
 #: ../fontend/mainwindow.cpp:363
 msgctxt "MainWindow|"
 msgid "Restart Now"
-msgstr "Uruchom ponownie teraz"
+msgstr "Reiniciar Agora"
 
 #: ../fontend/mainwindow.cpp:389
 msgctxt "MainWindow|"
 msgid "Finished"
-msgstr "Ukończono"
+msgstr "Terminado"
 
 #: ../fontend/mainwindow.cpp:531
 #, qt-format
 msgctxt "MainWindow|"
 msgid "You have installed %1."
-msgstr "Zainstalowałeś %1."
+msgstr "Instalou %1."
 
 #: ../fontend/mainwindow.cpp:537
 msgctxt "MainWindow|"
 msgid "Cancel"
-msgstr "Anuluj"
+msgstr "Cancelar"
 
 #: ../fontend/mainwindow.cpp:540
 msgctxt "MainWindow|"
 msgid "Uninstall"
-msgstr "Odinstaluj"
+msgstr "Desinstalar"
 
 #: ../fontend/mainwindow.cpp:543
 msgctxt "MainWindow|"
 msgid "Reinstall"
-msgstr "Ponownie zainstaluj"
+msgstr "Reinstalar"
 
 #: ../fontend/mainwindow.cpp:555
 msgctxt "MainWindow|"
 msgid "Being uninstalled. Please wait... "
-msgstr "Rozpoczęto odinstalowywanie. Prosimy czekać..."
+msgstr "A ser desinstalado. Por favor espere..."
 
 #: ../fontend/mainwindow.cpp:562
 msgctxt "MainWindow|"
 msgid "Uninstalled Successfully. "
-msgstr "Pomyślnie odinstalowano."
+msgstr "Desinstalado com Sucesso."
 
 #: ../fontend/mainwindow.cpp:569
 msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
-msgstr "Błąd odinstalowywania."
+msgstr "Desinstalação Falhada."
 
 #: ../backend/backend.h:161
 msgctxt "QObject|"
 msgid "Deepin System Installer"
-msgstr "Instalator systemu Deepin"
+msgstr "Instalador de Sistema Deepin"
 
 #: ../backend/utils.cpp:247 ../backend/utils.cpp:279
 msgctxt "QObject|"
 msgid "The first character must be in lower case."
-msgstr "Pierwszy znak musi być z małej litery."
+msgstr "O primeiro caractére tem de ser em letra minúscula."
 
 #: ../backend/utils.cpp:258 ../backend/utils.cpp:273
 msgctxt "QObject|"
 msgid "Username must comprise a~z, 0~9, - or _. "
-msgstr "Nazwa użytkownika musi składać się tylko ze znaków: a-z, 0-9, - lub _. "
+msgstr "O nome de utilizador deve incluir a~z, 0~9, - ou _. "
 
 #: ../backend/utils.cpp:267
 msgctxt "QObject|"
 msgid "Username can not be empty. "
-msgstr "Nazwa użytkownika nie może być pusta."
+msgstr "O nome de utilizador não pode estar vazio."
 
 #: ../backend/utils.cpp:286
 msgctxt "QObject|"
@@ -149,9 +149,9 @@ msgstr ""
 #: ../fontend/mainwindow.cpp:47
 msgctxt "QObject|"
 msgid "Password can not be empty."
-msgstr "Hasło nie może być puste."
+msgstr "A palavra-passe não pode estar vazia."
 
 #: ../fontend/mainwindow.cpp:48
 msgctxt "QObject|"
 msgid "The two passwords do not match."
-msgstr "Oba hasła nie pasują do siebie."
+msgstr "As duas palavras-passe não coincidem."

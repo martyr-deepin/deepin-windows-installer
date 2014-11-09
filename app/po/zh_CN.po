@@ -1,10 +1,11 @@
 # 
 # Translators:
 # Catherinelin <linhongxia@linuxdeepin.com>, 2014
+# szd_liufei <liufei@linuxdeepin.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
-"PO-Revision-Date: 2014-11-05 08:35+0000\n"
+"PO-Revision-Date: 2014-11-17 06:05+0000\n"
 "Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/deepin-windows-installer/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +34,7 @@ msgstr "重复密码"
 #: ../fontend/mainwindow.cpp:231
 msgctxt "MainWindow|"
 msgid "This operation will not affect any of your data. Please use it freely."
-msgstr "此操作不会影响您的任何数据，请放心使用      "
+msgstr "此操作不会影响您的任何数据，请放心使用。"
 
 #: ../fontend/mainwindow.cpp:254
 #, qt-format
@@ -41,7 +42,7 @@ msgctxt "MainWindow|"
 msgid ""
 "Please ensure that there is at least one%1 disk having more than 10GB free "
 "space."
-msgstr "请确保至少有一个%1磁盘有10GB以上空余空间"
+msgstr "请确保至少有一个%1磁盘有10GB以上空余空间。"
 
 #: ../fontend/mainwindow.cpp:263
 msgctxt "MainWindow|"
@@ -53,73 +54,78 @@ msgctxt "MainWindow|"
 msgid "Exit"
 msgstr "退出"
 
-#: ../fontend/mainwindow.cpp:303
+#: ../fontend/mainwindow.cpp:308
 msgctxt "MainWindow|"
 msgid "Being installed. Please wait... "
 msgstr "正在安装，请稍后..."
 
-#: ../fontend/mainwindow.cpp:341
+#: ../fontend/mainwindow.cpp:346
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
 "Installed Successfully. You need to restart your computer to experience %1."
-msgstr "安装成功。需要重启电脑以体验%1"
+msgstr "安装成功。需要重启电脑以体验%1。"
 
-#: ../fontend/mainwindow.cpp:349
+#: ../fontend/mainwindow.cpp:354
 msgctxt "MainWindow|"
 msgid "Installation Failed."
 msgstr "安装失败"
 
-#: ../fontend/mainwindow.cpp:355
+#: ../fontend/mainwindow.cpp:360
 msgctxt "MainWindow|"
 msgid "Restart Later"
 msgstr "稍后重启"
 
-#: ../fontend/mainwindow.cpp:358
+#: ../fontend/mainwindow.cpp:363
 msgctxt "MainWindow|"
 msgid "Restart Now"
 msgstr "现在重启"
 
-#: ../fontend/mainwindow.cpp:384
+#: ../fontend/mainwindow.cpp:389
 msgctxt "MainWindow|"
 msgid "Finished"
 msgstr "完成"
 
-#: ../fontend/mainwindow.cpp:525
+#: ../fontend/mainwindow.cpp:531
 #, qt-format
 msgctxt "MainWindow|"
 msgid "You have installed %1."
-msgstr "已经安装了%1"
+msgstr "已经安装了%1。"
 
-#: ../fontend/mainwindow.cpp:531
+#: ../fontend/mainwindow.cpp:537
 msgctxt "MainWindow|"
 msgid "Cancel"
 msgstr "取消"
 
-#: ../fontend/mainwindow.cpp:534
+#: ../fontend/mainwindow.cpp:540
 msgctxt "MainWindow|"
 msgid "Uninstall"
 msgstr "卸载"
 
-#: ../fontend/mainwindow.cpp:537
+#: ../fontend/mainwindow.cpp:543
 msgctxt "MainWindow|"
 msgid "Reinstall"
 msgstr "重新安装"
 
-#: ../fontend/mainwindow.cpp:549
+#: ../fontend/mainwindow.cpp:555
 msgctxt "MainWindow|"
 msgid "Being uninstalled. Please wait... "
 msgstr "正在卸载，请稍后..."
 
-#: ../fontend/mainwindow.cpp:556
+#: ../fontend/mainwindow.cpp:562
 msgctxt "MainWindow|"
 msgid "Uninstalled Successfully. "
-msgstr "卸载成功"
+msgstr "卸载成功。"
 
-#: ../fontend/mainwindow.cpp:563
+#: ../fontend/mainwindow.cpp:569
 msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
-msgstr "卸载失败"
+msgstr "卸载失败。"
+
+#: ../backend/backend.h:161
+msgctxt "QObject|"
+msgid "Deepin System Installer"
+msgstr "深度系统安装器"
 
 #: ../backend/utils.cpp:247 ../backend/utils.cpp:279
 msgctxt "QObject|"
@@ -137,10 +143,9 @@ msgid "Username can not be empty. "
 msgstr "用户名不能为空"
 
 #: ../backend/utils.cpp:286
-#, qt-format
 msgctxt "QObject|"
-msgid "You can not use the reserved username: %1."
-msgstr "不能使用保留用户名 ：%1"
+msgid "The username has been used by system."
+msgstr "此用户名已被系统使用"
 
 #: ../fontend/mainwindow.cpp:47
 msgctxt "QObject|"
@@ -151,8 +156,3 @@ msgstr "密码不能为空  "
 msgctxt "QObject|"
 msgid "The two passwords do not match."
 msgstr "两次输入的密码不一致 "
-
-#: ../main.cpp:32
-msgctxt "QObject|"
-msgid "Deepin System Installer"
-msgstr "深度系统安装器"
