@@ -72,6 +72,7 @@ private:
     QWidget *InstallOptionBody();
     QWidget *InstallFooter();
     QWidget *ExitFooter();
+    QWidget *NoSpaceBody(const QString& hits);
 
     QWidget *InstallProcessBody();
     QWidget *EmptyFooter();

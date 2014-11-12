@@ -252,8 +252,8 @@ QWidget *MainWindow::InstallOptionBody(){
         }
 
         QString errHits = tr("Please ensure that there is at least one%1 disk having more than 10GB free space.").arg (style);
-        hits->setText ("<p style='color:red; font-size:10px;'>" + errHits + "</p>");
-        layout->addStretch ();
+
+        return NoSpaceBody(errHits);
     }
     widget->setLayout(layout);
     return widget;
@@ -296,6 +296,11 @@ QWidget * HitsBodyWidget(const QString &icon, const QString &text){
 
     widget->setLayout(layout);
     return widget;
+}
+
+QWidget *MainWindow::NoSpaceBody(const QString& errhits){
+    QString hits = "<p style='color:white; font-size:14px;'>" + errhits + "</p>";
+    return HitsBodyWidget(WarningIconURL, hits);
 }
 
 QWidget *MainWindow::InstallProcessBody(){
