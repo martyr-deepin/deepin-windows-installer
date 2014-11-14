@@ -16,10 +16,6 @@
 #include <QProcess>
 #include <Windows.h>
 
-using namespace DeepinInstaller;
-
-void GenerateFontImage();
-
 int main(int argc, char**argv) {
     Q_INIT_RESOURCE(xsys);
     Q_INIT_RESOURCE(dwidget);
@@ -29,7 +25,7 @@ int main(int argc, char**argv) {
     LoadTranslate(app);
 
     MainWindow w;
-    w.setWindowTitle (QObject::tr("Deepin System Installer"));
+    w.setWindowTitle (DeepinInstaller::Title);
     w.setWindowIcon(QIcon(":/data/deepin-system-installer.png"));
     w.show();
 

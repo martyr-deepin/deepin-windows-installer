@@ -283,7 +283,7 @@ bool IsValidUsername(const QString& username, QString& error){
     size_t n = sizeof(s_ReserveUsername)/sizeof(s_ReserveUsername[0]);
     for (size_t i =0; i < n; ++i) {
         if(0 == username.compare(s_ReserveUsername[i])) {
-            error = QString(QObject::tr("You can not use the reserved username: %1.")).arg(username);
+            error = QString(QObject::tr("The username has been used by system."));
             return false;
         }
     }

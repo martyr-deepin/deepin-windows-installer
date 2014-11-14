@@ -45,72 +45,77 @@ msgctxt "MainWindow|"
 msgid "Exit"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:303
+#: ../fontend/mainwindow.cpp:308
 msgctxt "MainWindow|"
 msgid "Being installed. Please wait... "
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:341
+#: ../fontend/mainwindow.cpp:346
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
 "Installed Successfully. You need to restart your computer to experience %1."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:349
+#: ../fontend/mainwindow.cpp:354
 msgctxt "MainWindow|"
 msgid "Installation Failed."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:355
+#: ../fontend/mainwindow.cpp:360
 msgctxt "MainWindow|"
 msgid "Restart Later"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:358
+#: ../fontend/mainwindow.cpp:363
 msgctxt "MainWindow|"
 msgid "Restart Now"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:384
+#: ../fontend/mainwindow.cpp:389
 msgctxt "MainWindow|"
 msgid "Finished"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:525
+#: ../fontend/mainwindow.cpp:531
 #, qt-format
 msgctxt "MainWindow|"
 msgid "You have installed %1."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:531
+#: ../fontend/mainwindow.cpp:537
 msgctxt "MainWindow|"
 msgid "Cancel"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:534
+#: ../fontend/mainwindow.cpp:540
 msgctxt "MainWindow|"
 msgid "Uninstall"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:537
+#: ../fontend/mainwindow.cpp:543
 msgctxt "MainWindow|"
 msgid "Reinstall"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:549
+#: ../fontend/mainwindow.cpp:555
 msgctxt "MainWindow|"
 msgid "Being uninstalled. Please wait... "
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:556
+#: ../fontend/mainwindow.cpp:562
 msgctxt "MainWindow|"
 msgid "Uninstalled Successfully. "
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:563
+#: ../fontend/mainwindow.cpp:569
 msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
+msgstr ""
+
+#: ../backend/backend.h:161
+msgctxt "QObject|"
+msgid "Deepin System Installer"
 msgstr ""
 
 #: ../backend/utils.cpp:247 ../backend/utils.cpp:279
@@ -129,9 +134,8 @@ msgid "Username can not be empty. "
 msgstr ""
 
 #: ../backend/utils.cpp:286
-#, qt-format
 msgctxt "QObject|"
-msgid "You can not use the reserved username: %1."
+msgid "The username has been used by system."
 msgstr ""
 
 #: ../fontend/mainwindow.cpp:47
@@ -142,9 +146,4 @@ msgstr ""
 #: ../fontend/mainwindow.cpp:48
 msgctxt "QObject|"
 msgid "The two passwords do not match."
-msgstr ""
-
-#: ../main.cpp:32
-msgctxt "QObject|"
-msgid "Deepin System Installer"
 msgstr ""

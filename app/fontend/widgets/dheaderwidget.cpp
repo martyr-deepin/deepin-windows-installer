@@ -17,17 +17,18 @@ DHeaderWidget::DHeaderWidget(QWidget *parent) :
     btlayout->addWidget(m_CloseButton);
     btlayout->setAlignment(m_CloseButton, Qt::AlignRight);
 
-    QHBoxLayout *logolayout = new QHBoxLayout();
+    QVBoxLayout *logolayout = new QVBoxLayout();
     QLabel *logolabel = new QLabel();
     logolabel->setPixmap(QPixmap(":/fontend/images/logo.png"));
     logolayout->addStretch();
     logolayout->addWidget(logolabel);
-    logolayout->setAlignment(logolabel, Qt::AlignBottom);
-    QLabel *versionlabel = new QLabel(QString("<a style='color:white; font-size:11px;'>%1</a>").arg(DeepinInstaller::Version));
+    logolayout->setAlignment(logolabel, Qt::AlignCenter);
+    logolayout->addSpacing(10);
+    QLabel *versionlabel = new QLabel(QString("<a style='color:white; font-size:12px;font-weight:bold;'>%1 </a><a style='color:white; font-size:8px;'>%2</a>").arg(DeepinInstaller::Title).arg(DeepinInstaller::Version));
     versionlabel->setIndent(2);
     logolayout->addSpacing(2);
     logolayout->addWidget(versionlabel);
-    logolayout->setAlignment(versionlabel, Qt::AlignBottom);
+    logolayout->setAlignment(versionlabel, Qt::AlignCenter);
     logolayout->addStretch();
 
     QVBoxLayout *layout = new QVBoxLayout;

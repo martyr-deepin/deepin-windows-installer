@@ -52,7 +52,7 @@ public:
             QObject *parent = 0);
 
     void SetInstallParam(const QString &username,
-                         const QString &password,                         
+                         const QString &password,
                          const QString &locale,
                          const QString& installTarget,
                          const QString& isoPath,
@@ -157,5 +157,6 @@ protected:
 
 typedef int (Backend::*InstallAction)(void);
 
-const QString Version = "0.10";
+const QString Version = "v1.0";
+const QString Title = QObject::tr("Deepin System Installer");
 }
