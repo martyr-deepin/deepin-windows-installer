@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
-"PO-Revision-Date: 2014-11-17 05:32+0000\n"
-"Last-Translator: deepin_transifex <xiabin@linuxdeepin.com>\n"
+"PO-Revision-Date: 2014-11-17 18:44+0000\n"
+"Last-Translator: Carl Andersen <carl@manjaro.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/projects/p/deepin-windows-installer/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,7 +121,7 @@ msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
 msgstr "Afinstallationen mislykkedes."
 
-#: ../backend/backend.h:161
+#: ../backend/backend.cpp:23
 msgctxt "QObject|"
 msgid "Deepin System Installer"
 msgstr "Deepin systeminstallering"
@@ -144,7 +144,7 @@ msgstr "Brugernavn kan ikke være tomt."
 #: ../backend/utils.cpp:286
 msgctxt "QObject|"
 msgid "The username has been used by system."
-msgstr ""
+msgstr "Brugernavnet er blevet brugt af systemet."
 
 #: ../fontend/mainwindow.cpp:47
 msgctxt "QObject|"

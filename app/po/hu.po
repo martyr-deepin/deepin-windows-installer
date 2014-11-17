@@ -122,7 +122,7 @@ msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
 msgstr "Az eltávolítás sikertelen."
 
-#: ../backend/backend.h:161
+#: ../backend/backend.cpp:23
 msgctxt "QObject|"
 msgid "Deepin System Installer"
 msgstr "Deepin rendszer telepítő"

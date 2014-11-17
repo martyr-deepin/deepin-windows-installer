@@ -121,7 +121,7 @@ msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
 msgstr "Удаление неудачно."
 
-#: ../backend/backend.h:161
+#: ../backend/backend.cpp:23
 msgctxt "QObject|"
 msgid "Deepin System Installer"
 msgstr "Deepin System Installer"

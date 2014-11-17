@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
-"PO-Revision-Date: 2014-11-17 05:32+0000\n"
-"Last-Translator: deepin_transifex <xiabin@linuxdeepin.com>\n"
+"PO-Revision-Date: 2014-11-17 19:17+0000\n"
+"Last-Translator: Ricardo Simões <xmcorporation@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/projects/p/deepin-windows-installer/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,7 +121,7 @@ msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
 msgstr "Desinstalação Falhada."
 
-#: ../backend/backend.h:161
+#: ../backend/backend.cpp:23
 msgctxt "QObject|"
 msgid "Deepin System Installer"
 msgstr "Instalador de Sistema Deepin"
@@ -144,7 +144,7 @@ msgstr "O nome de utilizador não pode estar vazio."
 #: ../backend/utils.cpp:286
 msgctxt "QObject|"
 msgid "The username has been used by system."
-msgstr ""
+msgstr "O nome de utilizador foi usado pelo sistema."
 
 #: ../fontend/mainwindow.cpp:47
 msgctxt "QObject|"
