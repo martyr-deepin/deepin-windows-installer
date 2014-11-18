@@ -19,6 +19,10 @@
 
 namespace DeepinInstaller{
 
+const QString AppTitle() {
+    return QObject::tr("Deepin System Installer");
+}
+
 extern QString ToDeepinUsername(const QString& username);
 extern QString ToDeepinHostname(const QString& username);
 

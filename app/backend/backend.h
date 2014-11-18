@@ -158,5 +158,7 @@ protected:
 typedef int (Backend::*InstallAction)(void);
 
 const QString Version = "v1.0";
-const QString Title = QObject::tr("Deepin System Installer");
+
+const QString AppTitle();
+
 }

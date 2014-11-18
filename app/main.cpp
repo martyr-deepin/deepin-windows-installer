@@ -25,7 +25,7 @@ int main(int argc, char**argv) {
     LoadTranslate(app);
 
     MainWindow w;
-    w.setWindowTitle (DeepinInstaller::Title);
+    w.setWindowTitle (DeepinInstaller::AppTitle());
     w.setWindowIcon(QIcon(":/data/deepin-system-installer.png"));
     w.show();
 

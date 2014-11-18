@@ -24,7 +24,7 @@ DHeaderWidget::DHeaderWidget(QWidget *parent) :
     logolayout->addWidget(logolabel);
     logolayout->setAlignment(logolabel, Qt::AlignCenter);
     logolayout->addSpacing(10);
-    QLabel *versionlabel = new QLabel(QString("<a style='color:white; font-size:12px;font-weight:bold;'>%1 </a><a style='color:white; font-size:8px;'>%2</a>").arg(DeepinInstaller::Title).arg(DeepinInstaller::Version));
+    QLabel *versionlabel = new QLabel(QString("<a style='color:white; font-size:12px;font-weight:bold;'>%1 </a><a style='color:white; font-size:8px;'>%2</a>").arg(DeepinInstaller::AppTitle()).arg(DeepinInstaller::Version));
     versionlabel->setIndent(2);
     logolayout->addSpacing(2);
     logolayout->addWidget(versionlabel);
