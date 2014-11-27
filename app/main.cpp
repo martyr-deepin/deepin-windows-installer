@@ -20,6 +20,8 @@ int main(int argc, char**argv) {
     Q_INIT_RESOURCE(xsys);
     Q_INIT_RESOURCE(dwidget);
     QApplication app(argc, argv);
+
+    ImmDisableIME(GetCurrentThreadId());
     InstallLogHandler();
     LoadFonts();
     LoadTranslate(app);

@@ -1,0 +1,8 @@
+build
+*~
+*.pro.user
+*.pro.user.*
+*.log
+.DS_Store
+*.ts
+*.qm
