@@ -400,6 +400,8 @@ int WindowsBackend::FetchISO() {
     switch(DeviceType(curDir)) {
     case DRIVE_CDROM:
         qDebug()<<"curDir: "<<DRIVE_CDROM;
+        m_BasePersent = 30;
+        m_BaseRange = 50;
         result = DumpISO(curDir, installISOPath, pr);
         return ret = result ? Success:Failed;
     case DRIVE_NO_ROOT_DIR:
