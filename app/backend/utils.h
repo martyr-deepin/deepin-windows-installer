@@ -120,6 +120,7 @@ bool DumpISO(QString targetDev, const QString &imagePath, ProgressReporter<T> *p
         return false;
     }
 
+    //TODO: return -1; Fix it
     quint64 totalSize = GetFileSize(handle, NULL);
     quint64 copySize = 0;
 
@@ -133,11 +134,16 @@ bool DumpISO(QString targetDev, const QString &imagePath, ProgressReporter<T> *p
     DWORD curReadSize = 0;
     bool ret = false;
     do {
+        qDebug()<<"Dump ISO"<<totalSize<<"/"<<copySize;
         ret = ReadFile(handle, buffer, 1024*1024, &curReadSize, NULL);
+        if (FALSE == ret) {
+            break;
+        }
         out.write(buffer, curReadSize);
         copySize += curReadSize;
         pr->Report (totalSize, copySize);
     }while(ret && (0!=curReadSize));
+    out.close();
     return ret;
 }
 

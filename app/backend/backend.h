@@ -141,7 +141,6 @@ protected:
     void Increment(int deta) {
         qDebug()<<"Increment"<<deta<<m_Progress;
         m_Progress += deta;
-        m_Progress %= 100;
         emit ProgressUpdate (m_Progress);
     }
 

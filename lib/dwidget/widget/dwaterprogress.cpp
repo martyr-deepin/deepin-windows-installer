@@ -45,8 +45,9 @@ DWaterProgress::DWaterProgress(QWidget *parent) :
 }
 
 void DWaterProgress::setProgress(int p) {
-    m_Progresss = abs(p) % 100;
-    m_YOffset = 88 - p;
+    m_Progresss = (p <= 100) ? p : 100;
+    m_Progresss = (m_Progresss <= 0) ? 0: m_Progresss;
+    m_YOffset = 90 - p;
     setText(m_Progresss);
 }
 
