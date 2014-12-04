@@ -1,39 +1,38 @@
 # 
 # Translators:
-# Microtus <hrabosmartin@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
-"PO-Revision-Date: 2014-12-03 20:22+0000\n"
-"Last-Translator: Microtus <hrabosmartin@gmail.com>\n"
-"Language-Team: Slovak (http://www.transifex.com/projects/p/deepin-windows-installer/language/sk/)\n"
+"PO-Revision-Date: 2014-12-04 12:47+0000\n"
+"Last-Translator: deepin_transifex <xiabin@linuxdeepin.com>\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/deepin-windows-installer/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Language: en_US\n"
 "X-Qt-Contexts: true\n"
 
 #: ../fontend/mainwindow.cpp:70
 msgctxt "MainWindow|"
 msgid "Username"
-msgstr "Užívateľské meno"
+msgstr "Nombre de usuario"
 
 #: ../fontend/mainwindow.cpp:95
 msgctxt "MainWindow|"
 msgid "Password"
-msgstr "Heslo"
+msgstr "Contraseña."
 
 #: ../fontend/mainwindow.cpp:118
 msgctxt "MainWindow|"
 msgid "Repeat Password"
-msgstr "Zopakujte heslo"
+msgstr "Repetir contraseña"
 
 #: ../fontend/mainwindow.cpp:231
 msgctxt "MainWindow|"
 msgid "This operation will not affect any of your data. Please use it freely."
-msgstr "Táto operácia neovplyvní žiadne Vaše dáta. Použite ju slobodne. "
+msgstr "Esta operación no afectará a su información. Por favor, úsela libremente."
 
 #: ../fontend/mainwindow.cpp:254
 #, qt-format
@@ -41,117 +40,117 @@ msgctxt "MainWindow|"
 msgid ""
 "Please ensure that there is at least one%1 disk having more than 10GB free "
 "space."
-msgstr "Prosím uistite sa, že máte najmenej jeden%1 disk s aspoň 10GB voľného priestoru."
+msgstr "Por favor, asegúrese de que existe al menos un%1 disco con más de 10 GB de espacio libre."
 
 #: ../fontend/mainwindow.cpp:263
 msgctxt "MainWindow|"
 msgid "Start"
-msgstr "Štart"
+msgstr "Iniciar"
 
 #: ../fontend/mainwindow.cpp:271
 msgctxt "MainWindow|"
 msgid "Exit"
-msgstr "Ukončiť"
+msgstr "Salir"
 
 #: ../fontend/mainwindow.cpp:308
 msgctxt "MainWindow|"
 msgid "Being installed. Please wait... "
-msgstr "Inštaluje sa. Prosím čakajte..."
+msgstr "Instalando. Por favor espere..."
 
 #: ../fontend/mainwindow.cpp:346
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
 "Installed Successfully. You need to restart your computer to experience %1."
-msgstr "Inštalácia úspešná. Potrebujte reštartovať Váš počítač, aby ste skúsili %1. "
+msgstr "Instalación exitosa. Necesita reiniciar su ordenador para experimentar %1."
 
 #: ../fontend/mainwindow.cpp:354
 msgctxt "MainWindow|"
 msgid "Installation Failed."
-msgstr "Inštalácia zlyhala. "
+msgstr "Instalación fallida."
 
 #: ../fontend/mainwindow.cpp:360
 msgctxt "MainWindow|"
 msgid "Restart Later"
-msgstr "Reštartovať neskôr"
+msgstr "Reiniciar más tarde."
 
 #: ../fontend/mainwindow.cpp:363
 msgctxt "MainWindow|"
 msgid "Restart Now"
-msgstr "Reštartovať teraz"
+msgstr "Reinicar ahora"
 
 #: ../fontend/mainwindow.cpp:389
 msgctxt "MainWindow|"
 msgid "Finished"
-msgstr "Hotovo"
+msgstr "Finalizado"
 
 #: ../fontend/mainwindow.cpp:531
 #, qt-format
 msgctxt "MainWindow|"
 msgid "You have installed %1."
-msgstr "Nainštalovali ste %1."
+msgstr "Has instalado %1."
 
 #: ../fontend/mainwindow.cpp:537
 msgctxt "MainWindow|"
 msgid "Cancel"
-msgstr "Zrušiť"
+msgstr "Cancelar"
 
 #: ../fontend/mainwindow.cpp:540
 msgctxt "MainWindow|"
 msgid "Uninstall"
-msgstr "Odinštalovať"
+msgstr "Desinstalar"
 
 #: ../fontend/mainwindow.cpp:543
 msgctxt "MainWindow|"
 msgid "Reinstall"
-msgstr "Preinštalovať"
+msgstr "Reinstalar"
 
 #: ../fontend/mainwindow.cpp:555
 msgctxt "MainWindow|"
 msgid "Being uninstalled. Please wait... "
-msgstr "Odinštalovanie. Prosím čakajte..."
+msgstr "Instalando. Por favor espere..."
 
 #: ../fontend/mainwindow.cpp:562
 msgctxt "MainWindow|"
 msgid "Uninstalled Successfully. "
-msgstr "Odinštalovanie úspešné. "
+msgstr "Desinstalación exitosa."
 
 #: ../fontend/mainwindow.cpp:569
 msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
-msgstr "Odinštalovanie zlyhalo. "
+msgstr "Desinstalación fallida."
 
 #: ../backend/backend.cpp:23
 msgctxt "QObject|"
 msgid "Deepin System Installer"
-msgstr "Deepin Systém Inštalátor"
+msgstr "Instalador de sistema Deepin "
 
 #: ../backend/utils.cpp:247 ../backend/utils.cpp:279
 msgctxt "QObject|"
 msgid "The first character must be in lower case."
-msgstr "Prvý znak musí byť malé písmeno. "
+msgstr "El primer carácter debe estar en minúscula."
 
 #: ../backend/utils.cpp:258 ../backend/utils.cpp:273
 msgctxt "QObject|"
 msgid "Username must comprise a~z, 0~9, - or _. "
-msgstr "Užívateľské meno sa musí skladať z a~z, 0~9, - alebo_."
+msgstr "El nombre de usuario debe tener a~z, 0~9, - ó _."
 
 #: ../backend/utils.cpp:267
 msgctxt "QObject|"
 msgid "Username can not be empty. "
-msgstr "Užívateľské meno nesmie byť prázdne. "
+msgstr "El nombre de usuario no puede estar vacío."
 
 #: ../backend/utils.cpp:286
 msgctxt "QObject|"
 msgid "The username has been used by system."
-msgstr "Užívateľské meno už je používané v systéme. "
+msgstr "El nombre de usuario ha sido usado por el sistema."
 
 #: ../fontend/mainwindow.cpp:47
 msgctxt "QObject|"
 msgid "Password can not be empty."
-msgstr "Heslo nesmie byť prázdne. "
+msgstr "La contraseña no puede estar vacía."
 
 #: ../fontend/mainwindow.cpp:48
 msgctxt "QObject|"
 msgid "The two passwords do not match."
-msgstr "Heslá sa nezhodujú. "
+msgstr "Las dos contraseñas no coinciden."
