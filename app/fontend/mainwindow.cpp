@@ -434,6 +434,12 @@ void MainWindow::goInstallOptionCheck(){
         return;
     }
 
+    if (m_Password != m_RepeatPassword) {
+        emit setRepeatPasswordTips(RepeatPasswordHits);
+        emit showRepeatPasswordTips();
+        return;
+    }
+
     m_Backend->SetInstallParam (
                     m_Username,
                     QByteArray(m_Password.toUtf8()).toBase64(),
@@ -720,11 +726,13 @@ void MainWindow::editUsernameFinish () {
 void MainWindow::setPassword(const QString& v){
     m_Password = v;
 
-    if (m_Password != m_RepeatPassword) {
+    if (!m_RepeatPassword.isEmpty()){
+    if (0 != m_RepeatPassword.indexOf(m_Password)) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();
     } else {
         emit hideRepeatPasswordTips ();
+    }
     }
 
     if (v.isEmpty()) {
@@ -757,7 +765,7 @@ void MainWindow::setRepeatPassword(const QString& v){
         return;
     }
 
-    if (m_Password != m_RepeatPassword) {
+    if (0 != m_Password.indexOf(m_RepeatPassword)) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();
     } else {

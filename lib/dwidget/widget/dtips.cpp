@@ -111,8 +111,9 @@ void DTips::doPop() {
 
     this->adjustSize();
     QSize sz = this->size();
+    int offset = !this->isHidden() ? 0 : szLabel.height()/2;
     movie->setStartValue(QRect(pos.x(),
-                               pos.y() + szLabel.height()/2 - 6,
+                               pos.y() + szLabel.height() -offset - 6,
                                sz.width(),
                                sz.height()));
     movie->setEndValue(QRect(pos.x(),
