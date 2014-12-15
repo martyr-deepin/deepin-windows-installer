@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Windows Installer\n"
-"PO-Revision-Date: 2014-11-17 11:17+0000\n"
+"PO-Revision-Date: 2014-12-12 16:49+0000\n"
 "Last-Translator: Massimo Antonio Carofano <real.massimo@hotmail.it>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/deepin-windows-installer/language/it/)\n"
 "MIME-Version: 1.0\n"
