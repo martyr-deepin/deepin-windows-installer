@@ -727,12 +727,15 @@ void MainWindow::setPassword(const QString& v){
     m_Password = v;
 
     if (!m_RepeatPassword.isEmpty()){
-    if (0 != m_RepeatPassword.indexOf(m_Password)) {
+    if (m_Password != m_RepeatPassword) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();
     } else {
         emit hideRepeatPasswordTips ();
     }
+    }
+    else {
+         emit hideRepeatPasswordTips ();
     }
 
     if (v.isEmpty()) {
@@ -746,6 +749,13 @@ void MainWindow::editPasswordBegin (const QString & v) {
     if (v.isEmpty ()) {
         emit hidePasswordTips();
     }
+    //Check Repeat password
+    if (m_Password != m_RepeatPassword) {
+        emit setRepeatPasswordTips(RepeatPasswordHits);
+        emit showRepeatPasswordTips();
+    } else {
+        emit hideRepeatPasswordTips();
+    }
 }
 
 void MainWindow::editPasswordFinish () {
@@ -754,6 +764,13 @@ void MainWindow::editPasswordFinish () {
         emit showPasswordTips();
     } else {
         emit hidePasswordTips();
+    }
+    //Check Repeat password
+    if (m_RepeatPassword != m_Password) {
+        emit setRepeatPasswordTips(RepeatPasswordHits);
+        emit showRepeatPasswordTips();
+    } else {
+        emit hideRepeatPasswordTips ();
     }
 }
 
@@ -775,6 +792,12 @@ void MainWindow::setRepeatPassword(const QString& v){
 
 void MainWindow::editRepeatPasswordBegin (const QString & v) {
     if (v.isEmpty ()) {
+        emit hideRepeatPasswordTips ();
+    }
+    if (0 != m_Password.indexOf(m_RepeatPassword)) {
+        emit setRepeatPasswordTips(RepeatPasswordHits);
+        emit showRepeatPasswordTips();
+    } else {
         emit hideRepeatPasswordTips ();
     }
 }

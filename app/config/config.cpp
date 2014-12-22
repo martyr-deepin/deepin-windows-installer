@@ -19,16 +19,15 @@ void LoadFonts() {
     QStringList preferList;
     preferList.append("Microsoft YaHei UI");
     preferList.append("微软雅黑");
-    preferList.append("SimSong");
-    preferList.append("宋体");
-    preferList.append("WenQuanYi Micro Hei");
-    preferList.append("文泉驿微米黑");
+    preferList.append("SimHei");
+    preferList.append("黑体");
 
     foreach (QString font, preferList) {
         if (fontlist.contains(font)) {
             g_CurrentFont = QFont(font, 11);
             QApplication::setFont(g_CurrentFont);
-            qDebug()<<"Load font: "<<font;
+            qDebug()<<"Load font: "<<font
+                    <<"Current"<<g_CurrentFont.family();
             return;
         }
     }
