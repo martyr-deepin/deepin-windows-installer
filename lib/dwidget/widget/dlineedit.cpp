@@ -116,6 +116,10 @@ bool DLineEdit::hasFocus () const {
     return m_LineEdit->hasFocus ();
 }
 
+void DLineEdit::setMaxLength(int len) {
+    m_LineEdit->setMaxLength(len);
+}
+
 void DLineEdit::editFocusIn(QFocusEvent *) {
     emit editingBegin (m_LineEdit->text ());
 }

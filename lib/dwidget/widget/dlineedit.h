@@ -48,6 +48,7 @@ public:
     QLineEdit::EchoMode echoMode() const;
 
     bool hasFocus () const;
+    void setMaxLength(int);
 
 signals:
     void textChanged(const QString &);
