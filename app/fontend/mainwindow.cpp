@@ -68,6 +68,7 @@ QWidget *MainWindow::InstallOptionBody(){
     layout->addSpacing(10);
 
     DLineEdit *usernameEdit = new DLineEdit(":/fontend/images/user.png", tr("Username"));
+    usernameEdit->setMaxLength(32);
     usernameEdit->setFixedSize(180, DefaultWidgetHeight);
     layout->addWidget(usernameEdit);
     layout->setAlignment(usernameEdit, Qt::AlignCenter);

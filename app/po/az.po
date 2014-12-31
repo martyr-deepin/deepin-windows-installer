@@ -1,0 +1,157 @@
+# 
+# Translators:
+# Nicat Məmmədov <n1c4t97@gmail.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Deepin Windows Installer\n"
+"PO-Revision-Date: 2014-12-26 13:25+0000\n"
+"Last-Translator: Nicat Məmmədov <n1c4t97@gmail.com>\n"
+"Language-Team: Azerbaijani (http://www.transifex.com/projects/p/deepin-windows-installer/language/az/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: az\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Language: en_US\n"
+"X-Qt-Contexts: true\n"
+
+#: ../fontend/mainwindow.cpp:70
+msgctxt "MainWindow|"
+msgid "Username"
+msgstr "İstifadəçi adı"
+
+#: ../fontend/mainwindow.cpp:95
+msgctxt "MainWindow|"
+msgid "Password"
+msgstr "Şifrə"
+
+#: ../fontend/mainwindow.cpp:118
+msgctxt "MainWindow|"
+msgid "Repeat Password"
+msgstr "Təkrar Şifrə"
+
+#: ../fontend/mainwindow.cpp:231
+msgctxt "MainWindow|"
+msgid "This operation will not affect any of your data. Please use it freely."
+msgstr "Bu əməliyyat hər hansısa bir veriləni silməz. Xahiş edirik sərbəstcə istifadə edin."
+
+#: ../fontend/mainwindow.cpp:254
+#, qt-format
+msgctxt "MainWindow|"
+msgid ""
+"Please ensure that there is at least one%1 disk having more than 10GB free "
+"space."
+msgstr ""
+
+#: ../fontend/mainwindow.cpp:263
+msgctxt "MainWindow|"
+msgid "Start"
+msgstr "Başla"
+
+#: ../fontend/mainwindow.cpp:271
+msgctxt "MainWindow|"
+msgid "Exit"
+msgstr "Çıx"
+
+#: ../fontend/mainwindow.cpp:308
+msgctxt "MainWindow|"
+msgid "Being installed. Please wait... "
+msgstr "Quraşdırılma başladı. Xahiş edirik gözləyin..."
+
+#: ../fontend/mainwindow.cpp:346
+#, qt-format
+msgctxt "MainWindow|"
+msgid ""
+"Installed Successfully. You need to restart your computer to experience %1."
+msgstr "Quraşdırılma tamamlandı. %1 yoxlamaq üçün kompüteri yenidən başlatmalızınız."
+
+#: ../fontend/mainwindow.cpp:354
+msgctxt "MainWindow|"
+msgid "Installation Failed."
+msgstr "Quraşdırılma uğursuz alındı."
+
+#: ../fontend/mainwindow.cpp:360
+msgctxt "MainWindow|"
+msgid "Restart Later"
+msgstr "Daha sonra yenidən başlat"
+
+#: ../fontend/mainwindow.cpp:363
+msgctxt "MainWindow|"
+msgid "Restart Now"
+msgstr "İndi yenidən başlat"
+
+#: ../fontend/mainwindow.cpp:389
+msgctxt "MainWindow|"
+msgid "Finished"
+msgstr "Tamamlandı"
+
+#: ../fontend/mainwindow.cpp:531
+#, qt-format
+msgctxt "MainWindow|"
+msgid "You have installed %1."
+msgstr "%1 quraşdırıldı."
+
+#: ../fontend/mainwindow.cpp:537
+msgctxt "MainWindow|"
+msgid "Cancel"
+msgstr "İmtina"
+
+#: ../fontend/mainwindow.cpp:540
+msgctxt "MainWindow|"
+msgid "Uninstall"
+msgstr "Sil"
+
+#: ../fontend/mainwindow.cpp:543
+msgctxt "MainWindow|"
+msgid "Reinstall"
+msgstr "Yenidən quraşdır"
+
+#: ../fontend/mainwindow.cpp:555
+msgctxt "MainWindow|"
+msgid "Being uninstalled. Please wait... "
+msgstr "Silinmə başladı. Xahiş edirik gözləyin..."
+
+#: ../fontend/mainwindow.cpp:562
+msgctxt "MainWindow|"
+msgid "Uninstalled Successfully. "
+msgstr "Silinmə əməliyyatı uğurla başa çatdı."
+
+#: ../fontend/mainwindow.cpp:569
+msgctxt "MainWindow|"
+msgid "Uninstallation Failed."
+msgstr "Quraşdırılma uğursuz alındı."
+
+#: ../backend/backend.cpp:23
+msgctxt "QObject|"
+msgid "Deepin System Installer"
+msgstr "Deepin Sistem Qurucusu"
+
+#: ../backend/utils.cpp:247 ../backend/utils.cpp:279
+msgctxt "QObject|"
+msgid "The first character must be in lower case."
+msgstr "Birinci simvol kiçik olmalıdır."
+
+#: ../backend/utils.cpp:258 ../backend/utils.cpp:273
+msgctxt "QObject|"
+msgid "Username must comprise a~z, 0~9, - or _. "
+msgstr "İstifadəçi adı a~z, 0~9, - və ya _ simvollarından ibarət olmalıdır."
+
+#: ../backend/utils.cpp:267
+msgctxt "QObject|"
+msgid "Username can not be empty. "
+msgstr "İstifadəçi adı boş qoyula bilməz."
+
+#: ../backend/utils.cpp:286
+msgctxt "QObject|"
+msgid "The username has been used by system."
+msgstr "Bu istifadəçi adı sistem tərəfindən sistem tərəfindən istifadə olunur."
+
+#: ../fontend/mainwindow.cpp:47
+msgctxt "QObject|"
+msgid "Password can not be empty."
+msgstr "Şifrə boş qoyula bilməz."
+
+#: ../fontend/mainwindow.cpp:48
+msgctxt "QObject|"
+msgid "The two passwords do not match."
+msgstr "Şifrələr uyğunlaşmır."
