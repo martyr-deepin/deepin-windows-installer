@@ -289,6 +289,10 @@ WindowsBackend::WindowsBackend(
     if ( m_Info.ReleaseInfo.isEmpty ()) {
          m_Info.ReleaseInfo = "Deepin";
     }
+
+    QStringList mkisofsFileList;
+    mkisofsFileList.append(":/blobs/tools/mkisofs.exe");
+    Xapi::GetBlobs().Install(BlobAppMkisofs, mkisofsFileList);
 }
 
 int WindowsBackend::CreateUninstaller(){
