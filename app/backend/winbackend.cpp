@@ -844,6 +844,8 @@ int WindowsBackend::CreateConfig() {
         return ret = Failed;
     }
 
+    content = content.remove("\r");
+
     if (content.length() != newConfig.write(content.toLatin1())) {
         return ret = Failed;
     }
