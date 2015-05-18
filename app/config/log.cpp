@@ -42,7 +42,7 @@ void crashMessageOutput(QtMsgType type, const QMessageLogContext &, const QStrin
 }
 
 void InstallLogHandler() {
-    g_LogPath = QDir::toNativeSeparators(QStandardPaths::standardLocations(QStandardPaths::TempLocation).first() + "/" + "deepin-windows-installer.log");
+    g_LogPath = QDir::toNativeSeparators(QStandardPaths::standardLocations(QStandardPaths::TempLocation).first() + "/" + "deepin-windows-installer_d.log");
     qDebug()<<"Install Log to "<<g_LogPath;
     qInstallMessageHandler(crashMessageOutput);
 }

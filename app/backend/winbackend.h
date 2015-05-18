@@ -15,11 +15,15 @@ public:
                    int installSize,
                    QObject *parent = 0);
 
+
+
     virtual bool HasInstalled();
 
     static int PreFetchISO(QString &isopath);
 
     virtual int UninstallApp();
+
+    virtual int UninstallClear();
 
     virtual int CreateUninstaller();
 
@@ -44,6 +48,8 @@ private:
 
     int InstallBootIni(QString &id);
     int UninstallBootIni();
+
+    bool m_isUninstall;
 };
 
 

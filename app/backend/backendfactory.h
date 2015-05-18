@@ -27,6 +27,7 @@ public:
 
 private:
     BackendFactory(){;}
+    ~BackendFactory();
     BackendFactory(const BackendFactory&){;}
 };
 

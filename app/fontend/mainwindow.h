@@ -17,6 +17,7 @@ class MainWindow : public DeepinWidget::DMainWindow
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
 signals:
     void install();
@@ -82,7 +83,7 @@ private:
 
     QWidget *InstallFailedBody();
     QWidget *FinishFooter();
-
+    QWidget *FinishUnistallFooter();
     QWidget *UninstallBody();
     QWidget *UninstallFooter();
 
@@ -92,6 +93,7 @@ private:
     QWidget *UninstallFailedBody();
 
  public slots:
+    void unistallClear();
     void setUsername(const QString&);
     void editUsernameBegin(const QString&);
     void editUsernameFinish();
