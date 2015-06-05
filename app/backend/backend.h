@@ -34,6 +34,8 @@ public:
     QString Timezone;
     QString Version;
     QString ReleaseInfo;
+
+    QString BootMethod;
 };
 
 class Backend:public QObject {

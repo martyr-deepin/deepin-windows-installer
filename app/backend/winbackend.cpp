@@ -775,6 +775,11 @@ int WindowsBackend::InstallGrub() {
     QString content = grubTemplate.readAll();
     grubTemplate.close();
 
+    QString iso_method = "iso-scan/filename";
+    if (m_Info.BootMethod == "live") {
+        iso_method = "findiso";
+    }
+
     QMap<QString, QString> grubInfo;
 //    grubInfo.insert("custom_installation_dir", m_Info.InstallPath);
     QString relativeImagePath = ToRelativePath(m_Info.InstallPath) +"/install/install.iso";
@@ -794,6 +799,8 @@ int WindowsBackend::InstallGrub() {
     grubInfo.insert("verbose_mode_title", "Verbose mode");
     grubInfo.insert("demo_mode_title",  "Demo mode");
     grubInfo.insert("intall_path",  m_Info.InstallPrefix);
+    grubInfo.insert("iso_method",iso_method);
+    grubInfo.insert("boot_method", m_Info.BootMethod);
 
     QMap<QString, QString>::iterator iter;
     iter = grubInfo.begin();
