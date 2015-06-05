@@ -61,6 +61,11 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 }
 
+MainWindow::~MainWindow() {
+    qDebug()<<"Delete m_Backend";
+    delete m_Backend;
+}
+
 QWidget *MainWindow::InstallOptionBody(){
     QWidget *widget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
@@ -386,6 +391,20 @@ DHeaderWidget *MainWindow::Header () {
     return m_Heaer;
 }
 
+void MainWindow::unistallClear(){
+    m_Backend->UninstallClear();
+    close();
+}
+
+QWidget *MainWindow::FinishUnistallFooter(){
+    DPushButton *finish = new DPushButton(tr("Finished"));
+    connect(finish, SIGNAL(clicked()), this, SLOT(unistallClear()));
+
+    QList<DPushButton*> btlist;
+    btlist.append(finish);
+    return new DFooterWidget(btlist);
+}
+
 QWidget *MainWindow::FinishFooter(){
     DPushButton *finish = new DPushButton(tr("Finished"));
     connect(finish, SIGNAL(clicked()), this, SLOT(close()));
@@ -653,7 +672,7 @@ void MainWindow::goUninstallSuccess(){
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallSuccessBody());
-    m_topLayout->addWidget(FinishFooter());
+    m_topLayout->addWidget(FinishUnistallFooter());
 
     m_TopWidget->setLayout(m_topLayout);
 
@@ -668,7 +687,7 @@ void MainWindow::goUninstallFailed(){
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallFailedBody());
-    m_topLayout->addWidget(FinishFooter());
+    m_topLayout->addWidget(FinishUnistallFooter());
 
     m_TopWidget->setLayout(m_topLayout);
 

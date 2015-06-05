@@ -15,6 +15,8 @@
 #include <QApplication>
 #include <QCryptographicHash>
 #include <QDebug>
+#include <QStandardPaths>
+#include <QProcess>
 
 using namespace DeepinInstaller;
 
@@ -289,6 +291,29 @@ WindowsBackend::WindowsBackend(
     if ( m_Info.ReleaseInfo.isEmpty ()) {
          m_Info.ReleaseInfo = "Deepin";
     }
+
+    QStringList mkisofsFileList;
+    mkisofsFileList.append(":/blobs/tools/mkisofs.exe");
+    Xapi::GetBlobs().Install(BlobAppMkisofs, mkisofsFileList);
+}
+
+int WindowsBackend::UninstallClear() {
+    //copy tmp file and remove
+    qDebug()<<"Is m_Uninstall"<<m_isUninstall;
+    if (m_isUninstall) {
+    QString installationDir =  m_Info.InstallPath;
+    QString uninstaller = m_Info.InstallPath + "\\uninstaller.exe";
+    QString tmpPath = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
+    QString tmpUninstaller = tmpPath + "\\deepin-unistaller.exe";
+    QFile::copy(uninstaller, tmpUninstaller);
+    qDebug()<<uninstaller;
+    qDebug()<<tmpUninstaller;
+    QProcess caller;
+    QString cmdline = tmpUninstaller + QString(" -u -t \"%1\"").arg(installationDir);
+    qDebug()<<"start delay remove "<<cmdline;
+    caller.startDetached(cmdline);
+    }
+    return 0;
 }
 
 int WindowsBackend::CreateUninstaller(){
@@ -297,7 +322,7 @@ int WindowsBackend::CreateUninstaller(){
     this->SetAction ("CreateUninstaller");
     this->Increment (2);
 
-    QString uninstaller = QString("uinstall.exe");
+    QString uninstaller = QString("uninstaller.exe");
     QString uninstallerPath = m_Info.InstallPath + "/" + uninstaller;
     bool result = QFile::copy(QApplication::applicationFilePath(), uninstallerPath);
     qDebug()<<"Copy app to"<<uninstallerPath<<" Result"<<result;
@@ -360,18 +385,8 @@ int WindowsBackend::UninstallApp() {
     QSettings uninstallSettings(UninstallRegistryKey, QSettings::NativeFormat);
     uninstallSettings.remove(AppName);
 
-    if (QDir::toNativeSeparators (installationDir).contains (
-                QApplication::applicationDirPath())) {
-        qDebug()<<"Remove Later";
-        MoveFileEx(QApplication::applicationFilePath ().toStdWString ().c_str (),
-                   NULL,
-                   MOVEFILE_DELAY_UNTIL_REBOOT);
-        MoveFileEx(QApplication::applicationDirPath ().toStdWString ().c_str (),
-                   NULL,
-                   MOVEFILE_DELAY_UNTIL_REBOOT);
-    }
-
-    return ret = Success;
+    m_isUninstall = true;
+    m_Info.InstallPath = installationDir;
 }
 
 int WindowsBackend::FetchISO() {
@@ -839,6 +854,8 @@ int WindowsBackend::CreateConfig() {
     if (!newConfig.open(QIODevice::WriteOnly)) {
         return ret = Failed;
     }
+
+    content = content.remove("\r");
 
     if (content.length() != newConfig.write(content.toLatin1())) {
         return ret = Failed;

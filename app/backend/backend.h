@@ -96,6 +96,8 @@ public:
 
     virtual int  UninstallApp() = 0;
 
+    virtual int  UninstallClear() = 0;
+
     QString Release();
 
     void Report(quint64 total, quint64 copyed);

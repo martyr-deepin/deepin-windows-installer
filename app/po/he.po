@@ -1,0 +1,157 @@
+# 
+# Translators:
+# Yuval Bar-On <hyuvii@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Deepin Windows Installer\n"
+"PO-Revision-Date: 2015-01-07 15:11+0000\n"
+"Last-Translator: Yuval Bar-On <hyuvii@gmail.com>\n"
+"Language-Team: Hebrew (http://www.transifex.com/projects/p/deepin-windows-installer/language/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: he\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Language: en_US\n"
+"X-Qt-Contexts: true\n"
+
+#: ../fontend/mainwindow.cpp:70
+msgctxt "MainWindow|"
+msgid "Username"
+msgstr "שם משתמש"
+
+#: ../fontend/mainwindow.cpp:95
+msgctxt "MainWindow|"
+msgid "Password"
+msgstr "סיסמא"
+
+#: ../fontend/mainwindow.cpp:118
+msgctxt "MainWindow|"
+msgid "Repeat Password"
+msgstr "חזור שנית על הסיסמא"
+
+#: ../fontend/mainwindow.cpp:231
+msgctxt "MainWindow|"
+msgid "This operation will not affect any of your data. Please use it freely."
+msgstr "האופרציה לא תשפיע על המידע שלך"
+
+#: ../fontend/mainwindow.cpp:254
+#, qt-format
+msgctxt "MainWindow|"
+msgid ""
+"Please ensure that there is at least one%1 disk having more than 10GB free "
+"space."
+msgstr "אנא וודא כי יש לפחות כונן קשיח אחד %1 עם לפחות 10GB של שטח פנוי"
+
+#: ../fontend/mainwindow.cpp:263
+msgctxt "MainWindow|"
+msgid "Start"
+msgstr "התחל"
+
+#: ../fontend/mainwindow.cpp:271
+msgctxt "MainWindow|"
+msgid "Exit"
+msgstr "יציאה"
+
+#: ../fontend/mainwindow.cpp:308
+msgctxt "MainWindow|"
+msgid "Being installed. Please wait... "
+msgstr "מתקין, אנא המתן..."
+
+#: ../fontend/mainwindow.cpp:346
+#, qt-format
+msgctxt "MainWindow|"
+msgid ""
+"Installed Successfully. You need to restart your computer to experience %1."
+msgstr "הותקן בהצלחה. עליך לאתחל את המחשב בשביל לחוות %1"
+
+#: ../fontend/mainwindow.cpp:354
+msgctxt "MainWindow|"
+msgid "Installation Failed."
+msgstr "ההתקנה נכשלה"
+
+#: ../fontend/mainwindow.cpp:360
+msgctxt "MainWindow|"
+msgid "Restart Later"
+msgstr "אתחל מאוחר יותר"
+
+#: ../fontend/mainwindow.cpp:363
+msgctxt "MainWindow|"
+msgid "Restart Now"
+msgstr "אתחל עכשיו"
+
+#: ../fontend/mainwindow.cpp:389
+msgctxt "MainWindow|"
+msgid "Finished"
+msgstr "סיים"
+
+#: ../fontend/mainwindow.cpp:531
+#, qt-format
+msgctxt "MainWindow|"
+msgid "You have installed %1."
+msgstr "התקנת %1"
+
+#: ../fontend/mainwindow.cpp:537
+msgctxt "MainWindow|"
+msgid "Cancel"
+msgstr "ביטול"
+
+#: ../fontend/mainwindow.cpp:540
+msgctxt "MainWindow|"
+msgid "Uninstall"
+msgstr "הסר"
+
+#: ../fontend/mainwindow.cpp:543
+msgctxt "MainWindow|"
+msgid "Reinstall"
+msgstr "התקן מחדש"
+
+#: ../fontend/mainwindow.cpp:555
+msgctxt "MainWindow|"
+msgid "Being uninstalled. Please wait... "
+msgstr "מסיר התקנה. אנא המתן..."
+
+#: ../fontend/mainwindow.cpp:562
+msgctxt "MainWindow|"
+msgid "Uninstalled Successfully. "
+msgstr "הוסר בהצלחה"
+
+#: ../fontend/mainwindow.cpp:569
+msgctxt "MainWindow|"
+msgid "Uninstallation Failed."
+msgstr "ההסרה נכשלה"
+
+#: ../backend/backend.cpp:23
+msgctxt "QObject|"
+msgid "Deepin System Installer"
+msgstr "מתקין מערכת Deepin"
+
+#: ../backend/utils.cpp:247 ../backend/utils.cpp:279
+msgctxt "QObject|"
+msgid "The first character must be in lower case."
+msgstr "האות הראשונה חייבת להיות אות קטנה"
+
+#: ../backend/utils.cpp:258 ../backend/utils.cpp:273
+msgctxt "QObject|"
+msgid "Username must comprise a~z, 0~9, - or _. "
+msgstr "שם המשתמש חייב להכיל a~z, 0~9, מקף - או קו תחתון _"
+
+#: ../backend/utils.cpp:267
+msgctxt "QObject|"
+msgid "Username can not be empty. "
+msgstr "שם המשתמש לא יכול להיות ריק"
+
+#: ../backend/utils.cpp:286
+msgctxt "QObject|"
+msgid "The username has been used by system."
+msgstr "שם המשתמש כבר בשימוש במערכת"
+
+#: ../fontend/mainwindow.cpp:47
+msgctxt "QObject|"
+msgid "Password can not be empty."
+msgstr "הסיסמא לא יכולה להיות ריקה"
+
+#: ../fontend/mainwindow.cpp:48
+msgctxt "QObject|"
+msgid "The two passwords do not match."
+msgstr "שתי הסיסמאות לא תואמות"

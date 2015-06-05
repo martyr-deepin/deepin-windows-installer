@@ -41,4 +41,8 @@ Backend* BackendFactory::CreateBackend(BackendTpye type) {
     return CreateBackend(type, "", "", "", "", "", 0);
 }
 
+BackendFactory::~BackendFactory(){
+
+}
+
 }
