@@ -457,4 +457,16 @@ Arch CpuArch () {
     return Check64Bit()?AMD64:X86;
 }
 
+QString SystemDirtory() {
+    TCHAR path[MAX_PATH+1];
+    GetSystemDirectory(path, MAX_PATH);
+    QString system = QString().fromWCharArray(path);
+    BOOL isWow64 = FALSE;
+    IsWow64Process(GetCurrentProcess (), &isWow64);
+    if (TRUE == isWow64) {
+        return system = system.toLower ().replace ("system32", "SysNative");
+    }
+    return system;
+}
+
 }

@@ -197,7 +197,7 @@ QWidget *MainWindow::InstallOptionBody(){
     QList<DiskInfo>::iterator itor;
     for (itor = alldisklist.begin(); itor != alldisklist.end(); ++itor){
         if(styleFiter == itor->Style) {
-            if (itor->FreeSpace > MiniInstallSize) {
+            if (itor->FreeSpace > MiniInstallSize && ! itor->Encrypt) {
                 qDebug()<<"Add  Disk"<<itor->Name;
                 list.push_back (*itor);
             }

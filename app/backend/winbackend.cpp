@@ -26,18 +26,6 @@ static const QString RegistryKey = UninstallRegistryKey + AppName;
 
 static QString BlobAppMkisofs = "mkisofs.exe";
 
-QString SystemDirtory() {
-    TCHAR path[MAX_PATH+1];
-    GetSystemDirectory(path, MAX_PATH);
-    QString system = QString().fromWCharArray(path);
-    BOOL isWow64 = FALSE;
-    IsWow64Process(GetCurrentProcess (), &isWow64);
-    if (TRUE == isWow64) {
-        return system = system.toLower ().replace ("system32", "SysNative");
-    }
-    return system;
-}
-
 enum WindowsVersion{
     WinUnknow,
     Win2000,
@@ -101,7 +89,7 @@ int GetWindowsVersion() {
 }
 
 BootloaderType BCDType () {
-    QString bcdedit = SystemDirtory() + "\\bcdedit.exe";
+    QString bcdedit = Xapi::SystemDirtory() + "\\bcdedit.exe";
     QString cmd = QString("\"%1\" /enum").arg(bcdedit);
     QString ret =  Xapi::SynExec(cmd, "");
 
@@ -129,7 +117,7 @@ BootloaderType WindowsBootLoaderType() {
 }
 
 int ESPVolnameIndex() {
-    QString bcdedit = SystemDirtory() + "\\bcdedit.exe";
+    QString bcdedit = Xapi::SystemDirtory() + "\\bcdedit.exe";
     QString cmd = QString("\"%1\" /enum").arg(bcdedit);
     QString ret =  Xapi::SynExec(cmd, "");
 
@@ -282,7 +270,7 @@ WindowsBackend::WindowsBackend(
     m_BasePersent = 0;
     m_BaseRange = 10;
 
-    qDebug()<<SystemDirtory ();
+    qDebug()<<Xapi::SystemDirtory ();
 
     QSettings settings(RegistryKey, QSettings::NativeFormat);
     m_Info.ReleaseInfo = settings.value("ReleaseInfo").toString();
@@ -454,7 +442,7 @@ int WindowsBackend::CreateVirtualDisks() {
 }
 
 int WindowsBackend::UninstallBCD() {
-    QString bcdedit = SystemDirtory() + "\\bcdedit.exe";
+    QString bcdedit = Xapi::SystemDirtory() + "\\bcdedit.exe";
     QSettings settings(RegistryKey, QSettings::NativeFormat);
 
     QString id = settings.value(BootloaderKey).toString();
@@ -504,7 +492,7 @@ int WindowsBackend::InstallBCD(QString &id) {
     QString bootloaderPath = bootloaderDir + "/wubildr.mbr";
     QString bootloader = QDir::toNativeSeparators(bootloaderPath.remove(nativeTarget)).replace("\\\\", "\\");
 
-    QString bcdedit = SystemDirtory() + "\\bcdedit.exe";
+    QString bcdedit = Xapi::SystemDirtory() + "\\bcdedit.exe";
     QString cmdline = QString(" /create /d %1 /application bootsector").arg(m_Info.DistroName);
     QString cmdret =  Xapi::SynExec(bcdedit, cmdline);
     id = cmdret.split("{").last().split("}").first();
