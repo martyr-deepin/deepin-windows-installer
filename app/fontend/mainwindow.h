@@ -18,6 +18,8 @@ class MainWindow : public DeepinWidget::DMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
 
+    virtual void keyReleaseEvent(QKeyEvent *);
+
 signals:
     void install();
     void uninstall();

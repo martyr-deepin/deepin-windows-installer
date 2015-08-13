@@ -28,6 +28,7 @@
 #include <QStandardPaths>
 #include <QProcess>
 #include <QPainter>
+#include <QKeyEvent>
 
 static const int DefaultWidgetHeight = 24;
 
@@ -58,6 +59,12 @@ MainWindow::MainWindow(QWidget *parent) :
         emit uninstall();
     }else{
         emit install();
+    }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *k) {
+    if (k->key() == Qt::Key_Return || k->key() == Qt::Key_Enter){
+        this->goInstallOptionCheck();
     }
 }
 
