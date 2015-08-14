@@ -473,6 +473,7 @@ void MainWindow::installDone(int ret) {
     if (Backend::Success == ret) {
         goInstallSuccess();
     } else {
+        m_Backend->AsyncUninstall();
         goInstallFailed();
     }
     emit progressDone();

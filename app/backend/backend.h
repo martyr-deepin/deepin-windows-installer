@@ -108,7 +108,7 @@ signals:
     void ActionUpdate(const QString& act);
     void ProgressUpdate(int progress);
 
-protected slots:
+public slots:
     void AsyncInstall();
     void AsyncUninstall();
 
