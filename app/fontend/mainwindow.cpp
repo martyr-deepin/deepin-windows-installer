@@ -28,6 +28,7 @@
 #include <QStandardPaths>
 #include <QProcess>
 #include <QPainter>
+#include <QKeyEvent>
 
 static const int DefaultWidgetHeight = 24;
 
@@ -44,6 +45,7 @@ using namespace DeepinInstaller;
 MainWindow::MainWindow(QWidget *parent) :
     DeepinWidget::DMainWindow(parent)
 {
+    m_AcceptKey = false;
     PasswordHits = QObject::tr("Password can not be empty.");
     RepeatPasswordHits = QObject::tr("The two passwords do not match.");
 
@@ -59,6 +61,17 @@ MainWindow::MainWindow(QWidget *parent) :
     }else{
         emit install();
     }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *k) {
+    if (m_AcceptKey && (k->key() == Qt::Key_Return || k->key() == Qt::Key_Enter)){
+        this->goInstallOptionCheck();
+    }
+}
+
+MainWindow::~MainWindow() {
+    qDebug()<<"Delete m_Backend";
+    delete m_Backend;
 }
 
 QWidget *MainWindow::InstallOptionBody(){
@@ -190,7 +203,7 @@ QWidget *MainWindow::InstallOptionBody(){
     QList<DiskInfo>::iterator itor;
     for (itor = alldisklist.begin(); itor != alldisklist.end(); ++itor){
         if(styleFiter == itor->Style) {
-            if (itor->FreeSpace > MiniInstallSize) {
+            if (itor->FreeSpace > MiniInstallSize && ! itor->Encrypt) {
                 qDebug()<<"Add  Disk"<<itor->Name;
                 list.push_back (*itor);
             }
@@ -386,6 +399,20 @@ DHeaderWidget *MainWindow::Header () {
     return m_Heaer;
 }
 
+void MainWindow::unistallClear(){
+    m_Backend->UninstallClear();
+    close();
+}
+
+QWidget *MainWindow::FinishUnistallFooter(){
+    DPushButton *finish = new DPushButton(tr("Finished"));
+    connect(finish, SIGNAL(clicked()), this, SLOT(unistallClear()));
+
+    QList<DPushButton*> btlist;
+    btlist.append(finish);
+    return new DFooterWidget(btlist);
+}
+
 QWidget *MainWindow::FinishFooter(){
     DPushButton *finish = new DPushButton(tr("Finished"));
     connect(finish, SIGNAL(clicked()), this, SLOT(close()));
@@ -397,6 +424,8 @@ QWidget *MainWindow::FinishFooter(){
 
 void MainWindow::goInstall() {
     EnableCloseButton(true);
+
+    m_AcceptKey = true;
 
     QWidget *m_TopWidget = new QWidget(this);
     setCentralWidget(m_TopWidget);
@@ -458,6 +487,7 @@ void MainWindow::goInstallOptionCheck(){
              this, SLOT(updateProgress(int)));
 
     m_Backend->Go();
+    m_AcceptKey = false;
     goInstallProcess();
 }
 
@@ -466,6 +496,7 @@ void MainWindow::installDone(int ret) {
     if (Backend::Success == ret) {
         goInstallSuccess();
     } else {
+        m_Backend->AsyncUninstall();
         goInstallFailed();
     }
     emit progressDone();
@@ -653,7 +684,7 @@ void MainWindow::goUninstallSuccess(){
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallSuccessBody());
-    m_topLayout->addWidget(FinishFooter());
+    m_topLayout->addWidget(FinishUnistallFooter());
 
     m_TopWidget->setLayout(m_topLayout);
 
@@ -668,7 +699,7 @@ void MainWindow::goUninstallFailed(){
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallFailedBody());
-    m_topLayout->addWidget(FinishFooter());
+    m_topLayout->addWidget(FinishUnistallFooter());
 
     m_TopWidget->setLayout(m_topLayout);
 

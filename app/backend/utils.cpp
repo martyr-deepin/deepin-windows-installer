@@ -433,6 +433,9 @@ QList<DiskInfo> GetLocalDiskList(quint64 minSizeInGb,
             diskinfo.Name = devname;
             diskinfo.Style = style;
             diskinfo.FreeSpace = FreeBytes.QuadPart/(1024*1024*1024);
+            QString result = Xapi::SynExec( "cmd",  QString("/C \"chcp 437 & %1\\manage-bde -status  %2\" ").arg(Xapi::SystemDirtory()).arg(devname));
+            diskinfo.Encrypt = !result.split("\r").filter("BitLocker Version").first().contains("None");
+            qDebug()<<devname<<"System Type"<<diskinfo.Encrypt;
             disklist.push_back(diskinfo);
         }
     }

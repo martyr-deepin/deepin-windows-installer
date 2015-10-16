@@ -34,6 +34,8 @@ public:
     QString Timezone;
     QString Version;
     QString ReleaseInfo;
+
+    QString BootMethod;
 };
 
 class Backend:public QObject {
@@ -96,6 +98,8 @@ public:
 
     virtual int  UninstallApp() = 0;
 
+    virtual int  UninstallClear() = 0;
+
     QString Release();
 
     void Report(quint64 total, quint64 copyed);
@@ -108,7 +112,7 @@ signals:
     void ActionUpdate(const QString& act);
     void ProgressUpdate(int progress);
 
-protected slots:
+public slots:
     void AsyncInstall();
     void AsyncUninstall();
 

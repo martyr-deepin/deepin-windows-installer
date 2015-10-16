@@ -35,6 +35,7 @@ struct DiskInfo {
     QString Name;
     quint64 FreeSpace; //GB
     PartitonStyle Style;
+    bool Encrypt;
 };
 
 QList<DiskInfo> GetLocalDiskList(quint64 minSizeInGb = 10,

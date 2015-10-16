@@ -68,4 +68,7 @@ enum Arch{
 
 Arch CpuArch ();
 
+
+QString SystemDirtory() ;
+
 }

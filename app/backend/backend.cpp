@@ -62,6 +62,7 @@ void Backend::Init(
         int installSize) {
     m_Info.TargetDev = installTarget.left(2);
     m_Info.InstallPrefix = "deepin";
+    m_Info.BootMethod = "casper";
     m_Info.InstallPath = m_Info.TargetDev + "/" + m_Info.InstallPrefix;
     m_Info.KernelPath = m_Info.InstallPath + "/install/boot/vmlinuz";
     m_Info.InitrdPath = m_Info.InstallPath + "/install/boot/initrd.lz";
@@ -177,7 +178,25 @@ int Backend::ExtractISO() {
     QString sevenz = Xapi::GetBlobs().Get(BlobAppSevenZ);
 
     QString cmdline = QString(" e -y ")
-            + " -i!" + "casper/vmlinuz"
+            + " -i!" + "md5sum.txt"
+            + " -o" + m_Info.InstallPath + "/install/boot "
+            + "\"" + imagePath +  "\"";
+    Xapi::SynExec(sevenz, cmdline);
+
+    /*Check iso version*/
+    QString fileListPath = m_Info.InstallPath + "/install/boot/md5sum.txt";
+    QFile md5File(fileListPath);
+    if (!md5File.open(QIODevice::ReadOnly)) {
+        qWarning()<<"Open File Failed: "<< fileListPath;
+    }
+    QString fileListData = md5File.readAll();
+    m_Info.BootMethod = "casper";
+    if (fileListData.contains("/live/vmlinuz")) {
+        m_Info.BootMethod = "live";
+    }
+
+    cmdline = QString(" e -y ")
+            + " -i!" + m_Info.BootMethod + "/vmlinuz"
             + " -o" + m_Info.InstallPath + "/install/boot "
             + "\"" + imagePath +  "\"";
     Xapi::SynExec(sevenz, cmdline);
@@ -185,7 +204,7 @@ int Backend::ExtractISO() {
     this->Increment (4);
 
     cmdline = QString(" e -y ")
-            + " -i!" + "casper/initrd.lz "
+            + " -i!" + m_Info.BootMethod + "/initrd.lz "
             + " -o" + m_Info.InstallPath + "/install/boot "
             + "\"" + imagePath +  "\"";
     Xapi::SynExec(sevenz, cmdline);
