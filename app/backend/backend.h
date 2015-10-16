@@ -34,6 +34,8 @@ public:
     QString Timezone;
     QString Version;
     QString ReleaseInfo;
+
+    QString BootMethod;
 };
 
 class Backend:public QObject {
@@ -95,6 +97,8 @@ public:
     virtual int InstallGrub() = 0;
 
     virtual int  UninstallApp() = 0;
+
+    virtual int  UninstallClear() = 0;
 
     QString Release();
 

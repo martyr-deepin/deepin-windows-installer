@@ -45,6 +45,7 @@ using namespace DeepinInstaller;
 MainWindow::MainWindow(QWidget *parent) :
     DeepinWidget::DMainWindow(parent)
 {
+    m_AcceptKey = false;
     PasswordHits = QObject::tr("Password can not be empty.");
     RepeatPasswordHits = QObject::tr("The two passwords do not match.");
 
@@ -63,9 +64,14 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *k) {
-    if (k->key() == Qt::Key_Return || k->key() == Qt::Key_Enter){
+    if (m_AcceptKey && (k->key() == Qt::Key_Return || k->key() == Qt::Key_Enter)){
         this->goInstallOptionCheck();
     }
+}
+
+MainWindow::~MainWindow() {
+    qDebug()<<"Delete m_Backend";
+    delete m_Backend;
 }
 
 QWidget *MainWindow::InstallOptionBody(){
@@ -393,6 +399,20 @@ DHeaderWidget *MainWindow::Header () {
     return m_Heaer;
 }
 
+void MainWindow::unistallClear(){
+    m_Backend->UninstallClear();
+    close();
+}
+
+QWidget *MainWindow::FinishUnistallFooter(){
+    DPushButton *finish = new DPushButton(tr("Finished"));
+    connect(finish, SIGNAL(clicked()), this, SLOT(unistallClear()));
+
+    QList<DPushButton*> btlist;
+    btlist.append(finish);
+    return new DFooterWidget(btlist);
+}
+
 QWidget *MainWindow::FinishFooter(){
     DPushButton *finish = new DPushButton(tr("Finished"));
     connect(finish, SIGNAL(clicked()), this, SLOT(close()));
@@ -404,6 +424,8 @@ QWidget *MainWindow::FinishFooter(){
 
 void MainWindow::goInstall() {
     EnableCloseButton(true);
+
+    m_AcceptKey = true;
 
     QWidget *m_TopWidget = new QWidget(this);
     setCentralWidget(m_TopWidget);
@@ -465,6 +487,7 @@ void MainWindow::goInstallOptionCheck(){
              this, SLOT(updateProgress(int)));
 
     m_Backend->Go();
+    m_AcceptKey = false;
     goInstallProcess();
 }
 
@@ -661,7 +684,7 @@ void MainWindow::goUninstallSuccess(){
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallSuccessBody());
-    m_topLayout->addWidget(FinishFooter());
+    m_topLayout->addWidget(FinishUnistallFooter());
 
     m_TopWidget->setLayout(m_topLayout);
 
@@ -676,7 +699,7 @@ void MainWindow::goUninstallFailed(){
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
     m_topLayout->addWidget(UninstallFailedBody());
-    m_topLayout->addWidget(FinishFooter());
+    m_topLayout->addWidget(FinishUnistallFooter());
 
     m_TopWidget->setLayout(m_topLayout);
 

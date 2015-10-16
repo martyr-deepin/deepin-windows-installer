@@ -15,6 +15,8 @@
 #include <QApplication>
 #include <QCryptographicHash>
 #include <QDebug>
+#include <QStandardPaths>
+#include <QProcess>
 
 using namespace DeepinInstaller;
 
@@ -283,13 +285,32 @@ WindowsBackend::WindowsBackend(
     Xapi::GetBlobs().Install(BlobAppMkisofs, mkisofsFileList);
 }
 
+int WindowsBackend::UninstallClear() {
+    //copy tmp file and remove
+    qDebug()<<"Is m_Uninstall"<<m_isUninstall;
+    if (m_isUninstall) {
+    QString installationDir =  m_Info.InstallPath;
+    QString uninstaller = m_Info.InstallPath + "\\uninstaller.exe";
+    QString tmpPath = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
+    QString tmpUninstaller = tmpPath + "\\deepin-unistaller.exe";
+    QFile::copy(uninstaller, tmpUninstaller);
+    qDebug()<<uninstaller;
+    qDebug()<<tmpUninstaller;
+    QProcess caller;
+    QString cmdline = tmpUninstaller + QString(" -u -t \"%1\"").arg(installationDir);
+    qDebug()<<"start delay remove "<<cmdline;
+    caller.startDetached(cmdline);
+    }
+    return 0;
+}
+
 int WindowsBackend::CreateUninstaller(){
     int ret = Failed;
     FunctionLoger<int> log("CreateUninstaller", ret);
     this->SetAction ("CreateUninstaller");
     this->Increment (2);
 
-    QString uninstaller = QString("uinstall.exe");
+    QString uninstaller = QString("uninstaller.exe");
     QString uninstallerPath = m_Info.InstallPath + "/" + uninstaller;
     bool result = QFile::copy(QApplication::applicationFilePath(), uninstallerPath);
     qDebug()<<"Copy app to"<<uninstallerPath<<" Result"<<result;
@@ -352,18 +373,9 @@ int WindowsBackend::UninstallApp() {
     QSettings uninstallSettings(UninstallRegistryKey, QSettings::NativeFormat);
     uninstallSettings.remove(AppName);
 
-    if (QDir::toNativeSeparators (installationDir).contains (
-                QApplication::applicationDirPath())) {
-        qDebug()<<"Remove Later";
-        MoveFileEx(QApplication::applicationFilePath ().toStdWString ().c_str (),
-                   NULL,
-                   MOVEFILE_DELAY_UNTIL_REBOOT);
-        MoveFileEx(QApplication::applicationDirPath ().toStdWString ().c_str (),
-                   NULL,
-                   MOVEFILE_DELAY_UNTIL_REBOOT);
-    }
-
-    return ret = Success;
+    m_isUninstall = true;
+    m_Info.InstallPath = installationDir;
+    return ret= Success;
 }
 
 int WindowsBackend::FetchISO() {
@@ -752,6 +764,11 @@ int WindowsBackend::InstallGrub() {
     QString content = grubTemplate.readAll();
     grubTemplate.close();
 
+    QString iso_method = "iso-scan/filename";
+    if (m_Info.BootMethod == "live") {
+        iso_method = "findiso";
+    }
+
     QMap<QString, QString> grubInfo;
 //    grubInfo.insert("custom_installation_dir", m_Info.InstallPath);
     QString relativeImagePath = ToRelativePath(m_Info.InstallPath) +"/install/install.iso";
@@ -771,6 +788,8 @@ int WindowsBackend::InstallGrub() {
     grubInfo.insert("verbose_mode_title", "Verbose mode");
     grubInfo.insert("demo_mode_title",  "Demo mode");
     grubInfo.insert("intall_path",  m_Info.InstallPrefix);
+    grubInfo.insert("iso_method",iso_method);
+    grubInfo.insert("boot_method", m_Info.BootMethod);
 
     QMap<QString, QString>::iterator iter;
     iter = grubInfo.begin();

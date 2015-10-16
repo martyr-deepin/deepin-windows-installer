@@ -17,6 +17,7 @@ class MainWindow : public DeepinWidget::DMainWindow
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
     virtual void keyReleaseEvent(QKeyEvent *);
 
@@ -84,7 +85,7 @@ private:
 
     QWidget *InstallFailedBody();
     QWidget *FinishFooter();
-
+    QWidget *FinishUnistallFooter();
     QWidget *UninstallBody();
     QWidget *UninstallFooter();
 
@@ -94,6 +95,7 @@ private:
     QWidget *UninstallFailedBody();
 
  public slots:
+    void unistallClear();
     void setUsername(const QString&);
     void editUsernameBegin(const QString&);
     void editUsernameFinish();
@@ -125,6 +127,8 @@ private:
     bool        m_DiskSizeEnough;
 
     bool        m_EnableClose;
+
+    bool        m_AcceptKey;
 
     DeepinInstaller::Backend* m_Backend;
 
