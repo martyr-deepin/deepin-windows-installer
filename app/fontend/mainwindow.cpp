@@ -69,11 +69,6 @@ void MainWindow::keyReleaseEvent(QKeyEvent *k) {
     }
 }
 
-MainWindow::~MainWindow() {
-    qDebug()<<"Delete m_Backend";
-    delete m_Backend;
-}
-
 QWidget *MainWindow::InstallOptionBody(){
     QWidget *widget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
