@@ -1,5 +1,6 @@
 #include <QApplication>
 
+#include "Windows.h"
 #include "fontend/mainwindow.h"
 
 #include "backend/backendfactory.h"
@@ -9,7 +10,6 @@
 #include "config/config.h"
 
 #include <xsys.h>
-
 
 #include <QApplication>
 #include <QStandardPaths>
@@ -55,7 +55,22 @@ bool processArgs(QApplication &app) {
     return uninstall;
 }
 
+bool g_showCrashDialog = false;
+
+LONG WINAPI OurCrashHandler(EXCEPTION_POINTERS * /*ExceptionInfo*/) {
+    return g_showCrashDialog ? EXCEPTION_CONTINUE_SEARCH : EXCEPTION_EXECUTE_HANDLER;
+}
+
+LONG WINAPI RedirectedSetUnhandledExceptionFilter(EXCEPTION_POINTERS * /*ExceptionInfo*/) {
+    // When the CRT calls SetUnhandledExceptionFilter with NULL parameter
+    // our handler will not get removed.
+    return 0;
+}
+
 int main(int argc, char**argv) {
+    ::SetUnhandledExceptionFilter(OurCrashHandler);
+    //CAPIHook apiHook("kernel32.dll", "SetUnhandledExceptionFilter", (PROC)RedirectedSetUnhandledExceptionFilter);
+
     Q_INIT_RESOURCE(xsys);
     Q_INIT_RESOURCE(dwidget);
     QApplication app(argc, argv);
