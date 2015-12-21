@@ -25,7 +25,6 @@ bool processArgs(QApplication &app) {
     QCoreApplication::setApplicationVersion("1.0");
 
     QCommandLineParser parser;
-    //parser.setApplicationDescription("Test helper");
     parser.addHelpOption();
     parser.addVersionOption();
 

@@ -86,8 +86,6 @@ void Backend::Init(
     m_Info.ReleaseInfo = "Deepin";
 
     m_Progress=0;
-    connect(this, SIGNAL(Install()), this, SLOT(AsyncInstall()));
-    connect(this, SIGNAL(Uninstall()), this, SLOT(AsyncUninstall()));
 }
 
 int Backend::Go(){
@@ -95,6 +93,7 @@ int Backend::Go(){
     this->moveToThread(worker);
     worker->start();
 
+    connect(this, SIGNAL(Install()), this, SLOT(AsyncInstall()));
     emit Install();
 
     return Success;
@@ -104,6 +103,8 @@ int Backend::GoBack(){
     QThread *worker = new QThread();;
     this->moveToThread(worker);
     worker->start();
+
+    connect(this, SIGNAL(Uninstall()), this, SLOT(AsyncUninstall()));
 
     emit Uninstall();
 
