@@ -37,13 +37,6 @@ CONFIG(debug, debug|release) {
     win32: TARGET = $$join(TARGET,,,d)
 }
 
-
-win32-msvc* {
-    DEFINES += _USING_V110_SDK71_
-    QMAKE_LFLAGS += /MANIFESTUAC:"level='requireAdministrator'uiAccess='false'"
-    QMAKE_LFLAGS += /SUBSYSTEM:WINDOWS",5.1"
-}
-
 RESOURCES += \
     xsys.qrc \
 
