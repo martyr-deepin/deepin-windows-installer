@@ -17,7 +17,6 @@ class MainWindow : public DeepinWidget::DMainWindow
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
 
     virtual void keyReleaseEvent(QKeyEvent *);
 

@@ -105,6 +105,7 @@ int Backend::GoBack(){
     worker->start();
 
     connect(this, SIGNAL(Uninstall()), this, SLOT(AsyncUninstall()));
+
     emit Uninstall();
 
     return Success;
