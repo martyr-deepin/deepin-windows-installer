@@ -6,12 +6,6 @@
 /*select the best font*/
 #include <QFontDatabase>
 
-QFont g_CurrentFont;
-
-QFont CurrentFont() {
-    return g_CurrentFont;
-}
-
 void LoadFonts() {
     QFontDatabase database;
     QStringList fontlist = database.families();
@@ -24,7 +18,7 @@ void LoadFonts() {
 
     foreach (QString font, preferList) {
         if (fontlist.contains(font)) {
-            g_CurrentFont = QFont(font, 11);
+            QFont g_CurrentFont = QFont(font, 11);
             QApplication::setFont(g_CurrentFont);
             qDebug()<<"Load font: "<<font
                     <<"Current"<<g_CurrentFont.family();

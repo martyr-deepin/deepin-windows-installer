@@ -78,7 +78,7 @@ public:
     //5
     virtual int CreateUninstaller() = 0;
 
-    //70
+    //50
     virtual int FetchISO() = 0;
 
     //10
@@ -95,6 +95,9 @@ public:
 
     //1
     virtual int InstallGrub() = 0;
+
+    // 20
+    virtual int MigrationData() = 0;
 
     virtual int  UninstallApp() = 0;
 

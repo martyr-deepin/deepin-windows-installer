@@ -36,7 +36,18 @@ struct DiskInfo {
     quint64 FreeSpace; //GB
     PartitonStyle Style;
     bool Encrypt;
+
+    QString Label;
+    QString VolumeName;
+    QString VolumeLetter;
+    DWORD VolumeSerialNumber;
+    DWORD MaximumComponentLength;
+    DWORD FileSystemFlags;
+    QString FileSystemName;
+    QString UUID;
 };
+
+QList<DiskInfo> GetAllLocalDiskList();
 
 QList<DiskInfo> GetLocalDiskList(quint64 minSizeInGb = 10,
                                                  const QString &type="NTFS",

@@ -88,7 +88,8 @@ void Backend::Init(
     m_Progress=0;
 }
 
-int Backend::Go(){
+int Backend::Go(){  
+    qDebug()<<QThread::currentThread();
     QThread *worker = new QThread();;
     this->moveToThread(worker);
     worker->start();
@@ -100,6 +101,7 @@ int Backend::Go(){
 }
 
 int Backend::GoBack(){
+    qDebug()<<QThread::currentThread();
     QThread *worker = new QThread();;
     this->moveToThread(worker);
     worker->start();
@@ -118,6 +120,7 @@ void Backend::AsyncInstall() {
     QList<InstallAction> actions;
     actions.push_back(&Backend::CreateInstallDir);
     actions.push_back(&Backend::CreateUninstaller);
+    actions.push_back(&Backend::MigrationData);
     actions.push_back(&Backend::FetchISO);
     actions.push_back(&Backend::ExtractISO);
     actions.push_back(&Backend::CreateVirtualDisks);
@@ -150,6 +153,7 @@ int Backend::CreateInstallDir() {
 
     QStringList installStructure;
     installStructure.append("deepin");
+    installStructure.append("deepin/data");
     installStructure.append("deepin/disks");
     installStructure.append("deepin/install");
     installStructure.append("deepin/install/boot");

@@ -443,4 +443,113 @@ QList<DiskInfo> GetLocalDiskList(quint64 minSizeInGb,
     return disklist;
 }
 
+QString formatFat32UUID(LARGE_INTEGER uuid) {
+    byte b[4];
+    DWORD uuidHigh = uuid.HighPart;
+    memcpy(b, &uuidHigh, 4);
+    QString uuidstr = QString("%1%2-%3%4")
+            .arg(b[3],2,16,QLatin1Char('0'))
+            .arg(b[2],2,16,QLatin1Char('0'))
+            .arg(b[1],2,16,QLatin1Char('0'))
+            .arg(b[0],2,16,QLatin1Char('0'))
+            .toUpper();
+    return uuidstr;
+}
+
+QString formatNTFSUUID(LARGE_INTEGER uuid) {
+    byte b[8];
+    memcpy(b, &uuid, 8);
+    QString uuidstr = QString("%1%2%3%4%5%6%7%8")
+            .arg(b[7],2,16,QLatin1Char('0'))
+            .arg(b[6],2,16,QLatin1Char('0'))
+            .arg(b[5],2,16,QLatin1Char('0'))
+            .arg(b[4],2,16,QLatin1Char('0'))
+            .arg(b[3],2,16,QLatin1Char('0'))
+            .arg(b[2],2,16,QLatin1Char('0'))
+            .arg(b[1],2,16,QLatin1Char('0'))
+            .arg(b[0],2,16,QLatin1Char('0'))
+            .toUpper();
+    return uuidstr;
+}
+
+LARGE_INTEGER getUUID(const QString &letter) {
+    QString filePath = QString("\\\\.\\%1:").arg(letter.toUpper());
+    HANDLE fileHandle = CreateFile(filePath.toStdWString().c_str(), // or use syntax "\\?\Volume{GUID}"
+                                   GENERIC_READ,
+                                   FILE_SHARE_READ|FILE_SHARE_WRITE,
+                                   NULL,
+                                   OPEN_EXISTING,
+                                   NULL,
+                                   NULL);
+    DWORD i;
+    NTFS_VOLUME_DATA_BUFFER ntfsInfo;
+    DeviceIoControl(fileHandle,
+                    FSCTL_GET_NTFS_VOLUME_DATA,
+                    NULL,
+                    0,
+                    &ntfsInfo,
+                    sizeof(ntfsInfo),
+                    &i,
+                    NULL);
+    qDebug() << "UUID is "
+             << std::hex
+             << ntfsInfo.VolumeSerialNumber.HighPart
+             << std::hex
+             << ntfsInfo.VolumeSerialNumber.LowPart
+             << endl;
+    CloseHandle(fileHandle);
+    return ntfsInfo.VolumeSerialNumber;
+}
+
+QList<DiskInfo> GetAllLocalDiskList(){
+    QList<DiskInfo> disklist;
+    QFileInfoList devlist = QDir::drives();
+    for (int i = 0; i < devlist.size(); ++i)
+    {
+        QString devname = QDir::toNativeSeparators(devlist.at(i).path().toUpper()).remove("\\");
+        if (GetDriveType(LPWSTR(devname.utf16())) == DRIVE_FIXED)
+        {
+            PARTITION_INFORMATION_EX piex;
+            Xapi::GetPartitionEx (devname, &piex);
+            DiskInfo diskinfo;
+            WCHAR VolumeNameBuffer[1024];
+            DWORD VolumeSerialNumber;
+            DWORD MaximumComponentLength;
+            DWORD FileSystemFlags;
+            WCHAR FileSystemNameBuffer[1024];
+
+            QString root = devname + "\\";
+            /*BOOLEAN ret = */GetVolumeInformation(reinterpret_cast<const wchar_t *>(root.utf16()), VolumeNameBuffer, 1024,
+                                             &VolumeSerialNumber, &MaximumComponentLength,
+                                             &FileSystemFlags, FileSystemNameBuffer, 1024);
+            diskinfo.Label = QString::fromWCharArray(VolumeNameBuffer);
+            if (diskinfo.Label.isEmpty()) {
+                diskinfo.Label = "本地磁盘";
+            }
+            diskinfo.VolumeLetter = devname.remove(":").toUpper();
+            diskinfo.VolumeName = "VOLUME_" + diskinfo.VolumeLetter;
+            diskinfo.VolumeSerialNumber = VolumeSerialNumber;
+            diskinfo.MaximumComponentLength = MaximumComponentLength;
+            diskinfo.FileSystemFlags = FileSystemFlags;
+            diskinfo.FileSystemName = QString::fromWCharArray(FileSystemNameBuffer);
+
+            LARGE_INTEGER uuid = getUUID(diskinfo.VolumeLetter);
+
+            if ("FAT32" == diskinfo.FileSystemName) {
+                diskinfo.FileSystemName = "vfat";
+                diskinfo.UUID = formatFat32UUID(uuid);
+            } else if ("NTFS" == diskinfo.FileSystemName) {
+                diskinfo.FileSystemName = "ntfs";
+                diskinfo.UUID = formatNTFSUUID(uuid);
+            } else {
+                //TODO: other disk format
+                diskinfo.UUID = formatNTFSUUID(uuid);
+            }
+
+            disklist.push_back(diskinfo);
+        }
+    }
+    return disklist;
+}
+
 }

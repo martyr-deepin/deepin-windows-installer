@@ -12,21 +12,21 @@
 static QString g_LogPath;
 #include <io.h>
 #include <fcntl.h>
-void crashMessageOutput(QtMsgType type, const QMessageLogContext &, const QString & str)
+void crashMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString & str)
 {
     QString txt;
     switch (type) {
         case QtDebugMsg:
-            txt = QString("Debug: %1").arg(str);
+            txt = QString("Debug: %1 %2 %3 %4").arg(context.function).arg(context.file).arg(context.line).arg(str);
             break;
         case QtWarningMsg:
-            txt = QString("Warning: %1").arg(str);
+            txt = QString("Warning: %1 %2 %3 %4").arg(context.function).arg(context.file).arg(context.line).arg(str);
             break;
         case QtCriticalMsg:
-            txt = QString("Critical: %1").arg(str);
+            txt = QString("Critical: %1 %2 %3 %4").arg(context.function).arg(context.file).arg(context.line).arg(str);
             break;
         case QtFatalMsg:
-            txt = QString("Fatal: %").arg(str);
+            txt = QString("Fatal: %1 %2 %3 %4").arg(context.function).arg(context.file).arg(context.line).arg(str);
             abort();
     }
 
@@ -38,7 +38,7 @@ void crashMessageOutput(QtMsgType type, const QMessageLogContext &, const QStrin
 
     std::locale locale("");
     std::wcout.imbue(locale);
-    std::wcout<<"[debug]"<<txt.toStdWString()<<std::endl;
+    std::wcout<<"[debug]"<<str.toStdWString()<<std::endl;
 }
 
 void InstallLogHandler() {

@@ -18,6 +18,13 @@ SOURCES += \
 HEADERS += \
     backend/winbackend.h
 
+
+#win32 {
+#    VLD_PATH = "D:/Develop/Visual Leak Detector"
+#    INCLUDEPATH += $$VLD_PATH/include
+#    LIBS += -L$$VLD_PATH/lib/Win32 -lvld
+#}
+
 QMAKE_LFLAGS += /MANIFESTUAC:\"level=\'requireAdministrator\' uiAccess=\'false\'\"
 
 RC_FILE += data\deepin-system-installer.rc
@@ -33,7 +40,8 @@ SOURCES += \
     config/log.cpp \
     fontend/widgets/dheaderwidget.cpp \
     fontend/widgets/dfooterwidget.cpp \
-    backend/utils.cpp
+    backend/utils.cpp \
+    backend/migration.cpp
 
 HEADERS += \
     backend/backend.h \
@@ -44,7 +52,8 @@ HEADERS += \
     backend/utils.h \
     config/log.h \
     config/config.h \
-    backend/progressreporter.h
+    backend/progressreporter.h \
+    backend/migration.h
 
 RESOURCES += \
     bootloader.qrc \

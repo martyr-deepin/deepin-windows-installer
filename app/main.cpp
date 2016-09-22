@@ -20,6 +20,10 @@
 #include <QThread>
 #include <QMessageBox>
 
+#ifdef _DEBUG
+//#include "vld.h"
+#endif
+
 bool processArgs(QApplication &app) {
     QCoreApplication::setApplicationName("Deepin System Installer");
     QCoreApplication::setApplicationVersion("1.0");
@@ -73,6 +77,7 @@ int main(int argc, char**argv) {
     Q_INIT_RESOURCE(xsys);
     Q_INIT_RESOURCE(dwidget);
     QApplication app(argc, argv);
+
     InstallLogHandler();
 
     if (processArgs(app)) {

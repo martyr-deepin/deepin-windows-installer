@@ -37,6 +37,8 @@ public:
 
     virtual int InstallGrub();
 
+    virtual int MigrationData();
+
 private:
     bool VerfiyMD5(const QString &root, const QString md5file);
 

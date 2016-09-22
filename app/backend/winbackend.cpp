@@ -2,7 +2,7 @@
 #include "utils.h"
 
 #include "../config/log.h"
-
+#include "migration.h"
 #include <xsys.h>
 
 #include <Firmware>
@@ -808,6 +808,16 @@ int WindowsBackend::InstallGrub() {
     newGrub.close();
     this->Increment (1);
     return ret = Success;
+}
+
+int WindowsBackend::MigrationData()
+{
+    int ret = Failed;
+    FunctionLoger<int> log("MigrationData", ret);
+    Migration migrationer(m_Info.InstallPath);
+    migrationer.run();
+    ret = Success;
+    return ret;
 }
 
 
