@@ -81,7 +81,7 @@ public:
     //50
     virtual int FetchISO() = 0;
 
-    //10
+    //10 add extract window hooks
     virtual int ExtractISO();
 
     //5

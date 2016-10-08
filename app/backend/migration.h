@@ -20,6 +20,8 @@ private:
     void createMigrationDataConfig();
     void createVolumeLetterConfig();
 
+    void runMigrationScript();
+
     QString rootDir;
     QString migrationDataConfigFile;
     QString volumeLetterConfigFile;

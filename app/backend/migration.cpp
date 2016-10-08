@@ -9,10 +9,10 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QSettings>
+#include <QCoreApplication>
 
 #include <windows.h>
 #include <shlobj.h>
-
 using namespace DeepinInstaller;
 
 Migration::Migration(const QString &root, QObject *parent) :
@@ -23,8 +23,9 @@ Migration::Migration(const QString &root, QObject *parent) :
     volumeLetterConfigFile = rootDir + "\\data\\volume_letter.conf";
 }
 
-QString removeSpace(QString raw) {
-    return raw.left(raw.length()-1).right(raw.length()-2);
+QString removeSpace(QString raw)
+{
+    return raw.left(raw.length() - 1).right(raw.length() - 2);
 }
 
 
@@ -32,15 +33,15 @@ bool Migration::run()
 {
     createMigrationDataConfig();
     createVolumeLetterConfig();
+    runMigrationScript();
     return true;
 }
 
-void Migration::createMigrationDataConfig() {
+void Migration::createMigrationDataConfig()
+{
     WCHAR sysPath[MAX_PATH];
     GetSystemDirectory(sysPath, MAX_PATH);
     QString sysLetter = QString::fromWCharArray(sysPath).left(1);
-
-//    QString migraFileName = sysLetter + ":\\.deepin_data_migration.ini";
 
     QString migraFileName = migrationDataConfigFile;
     QFile outFile(migraFileName);
@@ -55,16 +56,16 @@ void Migration::createMigrationDataConfig() {
 
     QString uuids = " ";
     Config DeepinDataMigration;
-    for (itor = alldisklist.begin(); itor != alldisklist.end(); ++itor){
-        qDebug()<<"Add  Disk"<<itor->VolumeLetter;
-        qDebug()<<"     Vol "<<itor->VolumeName;
-        qDebug()<<"     Labe"<<itor->Label;
-        qDebug()<<"     Seri"<<itor->UUID;
-        qDebug()<<"     Type"<<itor->FileSystemName;
+    for (itor = alldisklist.begin(); itor != alldisklist.end(); ++itor) {
+        qDebug() << "Add  Disk" << itor->VolumeLetter;
+        qDebug() << "     Vol " << itor->VolumeName;
+        qDebug() << "     Labe" << itor->Label;
+        qDebug() << "     Seri" << itor->UUID;
+        qDebug() << "     Type" << itor->FileSystemName;
         if ("ntfs" == itor->FileSystemName || "vfat" == itor->FileSystemName) {
             Selection *Volume = new Selection();
             Volume->insert("Letter", itor->VolumeLetter);
-            Volume->insert("Label", "\""+itor->Label+"\"");
+            Volume->insert("Label", "\"" + itor->Label + "\"");
             Volume->insert("Format", itor->FileSystemName);
             DeepinDataMigration.insert(itor->UUID , Volume);
             uuids += itor->UUID + ",";
@@ -109,13 +110,13 @@ void Migration::createMigrationDataConfig() {
 //    collectNetWork(&DeepinDataMigration);
 
     Config::iterator selitor;
-    for (selitor = DeepinDataMigration.begin(); selitor != DeepinDataMigration.end(); ++selitor ) {
-        ts<<"["<<selitor.key() <<"]"<<endl;
+    for (selitor = DeepinDataMigration.begin(); selitor != DeepinDataMigration.end(); ++selitor) {
+        ts << "[" << selitor.key() << "]" << endl;
         Selection::iterator kvitor;
-        for (kvitor = selitor.value()->begin(); kvitor != selitor.value()->end(); ++kvitor ) {
-            ts<<kvitor.key() <<"="<<kvitor.value()<<endl;
+        for (kvitor = selitor.value()->begin(); kvitor != selitor.value()->end(); ++kvitor) {
+            ts << kvitor.key() << "=" << kvitor.value() << endl;
         }
-        ts<<endl;
+        ts << endl;
     }
     outFile.close();
 }
@@ -129,9 +130,9 @@ void Migration::createVolumeLetterConfig()
     auto uuidList = dataMigrationSettings.value("Volumes").toStringList();
     dataMigrationSettings.endGroup();
 
-    qDebug()<<volumeLetterConfigFile<<uuidList;
+    qDebug() << volumeLetterConfigFile << uuidList;
     volumeLetterSettings.beginGroup("Volume");
-    foreach (auto uuid, uuidList){
+    foreach (auto uuid, uuidList) {
         dataMigrationSettings.beginGroup(uuid);
         auto letter = dataMigrationSettings.value("Letter").toString();
         dataMigrationSettings.endGroup();
@@ -139,6 +140,35 @@ void Migration::createVolumeLetterConfig()
     }
     volumeLetterSettings.endGroup();
     volumeLetterSettings.sync();
+}
+
+static void runScriptDirs(QDir scriptDir, QDir workDir)
+{
+    QFileInfoList scriptList = scriptDir.entryInfoList(QStringList() << "*.bat");
+    for (const QFileInfo &fi : scriptList) {
+        qDebug() << fi.filePath();
+        Xapi::SynExec("cmd",  QString("/C %1 %2")
+                      .arg(fi.filePath())
+                      .arg(QDir::toNativeSeparators(workDir.absolutePath())));
+    }
+}
+
+void Migration::runMigrationScript()
+{
+    // find pargram path
+    QDir workDir(rootDir);
+    workDir.cd("install/data/migration");
+
+    QDir hookDir(qApp->applicationDirPath());
+    qDebug() << hookDir;
+    if (hookDir.cd("hook/migration")) {
+        return runScriptDirs(hookDir, workDir);
+    }
+
+    hookDir = QDir(rootDir);
+    hookDir.cd("install/hook/migration");
+
+    return runScriptDirs(hookDir, workDir);
 }
 
 typedef struct _NetworkInterfaceEntry {
@@ -150,7 +180,7 @@ typedef struct _NetworkInterfaceEntry {
     QString Gateway;
     QString PrimacyDNS;
     QString SecondDNS;
-}NetworkInterfaceEntry;
+} NetworkInterfaceEntry;
 
 
 #include <iphlpapi.h>
@@ -164,7 +194,8 @@ typedef struct _NetworkInterfaceEntry {
 #define MALLOC(x) HeapAlloc(GetProcessHeap(), 0, (x))
 #define FREE(x) HeapFree(GetProcessHeap(), 0, (x))
 
-QList<NetworkInterfaceEntry> listInterfaceEntryOld() {
+QList<NetworkInterfaceEntry> listInterfaceEntryOld()
+{
     QList<NetworkInterfaceEntry> interfaceList;
 
     /* Declare and initialize variables */
@@ -182,13 +213,13 @@ QList<NetworkInterfaceEntry> listInterfaceEntryOld() {
     DWORD dwRetVal = 0;
     UINT i;
 
-/* variables used to print DHCP time info */
+    /* variables used to print DHCP time info */
     struct tm newtime;
     char buffer[32];
     errno_t error;
 
-    ULONG ulOutBufLen = sizeof (IP_ADAPTER_INFO);
-    pAdapterInfo = (IP_ADAPTER_INFO *) MALLOC(sizeof (IP_ADAPTER_INFO));
+    ULONG ulOutBufLen = sizeof(IP_ADAPTER_INFO);
+    pAdapterInfo = (IP_ADAPTER_INFO *) MALLOC(sizeof(IP_ADAPTER_INFO));
     if (pAdapterInfo == NULL) {
         printf("Error allocating memory needed to call GetAdaptersinfo\n");
         return interfaceList;
@@ -217,11 +248,10 @@ QList<NetworkInterfaceEntry> listInterfaceEntryOld() {
             printf("\tAdapter Desc: \t%s\n", pAdapter->Description);
             printf("\tAdapter Addr: \t");
             for (i = 0; i < pAdapter->AddressLength; i++) {
-                if (i == (pAdapter->AddressLength - 1)){
+                if (i == (pAdapter->AddressLength - 1)) {
                     entry.Mac += QString("%1").arg(pAdapter->Address[i], 2, 16, QLatin1Char('0'));
                     printf("%.2X\n", (int) pAdapter->Address[i]);
-                }
-                else{
+                } else {
                     entry.Mac += QString("%1:").arg(pAdapter->Address[i], 2, 16, QLatin1Char('0'));
                     printf("%.2X-", (int) pAdapter->Address[i]);
                 }
@@ -273,34 +303,39 @@ QList<NetworkInterfaceEntry> listInterfaceEntryOld() {
 
                 printf("\t  Lease Obtained: ");
                 /* Display local time */
-                error = _localtime32_s(&newtime, (__time32_t*) &pAdapter->LeaseObtained);
-                if (error)
+                error = _localtime32_s(&newtime, (__time32_t *) &pAdapter->LeaseObtained);
+                if (error) {
                     printf("Invalid Argument to _localtime32_s\n");
-                else {
+                } else {
                     // Convert to an ASCII representation
                     error = asctime_s(buffer, 32, &newtime);
-                    if (error)
+                    if (error) {
                         printf("Invalid Argument to asctime_s\n");
-                    else
+                    } else
                         /* asctime_s returns the string terminated by \n\0 */
+                    {
                         printf("%s", buffer);
+                    }
                 }
 
                 printf("\t  Lease Expires:  ");
-                error = _localtime32_s(&newtime, (__time32_t*) &pAdapter->LeaseExpires);
-                if (error)
+                error = _localtime32_s(&newtime, (__time32_t *) &pAdapter->LeaseExpires);
+                if (error) {
                     printf("Invalid Argument to _localtime32_s\n");
-                else {
+                } else {
                     // Convert to an ASCII representation
                     error = asctime_s(buffer, 32, &newtime);
-                    if (error)
+                    if (error) {
                         printf("Invalid Argument to asctime_s\n");
-                    else
+                    } else
                         /* asctime_s returns the string terminated by \n\0 */
+                    {
                         printf("%s", buffer);
+                    }
                 }
-            } else
+            } else {
                 printf("\tDHCP Enabled: No\n");
+            }
 
             if (pAdapter->HaveWins) {
                 printf("\tHave Wins: Yes\n");
@@ -308,8 +343,9 @@ QList<NetworkInterfaceEntry> listInterfaceEntryOld() {
                        pAdapter->PrimaryWinsServer.IpAddress.String);
                 printf("\t  Secondary Wins Server:  %s\n",
                        pAdapter->SecondaryWinsServer.IpAddress.String);
-            } else
+            } else {
                 printf("\tHave Wins: No\n");
+            }
             pAdapter = pAdapter->Next;
             printf("\n");
         }
@@ -317,8 +353,9 @@ QList<NetworkInterfaceEntry> listInterfaceEntryOld() {
         printf("GetAdaptersInfo failed with error: %d\n", dwRetVal);
 
     }
-    if (pAdapterInfo)
+    if (pAdapterInfo) {
         FREE(pAdapterInfo);
+    }
 
     return interfaceList;
 }
@@ -326,65 +363,64 @@ QList<NetworkInterfaceEntry> listInterfaceEntryOld() {
 typedef struct _IPInterface {
     QString Name;
     QString IP;
-}IPInterface;
+} IPInterface;
 
 #include <QNetworkInterface>
 
-QList<IPInterface> listActiveInterface() {
+QList<IPInterface> listActiveInterface()
+{
     QList<IPInterface> interfaceList;
     QList<QNetworkInterface> ifaces = QNetworkInterface::allInterfaces();
-    if ( !ifaces.isEmpty() )
-    {
-      for(int i=0; i < ifaces.size(); i++)
-      {
+    if (!ifaces.isEmpty()) {
+        for (int i = 0; i < ifaces.size(); i++) {
 
-        unsigned int flags = ifaces[i].flags();
-        bool isLoopback = (bool)(flags & QNetworkInterface::IsLoopBack);
-        bool isP2P = (bool)(flags & QNetworkInterface::IsPointToPoint);
-        bool isRunning = (bool)(flags & QNetworkInterface::IsRunning);
+            unsigned int flags = ifaces[i].flags();
+            bool isLoopback = (bool)(flags & QNetworkInterface::IsLoopBack);
+            bool isP2P = (bool)(flags & QNetworkInterface::IsPointToPoint);
+            bool isRunning = (bool)(flags & QNetworkInterface::IsRunning);
 
-        // If this interface isn't running, we don't care about it
-        if ( !isRunning ) continue;
-        // We only want valid interfaces that aren't loopback/virtual and not point to point
-        if ( !ifaces[i].isValid() || isLoopback || isP2P ) continue;
-        QList<QNetworkAddressEntry> addresses = ifaces[i].addressEntries();
-        for(int a=0; a < addresses.size(); a++)
-        {
-          QHostAddress ipaddr = addresses[a].ip();
-          qDebug()<<ipaddr;
-          // Ignore local host
-          if ( ipaddr == QHostAddress::LocalHost ) continue;
+            // If this interface isn't running, we don't care about it
+            if (!isRunning) { continue; }
+            // We only want valid interfaces that aren't loopback/virtual and not point to point
+            if (!ifaces[i].isValid() || isLoopback || isP2P) { continue; }
+            QList<QNetworkAddressEntry> addresses = ifaces[i].addressEntries();
+            for (int a = 0; a < addresses.size(); a++) {
+                QHostAddress ipaddr = addresses[a].ip();
+                qDebug() << ipaddr;
+                // Ignore local host
+                if (ipaddr == QHostAddress::LocalHost) { continue; }
 
-          // Ignore non-ipv4 addresses
-          if ( !ipaddr.toIPv4Address() ) continue;
+                // Ignore non-ipv4 addresses
+                if (!ipaddr.toIPv4Address()) { continue; }
 
-          QString ip = ipaddr.toString();
-          if ( ip.isEmpty() ) continue;
-          IPInterface ii;
-          ii.Name = ifaces[i].humanReadableName();
-          ii.IP = ip;
-          interfaceList.push_back( ii );
-          qDebug() << "possible address: " << ifaces[i].humanReadableName() << "->" << ip;
+                QString ip = ipaddr.toString();
+                if (ip.isEmpty()) { continue; }
+                IPInterface ii;
+                ii.Name = ifaces[i].humanReadableName();
+                ii.IP = ip;
+                interfaceList.push_back(ii);
+                qDebug() << "possible address: " << ifaces[i].humanReadableName() << "->" << ip;
+            }
         }
-      }
     }
     return interfaceList;
 }
 
-QString getAddrStirng( SOCKET_ADDRESS addr) {
+QString getAddrStirng(SOCKET_ADDRESS addr)
+{
     WCHAR cAddr[160];
-    DWORD cLen=160;
+    DWORD cLen = 160;
     int iErr;
-    ZeroMemory(cAddr,160);
-    if (SOCKET_ERROR == WSAAddressToString((SOCKADDR *)(addr.lpSockaddr),sizeof(SOCKADDR),NULL,cAddr,&cLen))
-    {
-        iErr=WSAGetLastError();
-        qDebug()<<"ERRROR"<<iErr;
+    ZeroMemory(cAddr, 160);
+    if (SOCKET_ERROR == WSAAddressToString((SOCKADDR *)(addr.lpSockaddr), sizeof(SOCKADDR), NULL, cAddr, &cLen)) {
+        iErr = WSAGetLastError();
+        qDebug() << "ERRROR" << iErr;
     }
     return QString::fromStdWString(cAddr);
 }
 
-QList <NetworkInterfaceEntry> listInterfaceEntry () {
+QList <NetworkInterfaceEntry> listInterfaceEntry()
+{
     QList<NetworkInterfaceEntry> interfaceList;
 
     WORD wVersionRequested;
@@ -426,7 +462,7 @@ QList <NetworkInterfaceEntry> listInterfaceEntry () {
     pAnycast = NULL;
     pMulticast = NULL;
 
-    outBufLen = sizeof (IP_ADAPTER_ADDRESSES);
+    outBufLen = sizeof(IP_ADAPTER_ADDRESSES);
     pAddresses = (IP_ADAPTER_ADDRESSES *) MALLOC(outBufLen);
     if (pAddresses == NULL) {
         printf("Memory allocation failed for IP_ADAPTER_ADDRESSES struct!\n");
@@ -442,14 +478,16 @@ QList <NetworkInterfaceEntry> listInterfaceEntry () {
         printf("Not enough buffer! Re-allocating...\n");
         FREE(pAddresses);
         pAddresses = (IP_ADAPTER_ADDRESSES *) MALLOC(outBufLen);
-    } else
+    } else {
         printf("Buffer allocation is OK!\n");
+    }
 
     if (pAddresses == NULL) {
         printf("Memory allocation failed for IP_ADAPTER_ADDRESSES struct!\n");
         exit(1);
-    }else
+    } else {
         printf("Memory allocation for IP_ADAPTER_ADDRESSES struct is OK!\n");
+    }
 
     // Make a second call to GetAdapters Addresses to get the actual data we want
     printf("Memory allocated for GetAdapterAddresses = %d bytes\n", outBufLen);
@@ -469,7 +507,7 @@ QList <NetworkInterfaceEntry> listInterfaceEntry () {
             pUnicast = pCurrAddresses->FirstUnicastAddress;
             if (pUnicast != NULL) {
                 entry.IP = getAddrStirng(pUnicast->Address);
-                qDebug()<<entry.IP;
+                qDebug() << entry.IP;
             }
 
             pDnServer = pCurrAddresses->FirstDnsServerAddress;
@@ -478,8 +516,8 @@ QList <NetworkInterfaceEntry> listInterfaceEntry () {
                 if (pDnServer->Next) {
                     entry.SecondDNS = getAddrStirng(pDnServer->Next->Address);
                 }
-                qDebug()<<entry.PrimacyDNS;
-                qDebug()<<entry.SecondDNS;
+                qDebug() << entry.PrimacyDNS;
+                qDebug() << entry.SecondDNS;
             }
 
             entry.ID = QString::fromStdWString(pCurrAddresses->Description);
@@ -487,12 +525,11 @@ QList <NetworkInterfaceEntry> listInterfaceEntry () {
 
             if (pCurrAddresses->PhysicalAddressLength != 0) {
                 printf("\tPhysical address: ");
-                for (i = 0; i < (int) pCurrAddresses->PhysicalAddressLength; i++)
-                {
+                for (i = 0; i < (int) pCurrAddresses->PhysicalAddressLength; i++) {
                     if (i == (pCurrAddresses->PhysicalAddressLength - 1)) {
                         entry.Mac += QString("%1").arg(pCurrAddresses->PhysicalAddress[i], 2, 16, QLatin1Char('0'));
                         printf("%.2X\n", (int) pCurrAddresses->PhysicalAddress[i]);
-                    }else{
+                    } else {
                         entry.Mac += QString("%1:").arg(pCurrAddresses->PhysicalAddress[i], 2, 16, QLatin1Char('0'));
                         printf("%.2X-", (int) pCurrAddresses->PhysicalAddress[i]);
                     }
@@ -507,8 +544,8 @@ QList <NetworkInterfaceEntry> listInterfaceEntry () {
             printf("\tZoneIndices (hex): ");
 
             pPrefix = pCurrAddresses->FirstPrefix;
-            if (pPrefix){
-                qDebug()<<"Pre"<<getAddrStirng(pPrefix->Address);
+            if (pPrefix) {
+                qDebug() << "Pre" << getAddrStirng(pPrefix->Address);
 
                 printf("\tNumber of IP Adapter Prefix entries: %d\n", i);
             } else {
@@ -525,15 +562,16 @@ QList <NetworkInterfaceEntry> listInterfaceEntry () {
 
 #include <QTcpSocket>
 
-bool collectNetWork(Config *cfg) {
+bool collectNetWork(Config *cfg)
+{
     QList<NetworkInterfaceEntry> newentrylist = listInterfaceEntry();
     QList<NetworkInterfaceEntry> oldentrylist = listInterfaceEntryOld();
 
     QList<NetworkInterfaceEntry> entrylist;
-    for (int i =0; i<newentrylist.size(); ++i) {
-        for (int j =0; j<oldentrylist.size(); ++j) {
+    for (int i = 0; i < newentrylist.size(); ++i) {
+        for (int j = 0; j < oldentrylist.size(); ++j) {
             if (oldentrylist.at(j).IP == newentrylist.at(i).IP) {
-                NetworkInterfaceEntry entry =oldentrylist.at(j);
+                NetworkInterfaceEntry entry = oldentrylist.at(j);
                 entry.PrimacyDNS = newentrylist.at(i).PrimacyDNS;
                 entry.SecondDNS = newentrylist.at(i).SecondDNS;
                 entrylist.push_back(entry);
@@ -549,11 +587,11 @@ bool collectNetWork(Config *cfg) {
 
 
 
-    for (int i =0; i<entrylist.size(); ++i) {
-        qDebug()<<entrylist.at(i).IP;
+    for (int i = 0; i < entrylist.size(); ++i) {
+        qDebug() << entrylist.at(i).IP;
 
-        for (int j=0; j<activeInterface.size(); ++j) {
-            qDebug()<<activeInterface.at(j).IP;
+        for (int j = 0; j < activeInterface.size(); ++j) {
+            qDebug() << activeInterface.at(j).IP;
             if (entrylist.at(i).IP == activeInterface.at(j).IP) {
                 NetworkInterfaceEntry entry = entrylist.at(i);
                 entry.Name = activeInterface.at(j).Name;
@@ -569,17 +607,16 @@ bool collectNetWork(Config *cfg) {
 
     QTcpSocket dnsTestSocket;
     QString localIP = activeEntrys.at(0).IP;    //fall back
-    for (int i =0; i<activeEntrys.size(); ++i) {
+    for (int i = 0; i < activeEntrys.size(); ++i) {
         QString gatewayAddress  = activeEntrys.at(i).Gateway;  //try google DNS or sth. else reliable first
         dnsTestSocket.connectToHost(gatewayAddress, 53);
-        if (dnsTestSocket.waitForConnected(3000))
-        {
+        if (dnsTestSocket.waitForConnected(3000)) {
             localIP = dnsTestSocket.localAddress().toString();
         }
     }
 
     Selection *CurrentNetwork = new Selection();
-    for (int i =0; i<activeEntrys.size(); ++i) {
+    for (int i = 0; i < activeEntrys.size(); ++i) {
         if (localIP == activeEntrys.at(i).IP) {
             CurrentNetwork->insert("ID", activeEntrys.at(i).ID);
             CurrentNetwork->insert("Name", "\"" + activeEntrys.at(i).Name + "\"");

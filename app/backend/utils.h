@@ -25,7 +25,7 @@ QString ToDeepinHostname(const QString& username);
 
 
 enum PartitonStyle {
-    GPTPartition,
+    GPTPartition = 0,
     MBRPartition,
     RAWPartition,
     UnknowPartition,

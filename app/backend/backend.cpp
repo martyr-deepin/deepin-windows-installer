@@ -88,7 +88,7 @@ void Backend::Init(
     m_Progress=0;
 }
 
-int Backend::Go(){  
+int Backend::Go(){
     qDebug()<<QThread::currentThread();
     QThread *worker = new QThread();;
     this->moveToThread(worker);
@@ -120,10 +120,10 @@ void Backend::AsyncInstall() {
     QList<InstallAction> actions;
     actions.push_back(&Backend::CreateInstallDir);
     actions.push_back(&Backend::CreateUninstaller);
-    actions.push_back(&Backend::MigrationData);
     actions.push_back(&Backend::FetchISO);
     actions.push_back(&Backend::ExtractISO);
     actions.push_back(&Backend::CreateVirtualDisks);
+    actions.push_back(&Backend::MigrationData);
     actions.push_back(&Backend::CreateConfig);
     actions.push_back(&Backend::InstallBootloader);
     actions.push_back(&Backend::InstallGrub);
@@ -153,11 +153,15 @@ int Backend::CreateInstallDir() {
 
     QStringList installStructure;
     installStructure.append("deepin");
-    installStructure.append("deepin/data");
+    installStructure.append("deepin/data"); // TODO: remove
     installStructure.append("deepin/disks");
     installStructure.append("deepin/install");
     installStructure.append("deepin/install/boot");
+    installStructure.append("deepin/install/data");
+    installStructure.append("deepin/install/hook");
     installStructure.append("deepin/install/boot/grub");
+    installStructure.append("deepin/install/hook/migration");
+    installStructure.append("deepin/install/data/migration");
     installStructure.append("deepin/winboot");
 
     qDebug()<<"Install to "<<m_Info.TargetDev;
@@ -214,6 +218,12 @@ int Backend::ExtractISO() {
             + "\"" + imagePath +  "\"";
     Xapi::SynExec(sevenz, cmdline);
 
+    cmdline = QString(" e -y ")
+            + " -i!" + ".hook/migration/ "
+            + " -o" + m_Info.InstallPath + "/install/hook/migration "
+            + "\"" + imagePath +  "\"";
+    Xapi::SynExec(sevenz, cmdline);
+
     this->Increment (4);
     return Success;
 }
@@ -229,6 +239,7 @@ const QString& Backend::Action() const{
 const QString& Backend::Error() const {
     return m_LastError;
 }
+
 /*
     int CreateUninstaller() = 0;
 
@@ -320,12 +331,12 @@ QString Backend::GetRelesaseVersion(const QString& imagePath){
 
     Xapi::Arch arch = Xapi::CpuArch ();
     if (Xapi::X86 == arch && !content.contains("i386")) {
-        qDebug()<<"Skip iso"<<content;
+        qDebug()<<"Unsuport arch" << arch << "Skip iso"<<content;
         return "";
     }
 
     if (!content.contains("Deepin")) {
-        qDebug()<<"Skip iso"<<content;
+        qDebug()<<"Not Deepin System Image,Skip iso"<<content;
         return "";
     }
 
@@ -348,10 +359,10 @@ QString Backend::FetchImageFiles() {
     QDir curDir(curDirPath);
     QStringList fiter;
     fiter.push_back ("*.iso");
-    QStringList imagelist = curDir.entryList (fiter);
+    QFileInfoList imagelist = curDir.entryInfoList (fiter);
     qDebug()<<"Find"<<imagelist.length ()<<"image file";
 
-    QStringList::iterator itor = imagelist.begin ();
+    QFileInfoList::iterator itor = imagelist.begin ();
 
     //Begin calc progress
     int totalProgress = 20;
@@ -360,8 +371,8 @@ QString Backend::FetchImageFiles() {
     ProgressReporter<Backend> *pr = new ProgressReporter<Backend>(this);
     for(;itor != imagelist.end (); ++itor) {
         int progressslice = totalProgress / totalImageNum;
-        qDebug()<<"Find Image File"<<*itor;
-        QString release = GetRelesaseVersion(*itor);
+        qDebug()<<"Find Image File"<<itor->absoluteFilePath();
+        QString release = GetRelesaseVersion(itor->absoluteFilePath());
         if (release.isEmpty ()) {
             qDebug()<<"Find Image empty release"<<release;
             continue;
@@ -372,7 +383,7 @@ QString Backend::FetchImageFiles() {
         qDebug()<<"Check md5"<<md5;
         if (!md5.isEmpty ()) {
             m_BaseRange = progressslice;
-            if (md5 != GetFileMD5 (*itor, pr)) {
+            if (md5 != GetFileMD5 (itor->absoluteFilePath(), pr)) {
                 continue;
             }
             m_BasePersent += progressslice;
@@ -380,7 +391,7 @@ QString Backend::FetchImageFiles() {
         }
 
         m_Info.ReleaseInfo = release;
-        return *itor;
+        return itor->absoluteFilePath();
     }
     return "";
 }

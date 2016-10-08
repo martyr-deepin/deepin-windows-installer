@@ -28,7 +28,7 @@ static const QString RegistryKey = UninstallRegistryKey + AppName;
 
 static QString BlobAppMkisofs = "mkisofs.exe";
 
-enum WindowsVersion{
+enum WindowsVersion {
     WinUnknow,
     Win2000,
     WinXP,
@@ -40,17 +40,17 @@ enum WindowsVersion{
 // TODO: use VerifyVersionInfo
 #pragma warning (disable : 4996)
 
-int GetWindowsVersion() {
+int GetWindowsVersion()
+{
     OSVERSIONINFOEX os;
-    os.dwOSVersionInfoSize=sizeof(os);
-    if(!GetVersionEx((OSVERSIONINFO *)&os))
-    {
-          return WinUnknow;
+    os.dwOSVersionInfoSize = sizeof(os);
+    if (!GetVersionEx((OSVERSIONINFO *)&os)) {
+        return WinUnknow;
     }
 
-    switch(os.dwMajorVersion) {
+    switch (os.dwMajorVersion) {
     case 5:
-        switch(os.dwMinorVersion){
+        switch (os.dwMinorVersion) {
         case 0:
             return Win2000;
         case 1:
@@ -61,7 +61,7 @@ int GetWindowsVersion() {
         }
         break;
     case 6:
-        switch(os.dwMinorVersion) {
+        switch (os.dwMinorVersion) {
         case 0:
             switch (os.wProductType) {
             case VER_NT_WORKSTATION:
@@ -72,7 +72,7 @@ int GetWindowsVersion() {
             }
             break;
         case 1:
-            switch(os.wProductType) {
+            switch (os.wProductType) {
             case VER_NT_WORKSTATION:
                 return WinSeven;
             default:
@@ -90,21 +90,23 @@ int GetWindowsVersion() {
     return WinUnknow;
 }
 
-BootloaderType BCDType () {
+BootloaderType BCDType()
+{
     QString bcdedit = Xapi::SystemDirtory() + "\\bcdedit.exe";
     QString cmd = QString("\"%1\" /enum").arg(bcdedit);
     QString ret =  Xapi::SynExec(cmd, "");
 
     QStringList bootEntryList = ret.split("-------------------").filter("bootmgr");
     foreach (QString entry, bootEntryList) {
-        if (entry.contains("bootmgfw.efi")){
+        if (entry.contains("path") && entry.contains(".efi")) {
             return BCD_UEFI;
         }
     }
     return BCD_BIOS;
 }
 
-BootloaderType WindowsBootLoaderType() {
+BootloaderType WindowsBootLoaderType()
+{
     //Test for win7 first
     switch (GetWindowsVersion()) {
     case WinSeven:
@@ -118,7 +120,8 @@ BootloaderType WindowsBootLoaderType() {
     }
 }
 
-int ESPVolnameIndex() {
+int ESPVolnameIndex()
+{
     QString bcdedit = Xapi::SystemDirtory() + "\\bcdedit.exe";
     QString cmd = QString("\"%1\" /enum").arg(bcdedit);
     QString ret =  Xapi::SynExec(cmd, "");
@@ -130,11 +133,13 @@ int ESPVolnameIndex() {
     return device.toInt();
 }
 
-int DeviceType(const QString &target) {
+int DeviceType(const QString &target)
+{
     return GetDriveType(target.toStdWString().c_str());
 }
 
-QString ToRelativePath(const QString& windowsPath) {
+QString ToRelativePath(const QString &windowsPath)
+{
     QString rpath = windowsPath;
     rpath.replace("\\", "/");
     if ((rpath.length() > 1) && (':' == rpath[1])) {
@@ -147,15 +152,16 @@ QString ToRelativePath(const QString& windowsPath) {
     return rpath;
 }
 
-bool CreateVirtualFile(const QString& filePath, quint64 size) {
+bool CreateVirtualFile(const QString &filePath, quint64 size)
+{
     HANDLE priHandle;
-    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY, &priHandle)) {
-        qDebug()<<"OpenProcessToken  Failed.";
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &priHandle)) {
+        qDebug() << "OpenProcessToken  Failed.";
     }
 
     LUID luid;
     if (!LookupPrivilegeValue(NULL, SE_MANAGE_VOLUME_NAME, &(luid))) {
-        qDebug()<<"LookupPrivilegeValue Failed.";
+        qDebug() << "LookupPrivilegeValue Failed.";
     }
 
     TOKEN_PRIVILEGES token;
@@ -163,20 +169,20 @@ bool CreateVirtualFile(const QString& filePath, quint64 size) {
     token.Privileges[0].Luid = luid;
     token.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
     if (! AdjustTokenPrivileges(priHandle, FALSE, &(token), 0, NULL, NULL)) {
-        qDebug()<<"AdjustTokenPrivileges Failed.";
+        qDebug() << "AdjustTokenPrivileges Failed.";
     }
     CloseHandle(priHandle);
 
     HANDLE handle = CreateFile(
-                filePath.toStdWString().c_str(),
-                GENERIC_READ | GENERIC_WRITE,
-                0,
-                NULL,
-                CREATE_ALWAYS,
-                FILE_ATTRIBUTE_NORMAL,
-                NULL);
+                        filePath.toStdWString().c_str(),
+                        GENERIC_READ | GENERIC_WRITE,
+                        0,
+                        NULL,
+                        CREATE_ALWAYS,
+                        FILE_ATTRIBUTE_NORMAL,
+                        NULL);
     if (handle == INVALID_HANDLE_VALUE) {
-        qDebug()<<"Failed open file"<<filePath;
+        qDebug() << "Failed open file" << filePath;
         return false;
     }
 
@@ -185,12 +191,12 @@ bool CreateVirtualFile(const QString& filePath, quint64 size) {
     filePos.QuadPart = fileBytes;
 
     if (!SetFilePointerEx(handle, filePos, 0, FILE_BEGIN)) {
-        qDebug()<<"Failed SetFilePointerEx"<<filePath <<fileBytes;
+        qDebug() << "Failed SetFilePointerEx" << filePath << fileBytes;
         return false;
     }
 
     if (!SetEndOfFile(handle)) {
-       qDebug()<<"Failed SetEndOfFile"<<filePath;
+        qDebug() << "Failed SetEndOfFile" << filePath;
         return false;
     }
 
@@ -198,12 +204,12 @@ bool CreateVirtualFile(const QString& filePath, quint64 size) {
 
     filePos.QuadPart = 0;
     if (!SetFilePointerEx(handle, filePos, 0, FILE_BEGIN)) {
-        qDebug()<<"Failed SetFilePointerEx 0"<<filePath;
+        qDebug() << "Failed SetFilePointerEx 0" << filePath;
         return false;
     }
 
     //zero File
-    quint64 bufSize = 1024*32;
+    quint64 bufSize = 1024 * 32;
     quint8 *writeBuf = new quint8[bufSize];
     quint64 writeBufSize = bufSize;
     memset(writeBuf, NULL, writeBufSize);
@@ -212,15 +218,15 @@ bool CreateVirtualFile(const QString& filePath, quint64 size) {
     quint64 bytesWrite = writeBufSize;
     DWORD bytesWrited = 0;
     byteCleared += bytesWrited;
-    while(byteCleared < clearBytes) {
+    while (byteCleared < clearBytes) {
         bytesWrite = writeBufSize;
         if (bytesWrite > (fileBytes - byteCleared)) {
             bytesWrite = fileBytes - byteCleared;
         }
 
-        bool ret=WriteFile(handle, writeBuf, bytesWrite, &bytesWrited, NULL);
+        bool ret = WriteFile(handle, writeBuf, bytesWrite, &bytesWrited, NULL);
         if (!ret || (0 == bytesWrited)) {
-            qDebug()<<"Failed WriteFile "<<filePath;
+            qDebug() << "Failed WriteFile " << filePath;
             return false;
         }
 
@@ -229,7 +235,7 @@ bool CreateVirtualFile(const QString& filePath, quint64 size) {
 
     filePos.QuadPart = fileBytes - clearBytes;
     if (!SetFilePointerEx(handle, filePos, 0, FILE_BEGIN)) {
-        qDebug()<<"Failed SetFilePointerEx 0"<<filePath;
+        qDebug() << "Failed SetFilePointerEx 0" << filePath;
         return false;
     }
 
@@ -237,15 +243,15 @@ bool CreateVirtualFile(const QString& filePath, quint64 size) {
     writeBufSize = bufSize;
     bytesWrite = writeBufSize;
     bytesWrited = 0;
-    while(byteCleared < clearBytes) {
+    while (byteCleared < clearBytes) {
         bytesWrite = writeBufSize;
         if (bytesWrite > (fileBytes - byteCleared)) {
             bytesWrite = fileBytes - byteCleared;
         }
 
-        bool ret=WriteFile(handle, writeBuf, bytesWrite, &bytesWrited, NULL);
+        bool ret = WriteFile(handle, writeBuf, bytesWrite, &bytesWrited, NULL);
         if (!ret || (0 == bytesWrited)) {
-            qDebug()<<"Failed WriteFile "<<filePath;
+            qDebug() << "Failed WriteFile " << filePath;
             return false;
         }
 
@@ -261,23 +267,24 @@ int UnpackBootXXXX(const QString &bootxxxx);
 
 
 WindowsBackend::WindowsBackend(
-        const QString &username,
-        const QString &locale,
-        const QString &password,
-        const QString &installTarget,
-        const QString &isoPath,
-        int installSize,
-        QObject *parent):
-    Backend(username, password, locale, installTarget, isoPath, installSize, parent){
+    const QString &username,
+    const QString &locale,
+    const QString &password,
+    const QString &installTarget,
+    const QString &isoPath,
+    int installSize,
+    QObject *parent):
+    Backend(username, password, locale, installTarget, isoPath, installSize, parent)
+{
     m_BasePersent = 0;
     m_BaseRange = 10;
 
-    qDebug()<<Xapi::SystemDirtory ();
+    qDebug() << Xapi::SystemDirtory();
 
     QSettings settings(RegistryKey, QSettings::NativeFormat);
     m_Info.ReleaseInfo = settings.value("ReleaseInfo").toString();
-    if ( m_Info.ReleaseInfo.isEmpty ()) {
-         m_Info.ReleaseInfo = "Deepin";
+    if (m_Info.ReleaseInfo.isEmpty()) {
+        m_Info.ReleaseInfo = "Deepin";
     }
 
     QStringList mkisofsFileList;
@@ -285,35 +292,36 @@ WindowsBackend::WindowsBackend(
     Xapi::GetBlobs().Install(BlobAppMkisofs, mkisofsFileList);
 }
 
-int WindowsBackend::UninstallClear() {
+int WindowsBackend::UninstallClear()
+{
     //copy tmp file and remove
-    qDebug()<<"Is m_Uninstall"<<m_isUninstall;
+    qDebug() << "Is m_Uninstall" << m_isUninstall;
     if (m_isUninstall) {
-    QString installationDir =  m_Info.InstallPath;
-    QString uninstaller = m_Info.InstallPath + "\\uninstaller.exe";
-    QString tmpPath = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
-    QString tmpUninstaller = tmpPath + "\\deepin-unistaller.exe";
-    QFile::copy(uninstaller, tmpUninstaller);
-    qDebug()<<uninstaller;
-    qDebug()<<tmpUninstaller;
-    QProcess caller;
-    QString cmdline = tmpUninstaller + QString(" -u -t \"%1\"").arg(installationDir);
-    qDebug()<<"start delay remove "<<cmdline;
-    caller.startDetached(cmdline);
+        QString installationDir =  m_Info.InstallPath;
+        QString uninstaller = m_Info.InstallPath + "\\uninstaller.exe";
+        QString tmpPath = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
+        QString tmpUninstaller = tmpPath + "\\deepin-unistaller.exe";
+        QFile::copy(uninstaller, tmpUninstaller);
+        qDebug() << uninstaller;
+        qDebug() << tmpUninstaller;
+        QString cmdline = tmpUninstaller + QString(" -u -t \"%1\"").arg(installationDir);
+        qDebug() << "start delay remove " << cmdline;
+        QProcess::startDetached(cmdline);
     }
     return 0;
 }
 
-int WindowsBackend::CreateUninstaller(){
+int WindowsBackend::CreateUninstaller()
+{
     int ret = Failed;
     FunctionLoger<int> log("CreateUninstaller", ret);
-    this->SetAction ("CreateUninstaller");
-    this->Increment (2);
+    this->SetAction("CreateUninstaller");
+    this->Increment(2);
 
     QString uninstaller = QString("uninstaller.exe");
     QString uninstallerPath = m_Info.InstallPath + "/" + uninstaller;
     bool result = QFile::copy(QApplication::applicationFilePath(), uninstallerPath);
-    qDebug()<<"Copy app to"<<uninstallerPath<<" Result"<<result;
+    qDebug() << "Copy app to" << uninstallerPath << " Result" << result;
 
     QSettings settings(RegistryKey, QSettings::NativeFormat);
     settings.setValue("UninstallString", QDir::toNativeSeparators(uninstallerPath));
@@ -321,18 +329,19 @@ int WindowsBackend::CreateUninstaller(){
     settings.setValue("InstallationDev", QDir::toNativeSeparators(m_Info.TargetDev));
     settings.setValue("ReleaseInfo",  m_Info.ReleaseInfo);
     settings.setValue("DisplayName",  m_Info.DistroName);
-    settings.setValue("DisplayIcon", QDir::toNativeSeparators(m_Info.InstallPath+"\\deepin.ico"));
+    settings.setValue("DisplayIcon", QDir::toNativeSeparators(m_Info.InstallPath + "\\deepin.ico"));
     settings.setValue("DisplayVersion", "0.10");
     settings.setValue("Publisher", m_Info.DistroName);
     settings.setValue("URLInfoAbout", "www.linuxdeepin.com");
     settings.setValue("HelpLink", "www.linuxdeepin.com");
 
-    this->Increment (3);
+    this->Increment(3);
     return ret = Success;
 }
 
-bool WindowsBackend::HasInstalled() {
-    qDebug()<<"Begin HasInstalled";
+bool WindowsBackend::HasInstalled()
+{
+    qDebug() << "Begin HasInstalled";
 
     QSettings settings(RegistryKey, QSettings::NativeFormat);
     QStringList list = settings.childKeys();
@@ -342,7 +351,8 @@ bool WindowsBackend::HasInstalled() {
     return false;
 }
 
-int WindowsBackend::UninstallApp() {
+int WindowsBackend::UninstallApp()
+{
     int ret = Failed;
     FunctionLoger<int> log("UninstallApp", ret);
 
@@ -375,52 +385,53 @@ int WindowsBackend::UninstallApp() {
 
     m_isUninstall = true;
     m_Info.InstallPath = installationDir;
-    return ret= Success;
+    return ret = Success;
 }
 
-int WindowsBackend::FetchISO() {
+int WindowsBackend::FetchISO()
+{
     int ret = Failed;
     FunctionLoger<int> log("FetchISO", ret);
 
-    this->SetAction ("FetchISO");
+    this->SetAction("FetchISO");
 
     QString curDir = QApplication::applicationDirPath();
-    QString installISOPath = m_Info.InstallPath+"/install/install.iso";
+    QString installISOPath = m_Info.InstallPath + "/install/install.iso";
 
     ProgressReporter<WindowsBackend> *pr = new ProgressReporter<WindowsBackend>(this);
-    QString isofilepath = this->FetchImageFiles ();
-    qDebug()<< "Find iso file :"<<isofilepath;
-    if (!isofilepath.isEmpty ()) {
+    QString isofilepath = this->FetchImageFiles();
+    qDebug() << "Find iso file :" << isofilepath;
+    if (!isofilepath.isEmpty()) {
         m_Info.ImagePath = isofilepath;
-        qDebug()<<"ExCopy"<<isofilepath<<" to "<<installISOPath;
+        qDebug() << "ExCopy" << isofilepath << " to " << installISOPath;
         m_BasePersent = 30;
         m_BaseRange = 50;
-        bool copyret = ExCopy (isofilepath, installISOPath, pr);
-        return ret = copyret? Success : Failed;
+        bool copyret = ExCopy(isofilepath, installISOPath, pr);
+        return ret = copyret ? Success : Failed;
     }
 
-    qDebug()<< "Search iso file failed, try create iso image!";
+    qDebug() << "Search iso file failed, try create iso image!";
     bool result = false;
-    switch(DeviceType(curDir)) {
+    switch (DeviceType(curDir)) {
     case DRIVE_CDROM:
-        qDebug()<<"curDir: "<<DRIVE_CDROM;
+        qDebug() << "curDir: " << DRIVE_CDROM;
         m_BasePersent = 30;
         m_BaseRange = 50;
         result = DumpISO(curDir, installISOPath, pr);
-        return ret = result ? Success:Failed;
+        return ret = result ? Success : Failed;
     case DRIVE_NO_ROOT_DIR:
         //Make ISO FILE
         // TODO: md5sum.txt
         QString md5FileName = curDir + "/MD5SUM.TXT";
         QFile md5File(md5FileName);
         if (!md5File.exists()) {
-            qDebug()<<"MD5SUM.TXT not exists!";
+            qDebug() << "MD5SUM.TXT not exists!";
             return ret = Failed;
         }
 
         //Verify md5
         if (!this->VerfiyMD5(curDir, md5FileName)) {
-            qDebug()<<"Verify md5 Failed";
+            qDebug() << "Verify md5 Failed";
             return ret = Failed;
         }
 
@@ -433,27 +444,29 @@ int WindowsBackend::FetchISO() {
     return ret = Failed;
 }
 
-int WindowsBackend::CreateVirtualDisks() {
+int WindowsBackend::CreateVirtualDisks()
+{
     int ret = Failed;
     FunctionLoger<int> log("CreateVirtualDisks", ret);
 
-    this->SetAction ("CreateVirtualDisks");
-    this->Increment (1);
+    this->SetAction("CreateVirtualDisks");
+    this->Increment(1);
 
     QString rootDisk = m_Info.TargetDev + m_Info.RootFilePath;
     bool result = CreateVirtualFile(rootDisk, m_Info.RootSize);
-    qDebug()<<"Create "<<rootDisk<<result;
-    this->Increment (2);
+    qDebug() << "Create " << rootDisk << result;
+    this->Increment(2);
 
     QString swapDisk = m_Info.TargetDev + m_Info.SwapFilePath;
     result &= CreateVirtualFile(swapDisk, m_Info.SwapSize);
-    qDebug()<<"Create "<<swapDisk<<result;
-    this->Increment (2);
+    qDebug() << "Create " << swapDisk << result;
+    this->Increment(2);
 
-    return ret = result?Success:Failed;
+    return ret = result ? Success : Failed;
 }
 
-int WindowsBackend::UninstallBCD() {
+int WindowsBackend::UninstallBCD()
+{
     QString bcdedit = Xapi::SystemDirtory() + "\\bcdedit.exe";
     QSettings settings(RegistryKey, QSettings::NativeFormat);
 
@@ -470,29 +483,31 @@ int WindowsBackend::UninstallBCD() {
     return Success;
 }
 
-bool WindowsBackend::VerfiyMD5(const QString &root, const QString md5FilePath) {
+bool WindowsBackend::VerfiyMD5(const QString &root, const QString md5FilePath)
+{
     QFile md5File(md5FilePath);
     if (!md5File.open(QIODevice::ReadOnly)) {
-        qDebug()<<md5FilePath<<" openfile";
+        qDebug() << md5FilePath << " openfile";
         return false;
     }
 
     QString contents = md5File.readAll();
     QStringList checklist = contents.split("\n");
-    foreach(QString checkitem, checklist) {
+    foreach (QString checkitem, checklist) {
         QStringList md5path = checkitem.split("  ");
         QString md5 = md5path.first();
         QString path = root + "/" + md5path.last();
         QString fileMD5 = Xapi::GetFileMD5(path);
         if (md5 != fileMD5) {
-            qDebug()<<md5<<path<<fileMD5;
+            qDebug() << md5 << path << fileMD5;
             return false;
         }
     }
     return true;
 }
 
-int WindowsBackend::InstallBCD(QString &id) {
+int WindowsBackend::InstallBCD(QString &id)
+{
     int ret = Failed;
     FunctionLoger<int> log("installBCD", ret);
 
@@ -524,7 +539,8 @@ int WindowsBackend::InstallBCD(QString &id) {
 }
 
 
-int WindowsBackend::InstallUEFI(QString &id) {
+int WindowsBackend::InstallUEFI(QString &id)
+{
     QString espLetter = "B";
     QString app = "mountvol";
     QString cmd = QString("%1: /S").arg(espLetter);
@@ -538,41 +554,43 @@ int WindowsBackend::InstallUEFI(QString &id) {
     Xapi::CpFile(":/data/bootloader/grubx64.efi", efiInstallPath);
 
     QString efiBinPath = "\\EFI\\deepin\\grubx64.efi";
-    qDebug()<<"Insert UEFI boot option";
+    qDebug() << "Insert UEFI boot option";
     QString bootoption = QString().fromStdWString(UEFI::InsertBootOption(
-                (espLetter + ":").toStdWString() ,
-                L"Deepin",
-                efiBinPath.toStdWString()));
+                             (espLetter + ":").toStdWString() ,
+                             L"Deepin",
+                             efiBinPath.toStdWString()));
 
-    qDebug()<<"Umount efi partition";
+    qDebug() << "Umount efi partition";
     app = "mountvol";
     cmd = QString("%1: /d").arg(espLetter);
     Xapi::SynExec(app, cmd);
 
-    qDebug()<<"Umount set BootloaderKey"<<bootoption;
+    qDebug() << "Umount set BootloaderKey" << bootoption;
 
     id = bootoption;
     return Success;
 }
 
-int WindowsBackend::UninstallUEFI() {
+int WindowsBackend::UninstallUEFI()
+{
     int ret = Failed;
     FunctionLoger<int> log("InstallBootloader", ret);
 
     QSettings settings(RegistryKey, QSettings::NativeFormat);
     QString bootxxxx = settings.value(BootloaderKey).toString();
 
-    if (bootxxxx.isEmpty ()) {
+    if (bootxxxx.isEmpty()) {
         return ret = Success;
     }
 
-    qDebug()<<"Remove uefi option: "<<bootxxxx;
+    qDebug() << "Remove uefi option: " << bootxxxx;
     UEFI::RemoveBootOption(bootxxxx.toStdWString());
     return ret = Success;
 }
 
-int WindowsBackend::InstallBootIni(QString & id){
-    TCHAR path[MAX_PATH+1];
+int WindowsBackend::InstallBootIni(QString &id)
+{
+    TCHAR path[MAX_PATH + 1];
     GetSystemDirectory(path, MAX_PATH);
     QString systemDev = QString().fromWCharArray(path).left(2).toUpper();
     QString bootloaderPath = systemDev + "\\" + "wubildr.mbr";
@@ -585,32 +603,32 @@ int WindowsBackend::InstallBootIni(QString & id){
     QFile bootini(bootiniPath);
 
     if (!bootini.open(QIODevice::ReadOnly)) {
-        qDebug()<<"Open Failed"<<bootiniPath;
+        qDebug() << "Open Failed" << bootiniPath;
         return Failed;
     }
 
     QString bootcontent = bootini.readAll();
     bootini.close();
 
-    qDebug()<<"boot.ini"<<bootcontent.length ()<<endl<<bootcontent;
+    qDebug() << "boot.ini" << bootcontent.length() << endl << bootcontent;
     bootcontent = bootcontent.remove("\r");
-    qDebug()<<"boot.ini"<<bootcontent.length ()<<endl<<bootcontent;
+    qDebug() << "boot.ini" << bootcontent.length() << endl << bootcontent;
 
-    if (bootcontent.isEmpty ()) {
-        qDebug()<<"Read Failed anagin, abort"<<bootiniPath;
+    if (bootcontent.isEmpty()) {
+        qDebug() << "Read Failed anagin, abort" << bootiniPath;
     }
 
     if (!bootini.open(QIODevice::WriteOnly)) {
-        qDebug()<<"Open Failed"<<bootiniPath;
+        qDebug() << "Open Failed" << bootiniPath;
         return Failed;
     }
 
     QStringList bootlines = bootcontent.split("\n");
     QStringList::iterator itor = bootlines.begin();
-    while(itor != bootlines.end()) {
+    while (itor != bootlines.end()) {
         if (itor->contains("[operating systems]")) {
             ++itor;
-            while(itor != bootlines.end()) {
+            while (itor != bootlines.end()) {
                 if (!itor->contains("=")) {
                     bootlines.insert(itor, bootloaderOption);
                     break;
@@ -626,12 +644,12 @@ int WindowsBackend::InstallBootIni(QString & id){
     }
 
     itor = bootlines.begin();
-    while(itor != bootlines.end()) {
-        QString newline = (*itor).remove("\r")+"\r\n";
-        if (newline.contains ("timeout=")) {
-            int time = newline.remove("timeout=").toInt ();
+    while (itor != bootlines.end()) {
+        QString newline = (*itor).remove("\r") + "\r\n";
+        if (newline.contains("timeout=")) {
+            int time = newline.remove("timeout=").toInt();
             if (0 == time) {
-                time=5;
+                time = 5;
             }
             newline = QString("timeout=%1\r\n").arg(time);
         }
@@ -649,16 +667,17 @@ int WindowsBackend::InstallBootIni(QString & id){
     return Success;
 }
 
-int WindowsBackend::UninstallBootIni(){
+int WindowsBackend::UninstallBootIni()
+{
     QSettings settings(RegistryKey, QSettings::NativeFormat);
 
     QString bootentry = settings.value(BootloaderKey).toString();
-    qDebug()<<"Uinstall bootentry"<<bootentry;
-    if (!bootentry.contains ("wubildr.mbr")) {
+    qDebug() << "Uinstall bootentry" << bootentry;
+    if (!bootentry.contains("wubildr.mbr")) {
         return Failed;
     }
 
-    TCHAR path[MAX_PATH+1];
+    TCHAR path[MAX_PATH + 1];
     GetSystemDirectory(path, MAX_PATH);
     QString systemDev = QString().fromWCharArray(path).left(2).toUpper();
     QString bootiniPath = systemDev + "\\boot.ini";
@@ -666,39 +685,39 @@ int WindowsBackend::UninstallBootIni(){
 
     QFile bootini(bootiniPath);
     if (!bootini.open(QIODevice::ReadOnly)) {
-        qDebug()<<"Open Failed"<<bootiniPath;
+        qDebug() << "Open Failed" << bootiniPath;
         return Failed;
     }
 
     QString bootcontent = bootini.readAll();
     bootini.close();
-    qDebug()<<"boot.ini"<<bootcontent.length ()<<endl<<bootcontent;
+    qDebug() << "boot.ini" << bootcontent.length() << endl << bootcontent;
     bootcontent = bootcontent.remove("\r");
-    qDebug()<<"boot.ini"<<bootcontent.length ()<<endl<<bootcontent;
-    if (bootcontent.isEmpty ()) {
-        qDebug()<<"Read Failed anagin, abort"<<bootiniPath;
+    qDebug() << "boot.ini" << bootcontent.length() << endl << bootcontent;
+    if (bootcontent.isEmpty()) {
+        qDebug() << "Read Failed anagin, abort" << bootiniPath;
     }
 
     if (!bootini.open(QIODevice::WriteOnly)) {
-        qDebug()<<"Open Failed"<<bootiniPath;
+        qDebug() << "Open Failed" << bootiniPath;
         return Failed;
     }
 
     QStringList bootlines = bootcontent.split("\n");
 
     QStringList::iterator itor = bootlines.begin();
-    while(itor != bootlines.end()) {
-        if (itor->contains(bootentry)){
+    while (itor != bootlines.end()) {
+        if (itor->contains(bootentry)) {
             ++itor;
             continue;
         }
-        QString newline = (*itor).remove("\r")+"\r\n";
+        QString newline = (*itor).remove("\r") + "\r\n";
         ++itor;
         if (itor == bootlines.end()) {
             newline.remove("\r\n");
         }
-        qDebug()<<"newline "<<newline;
-        qDebug()<<"newline latin1 "<<newline.toLatin1 ();
+        qDebug() << "newline " << newline;
+        qDebug() << "newline latin1 " << newline.toLatin1();
         bootini.write(newline.toLatin1());
     }
 
@@ -707,15 +726,16 @@ int WindowsBackend::UninstallBootIni(){
     return Success;
 }
 
-int WindowsBackend::InstallBootloader() {
+int WindowsBackend::InstallBootloader()
+{
     int ret = Failed;
     FunctionLoger<int> log("InstallBootloader", ret);
 
-    this->SetAction ("CreateConfig");
+    this->SetAction("CreateConfig");
 
     QString nativeTarget = m_Info.TargetDev.left(2);
     QString bootloaderDir =  m_Info.InstallPath + "/winboot";
-    qDebug()<<nativeTarget<<bootloaderDir;
+    qDebug() << nativeTarget << bootloaderDir;
     Xapi::CpFile(":/data/bootloader/wubildr", bootloaderDir + "/wubildr");
     Xapi::CpFile(":/data/bootloader/wubildr.mbr", bootloaderDir + "/wubildr.mbr");
     Xapi::CpFile(":/data/bootloader/wubildr.cfg", bootloaderDir + "/wubildr.cfg");
@@ -724,7 +744,7 @@ int WindowsBackend::InstallBootloader() {
     Xapi::CpFile(":/data/bootloader/wubildr", nativeTarget + "/wubildr");
     Xapi::CpFile(":/data/bootloader/wubildr.mbr", nativeTarget + "/wubildr.mbr");
 
-    this->Increment (1);
+    this->Increment(1);
     //Test for win7 first
     QString bootid;
     switch (WindowsBootLoaderType()) {
@@ -747,18 +767,19 @@ int WindowsBackend::InstallBootloader() {
     settings.setValue(BootloaderKey, bootid);
     settings.setValue("ReleaseInfo",  m_Info.ReleaseInfo);
 
-    this->Increment (2);
+    this->Increment(2);
     return ret;
 }
 
-int WindowsBackend::InstallGrub() {
+int WindowsBackend::InstallGrub()
+{
     int ret = Failed;
     FunctionLoger<int> log("InstallGrub", ret);
 
-    this->SetAction ("InstallGrub");
+    this->SetAction("InstallGrub");
 
     QFile grubTemplate(":/data/install/grub.install.cfg");
-    if (!grubTemplate.open(QIODevice::ReadOnly)){
+    if (!grubTemplate.open(QIODevice::ReadOnly)) {
         return ret = Failed;
     }
     QString content = grubTemplate.readAll();
@@ -771,7 +792,7 @@ int WindowsBackend::InstallGrub() {
 
     QMap<QString, QString> grubInfo;
 //    grubInfo.insert("custom_installation_dir", m_Info.InstallPath);
-    QString relativeImagePath = ToRelativePath(m_Info.InstallPath) +"/install/install.iso";
+    QString relativeImagePath = ToRelativePath(m_Info.InstallPath) + "/install/install.iso";
     grubInfo.insert("iso_path", relativeImagePath);
     grubInfo.insert("keyboard_variant", m_Info.KeyboardVariant);
     grubInfo.insert("keyboard_layout", m_Info.KeyboardLayout);
@@ -788,25 +809,25 @@ int WindowsBackend::InstallGrub() {
     grubInfo.insert("verbose_mode_title", "Verbose mode");
     grubInfo.insert("demo_mode_title",  "Demo mode");
     grubInfo.insert("intall_path",  m_Info.InstallPrefix);
-    grubInfo.insert("iso_method",iso_method);
+    grubInfo.insert("iso_method", iso_method);
     grubInfo.insert("boot_method", m_Info.BootMethod);
 
     QMap<QString, QString>::iterator iter;
     iter = grubInfo.begin();
-    while(iter != grubInfo.end()) {
-        content.replace("$("+iter.key()+")", iter.value());
+    while (iter != grubInfo.end()) {
+        content.replace("$(" + iter.key() + ")", iter.value());
         ++iter;
     }
 
     QFile newGrub(m_Info.InstallPath + "/install/boot/grub/grub.cfg");
-    if (!newGrub.open(QIODevice::WriteOnly)){
+    if (!newGrub.open(QIODevice::WriteOnly)) {
         return ret = Failed;
     }
     if (content.length() != newGrub.write(content.toLatin1())) {
         return ret = Failed;
     }
     newGrub.close();
-    this->Increment (1);
+    this->Increment(1);
     return ret = Success;
 }
 
@@ -821,11 +842,12 @@ int WindowsBackend::MigrationData()
 }
 
 
-int WindowsBackend::CreateConfig() {
+int WindowsBackend::CreateConfig()
+{
     int ret = Failed;
     FunctionLoger<int> log("CreateConfig", ret);
 
-    this->SetAction ("CreateConfig");
+    this->SetAction("CreateConfig");
 
     QFile configTemplate(":/data/deepin-installer.conf");
     configTemplate.open(QIODevice::ReadOnly);
@@ -851,8 +873,8 @@ int WindowsBackend::CreateConfig() {
 
     QMap<QString, QString>::iterator iter;
     iter = configInfo.begin();
-    while(iter != configInfo.end()) {
-        content.replace("$("+iter.key()+")", iter.value());
+    while (iter != configInfo.end()) {
+        content.replace("$(" + iter.key() + ")", iter.value());
         ++iter;
     }
 
@@ -868,6 +890,6 @@ int WindowsBackend::CreateConfig() {
     }
     newConfig.close();
 
-    this->Increment (1);
+    this->Increment(1);
     return ret = Success;
 }
