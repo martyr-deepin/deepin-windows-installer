@@ -459,6 +459,15 @@ void MainWindow::goInstall()
 
 void MainWindow::goReInstall()
 {
+    int ret = QMessageBox::warning(this, tr("Reinstall Deepin System Installer"),
+                                   tr("Do you want remove old install before reinstall?"),
+                                   QMessageBox::Ok | QMessageBox::Cancel,
+                                   QMessageBox::Cancel);
+
+    if (QMessageBox::Ok != ret) {
+        return;
+    }
+
     connect(m_Backend, SIGNAL(Done(int)), this, SLOT(reinstallDone(int)));
     goUninstallProcess();
     m_Backend->GoBack();
@@ -583,7 +592,6 @@ void MainWindow::goInstallFailed()
     m_topLayout->addWidget(FinishFooter());
 
     m_TopWidget->setLayout(m_topLayout);
-
 }
 
 QWidget *MainWindow::UninstallBody()
@@ -608,7 +616,10 @@ QWidget *MainWindow::UninstallFooter()
     QList<DPushButton *> btlist;
     btlist.append(cancel);
     btlist.append(uninstall);
-    btlist.append(reinstall);
+
+    if (m_Backend->CheckReinstall()) {
+        btlist.append(reinstall);
+    }
     return new DFooterWidget(btlist);
 }
 

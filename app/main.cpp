@@ -1,15 +1,6 @@
 #include <QApplication>
 
 #include "Windows.h"
-#include "fontend/mainwindow.h"
-
-#include "backend/backendfactory.h"
-#include "backend/winbackend.h"
-
-#include "config/log.h"
-#include "config/config.h"
-
-#include <xsys.h>
 
 #include <QApplication>
 #include <QStandardPaths>
@@ -23,6 +14,18 @@
 #ifdef _DEBUG
 //#include "vld.h"
 #endif
+
+#include "fontend/mainwindow.h"
+
+#include "backend/backendfactory.h"
+#include "backend/winbackend.h"
+
+#include "config/log.h"
+#include "config/config.h"
+
+#include <xsys.h>
+#include "data/version.h"
+
 
 bool processArgs(QApplication &app) {
     QCoreApplication::setApplicationName("Deepin System Installer");

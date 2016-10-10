@@ -3,31 +3,32 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Language: en_US\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Language: zh_CN\n"
+"X-Source-Language: en_US\n"
 "X-Qt-Contexts: true\n"
 
-#: ../fontend/mainwindow.cpp:70
+#: ../fontend/mainwindow.cpp:80
 msgctxt "MainWindow|"
 msgid "Username"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:95
+#: ../fontend/mainwindow.cpp:106
 msgctxt "MainWindow|"
 msgid "Password"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:118
+#: ../fontend/mainwindow.cpp:129
 msgctxt "MainWindow|"
 msgid "Repeat Password"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:231
+#: ../fontend/mainwindow.cpp:245
 msgctxt "MainWindow|"
 msgid "This operation will not affect any of your data. Please use it freely."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:254
+#: ../fontend/mainwindow.cpp:269
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
@@ -35,80 +36,90 @@ msgid ""
 "space."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:263
+#: ../fontend/mainwindow.cpp:279
 msgctxt "MainWindow|"
 msgid "Start"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:271
+#: ../fontend/mainwindow.cpp:288
 msgctxt "MainWindow|"
 msgid "Exit"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:308
+#: ../fontend/mainwindow.cpp:328
 msgctxt "MainWindow|"
 msgid "Being installed. Please wait... "
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:346
+#: ../fontend/mainwindow.cpp:368
 #, qt-format
 msgctxt "MainWindow|"
 msgid ""
 "Installed Successfully. You need to restart your computer to experience %1."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:354
+#: ../fontend/mainwindow.cpp:377
 msgctxt "MainWindow|"
 msgid "Installation Failed."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:360
+#: ../fontend/mainwindow.cpp:384
 msgctxt "MainWindow|"
 msgid "Restart Later"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:363
+#: ../fontend/mainwindow.cpp:387
 msgctxt "MainWindow|"
 msgid "Restart Now"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:389
+#: ../fontend/mainwindow.cpp:422 ../fontend/mainwindow.cpp:432
 msgctxt "MainWindow|"
 msgid "Finished"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:531
+#: ../fontend/mainwindow.cpp:464
+msgctxt "MainWindow|"
+msgid "Reinstall Deepin System Installer"
+msgstr ""
+
+#: ../fontend/mainwindow.cpp:465
+msgctxt "MainWindow|"
+msgid "Do you want remove old install before reinstall?"
+msgstr ""
+
+#: ../fontend/mainwindow.cpp:602
 #, qt-format
 msgctxt "MainWindow|"
 msgid "You have installed %1."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:537
+#: ../fontend/mainwindow.cpp:609
 msgctxt "MainWindow|"
 msgid "Cancel"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:540
+#: ../fontend/mainwindow.cpp:612
 msgctxt "MainWindow|"
 msgid "Uninstall"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:543
+#: ../fontend/mainwindow.cpp:615
 msgctxt "MainWindow|"
 msgid "Reinstall"
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:555
+#: ../fontend/mainwindow.cpp:631
 msgctxt "MainWindow|"
 msgid "Being uninstalled. Please wait... "
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:562
+#: ../fontend/mainwindow.cpp:639
 msgctxt "MainWindow|"
 msgid "Uninstalled Successfully. "
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:569
+#: ../fontend/mainwindow.cpp:647
 msgctxt "MainWindow|"
 msgid "Uninstallation Failed."
 msgstr ""
@@ -138,12 +149,12 @@ msgctxt "QObject|"
 msgid "The username has been used by system."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:47
+#: ../fontend/mainwindow.cpp:49
 msgctxt "QObject|"
 msgid "Password can not be empty."
 msgstr ""
 
-#: ../fontend/mainwindow.cpp:48
+#: ../fontend/mainwindow.cpp:50
 msgctxt "QObject|"
 msgid "The two passwords do not match."
 msgstr ""

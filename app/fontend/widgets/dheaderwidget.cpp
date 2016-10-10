@@ -41,6 +41,7 @@ DHeaderWidget::DHeaderWidget(QWidget *parent) :
 }
 
 
-void DHeaderWidget::enableClose(bool enable) {
+void DHeaderWidget::enableClose(bool enable)
+{
     m_CloseButton->enableClose(enable);
 }

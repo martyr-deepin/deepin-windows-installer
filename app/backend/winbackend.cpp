@@ -292,6 +292,18 @@ WindowsBackend::WindowsBackend(
     Xapi::GetBlobs().Install(BlobAppMkisofs, mkisofsFileList);
 }
 
+bool WindowsBackend::CheckReinstall()
+{
+    qDebug() << "CheckReinstall";
+    QSettings settings(RegistryKey, QSettings::NativeFormat);
+    QString installationDir = QDir::toNativeSeparators(settings.value("InstallationDir").toString());
+    QString appDir = QDir::toNativeSeparators(QCoreApplication::applicationDirPath());
+    if (appDir == installationDir) {
+        return false;
+    }
+    return true;
+}
+
 int WindowsBackend::UninstallClear()
 {
     //copy tmp file and remove

@@ -70,6 +70,8 @@ public:
 
     const QString& Error() const;
 
+    virtual bool CheckReinstall() = 0;
+
     virtual bool HasInstalled() = 0;
 
     //5

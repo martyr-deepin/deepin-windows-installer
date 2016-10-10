@@ -3,9 +3,11 @@
 #include "backend.h"
 #include "progressreporter.h"
 
-namespace  DeepinInstaller {
+namespace  DeepinInstaller
+{
 
-class WindowsBackend: public Backend {
+class WindowsBackend: public Backend
+{
 public:
     WindowsBackend(const QString &username,
                    const QString &password,
@@ -16,6 +18,7 @@ public:
                    QObject *parent = 0);
 
 
+    virtual bool CheckReinstall();
 
     virtual bool HasInstalled();
 
@@ -57,7 +60,7 @@ private:
 
 }
 
-enum BootloaderType{
+enum BootloaderType {
     BCD_UEFI,
     BCD_BIOS,
     BOOT_INI,
@@ -65,4 +68,3 @@ enum BootloaderType{
 };
 
 BootloaderType WindowsBootLoaderType();
-

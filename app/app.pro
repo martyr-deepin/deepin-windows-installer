@@ -10,6 +10,7 @@ TARGET = deepin-system-installer
 TEMPLATE = app
 
 win32-msvc* {
+system(..\tools\build-version.bat $$PWD/data/build_env.h)
 system(..\tools\importPo.bat app.pro)
 
 SOURCES += \
@@ -53,7 +54,9 @@ HEADERS += \
     config/log.h \
     config/config.h \
     backend/progressreporter.h \
-    backend/migration.h
+    backend/migration.h \
+    data/version.h \
+    data/build_env.h
 
 RESOURCES += \
     bootloader.qrc \

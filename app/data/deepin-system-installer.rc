@@ -1,30 +1,42 @@
-#define RT_MANIFEST 24
-#define APP_MANIFEST 1
+#include <windows.h>
+#include "version.h"
+
+#define VER_FILEVERSION             1,2,0,0
+
+#define VER_COMPANYNAME_STR         "Deepin"
+#define VER_FILEDESCRIPTION_STR     "Deepin System Installer"
+#define VER_INTERNALNAME_STR        "Deepin System Installer"
+#define VER_LEGALCOPYRIGHT_STR      "Copyright - Deepin - License - GNU GPL v3"
+#define VER_LEGALTRADEMARKS1_STR    "All Rights Reserved"
+#define VER_LEGALTRADEMARKS2_STR    VER_LEGALTRADEMARKS1_STR
+#define VER_ORIGINALFILENAME_STR    "deepin-system-installer.exe"
+#define VER_PRODUCTNAME_STR         "Deepin System Installer"
+
+#define VER_COMPANYDOMAIN_STR       "www.deepin.com"
 
 IDI_APPICON 	ICON     DISCARDABLE     "deepin-system-installer.ico"
 
-1 VERSIONINFO
-FILEVERSION 1,0,0,1
-PRODUCTVERSION 1,0,0,1
-{
-BLOCK "StringFileInfo"
-{
-    BLOCK "040904E4"
-    {
-        VALUE "CompanyName", "Deepin"
-        VALUE "FileVersion", " "
-        VALUE "FileDescription", "Deepin System Installer"
-        VALUE "InternalName", "Deepin System Installer"
-        VALUE "LegalCopyright", "Copyright - Deepin - License - GNU GPL v3"
-        VALUE "LegalTrademarks", " "
-        VALUE "OriginalFilename", "deepin-system-installer.exe"
-        VALUE "ProductName", "System Installer"
-        VALUE "ProductVersion", " "
-    }
-}
-BLOCK "VarFileInfo"
-    {
-        VALUE "Translation", 1033, 1252
-    }
-}
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     VER_FILEVERSION
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",        VER_COMPANYNAME_STR
+            VALUE "FileDescription",    VER_FILEDESCRIPTION_STR
+            VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
+            VALUE "InternalName",       VER_INTERNALNAME_STR
+            VALUE "LegalCopyright",     VER_LEGALCOPYRIGHT_STR
+            VALUE "LegalTrademarks1",   VER_LEGALTRADEMARKS1_STR
+            VALUE "LegalTrademarks2",   VER_LEGALTRADEMARKS2_STR
+            VALUE "OriginalFilename",   VER_ORIGINALFILENAME_STR
+            VALUE "ProductName",        VER_PRODUCTNAME_STR
+        END
+    END
 
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 1033, 1252
+    END
+END
