@@ -1,3 +1,0 @@
-[submodule "lib/libuefi"]
-	path = lib/libuefi
-	url = git@github.com:Iceyer/libuefi.git

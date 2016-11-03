@@ -123,10 +123,10 @@ void Backend::AsyncInstall() {
     actions.push_back(&Backend::FetchISO);
     actions.push_back(&Backend::ExtractISO);
     actions.push_back(&Backend::CreateVirtualDisks);
-    actions.push_back(&Backend::MigrationData);
     actions.push_back(&Backend::CreateConfig);
     actions.push_back(&Backend::InstallBootloader);
     actions.push_back(&Backend::InstallGrub);
+    actions.push_back(&Backend::MigrationData);
 
     foreach(InstallAction action, actions) {
         ret = (this->*action)();
@@ -154,6 +154,7 @@ int Backend::CreateInstallDir() {
     QStringList installStructure;
     installStructure.append("deepin");
     installStructure.append("deepin/data"); // TODO: remove
+    installStructure.append("deepin/data/backup"); // TODO: remove
     installStructure.append("deepin/disks");
     installStructure.append("deepin/install");
     installStructure.append("deepin/install/boot");

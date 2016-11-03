@@ -523,7 +523,6 @@ int WindowsBackend::InstallBCD(QString &id)
     int ret = Failed;
     FunctionLoger<int> log("installBCD", ret);
 
-
     QString nativeTarget = m_Info.TargetDev.left(2);
     QString bootloaderDir =  m_Info.InstallPath + "/winboot";
     bootloaderDir.remove(nativeTarget);
@@ -532,7 +531,13 @@ int WindowsBackend::InstallBCD(QString &id)
     QString bootloader = QDir::toNativeSeparators(bootloaderPath.remove(nativeTarget)).replace("\\\\", "\\");
 
     QString bcdedit = Xapi::SystemDirtory() + "\\bcdedit.exe";
-    QString cmdline = QString(" /create /d %1 /application bootsector").arg(m_Info.DistroName);
+
+    // backup bcd;
+    QString cmdline = " /export " + m_Info.InstallPath + "\\data\\backup\\bcd";
+    Xapi::SynExec(bcdedit, cmdline);
+
+    //install grub4dos
+    cmdline = QString(" /create /d %1 /application bootsector").arg(m_Info.DistroName);
     QString cmdret =  Xapi::SynExec(bcdedit, cmdline);
     id = cmdret.split("{").last().split("}").first();
     id = "{" + id + "}";
@@ -542,9 +547,9 @@ int WindowsBackend::InstallBCD(QString &id)
     Xapi::SynExec(bcdedit, cmdline);
     cmdline = QString(" /displayorder %1 /addlast").arg(id);
     Xapi::SynExec(bcdedit, cmdline);
-    cmdline = QString(" /timeout  10");
+    cmdline = QString(" /timeout  0");
     Xapi::SynExec(bcdedit, cmdline);
-    cmdline = QString(" /bootsequence %1").arg(id);
+    cmdline = QString(" /default %1").arg(id);
     Xapi::SynExec(bcdedit, cmdline);
 
     return ret = Success;
@@ -553,6 +558,12 @@ int WindowsBackend::InstallBCD(QString &id)
 
 int WindowsBackend::InstallUEFI(QString &id)
 {
+    QString bcdedit = Xapi::SystemDirtory() + "\\bcdedit.exe";
+
+    // backup bcd;
+    QString cmdline = " /export " + m_Info.InstallPath + "\\data\\backup\\bcd";
+    Xapi::SynExec(bcdedit, cmdline);
+
     QString espLetter = "B";
     QString app = "mountvol";
     QString cmd = QString("%1: /S").arg(espLetter);
@@ -600,47 +611,63 @@ int WindowsBackend::UninstallUEFI()
     return ret = Success;
 }
 
-int WindowsBackend::InstallBootIni(QString &id)
+/*!
+ * \brief WindowsBackend::InstallBootIni
+ * \param id
+ * \return
+ *
+ *
+[boot loader]
+timeout=3
+default=multi(0)disk(0)rdisk(0)partition(1)\WINDOWS
+[operating systems]
+multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Microsoft Windows XP Professionl"
+ */
+int WindowsBackend::InstallBootIni(QString & id)
 {
     TCHAR path[MAX_PATH + 1];
     GetSystemDirectory(path, MAX_PATH);
     QString systemDev = QString().fromWCharArray(path).left(2).toUpper();
     QString bootloaderPath = systemDev + "\\" + "wubildr.mbr";
-    QString bootloaderOption = QString("%1 = \"%2\"").arg(bootloaderPath).arg(m_Info.DistroName);
+    QString bootloaderOption = QString("%1=\"%2\"").arg(bootloaderPath).arg(m_Info.DistroName);
 
     Xapi::InsertFile(":/data/bootloader/wubildr.mbr", bootloaderPath);
-    //read bootini and search [operating systems]
+
     QString bootiniPath = systemDev + "\\boot.ini";
+    // backup
+    Xapi::CpFile(bootiniPath, m_Info.InstallPath + "\\data\\backup\\boot.ini");
+
     Xapi::SynExec("attrib", QString("-R -S -H %1").arg(bootiniPath));
+
     QFile bootini(bootiniPath);
 
     if (!bootini.open(QIODevice::ReadOnly)) {
-        qDebug() << "Open Failed" << bootiniPath;
+        qDebug()<<"Open Failed"<<bootiniPath;
         return Failed;
     }
 
     QString bootcontent = bootini.readAll();
     bootini.close();
 
-    qDebug() << "boot.ini" << bootcontent.length() << endl << bootcontent;
+    qDebug()<<"boot.ini"<<bootcontent.length ()<<endl<<bootcontent;
     bootcontent = bootcontent.remove("\r");
-    qDebug() << "boot.ini" << bootcontent.length() << endl << bootcontent;
+    qDebug()<<"boot.ini"<<bootcontent.length ()<<endl<<bootcontent;
 
-    if (bootcontent.isEmpty()) {
-        qDebug() << "Read Failed anagin, abort" << bootiniPath;
+    if (bootcontent.isEmpty ()) {
+        qDebug()<<"Read Failed anagin, abort"<<bootiniPath;
     }
 
     if (!bootini.open(QIODevice::WriteOnly)) {
-        qDebug() << "Open Failed" << bootiniPath;
+        qDebug()<<"Open Failed"<<bootiniPath;
         return Failed;
     }
 
     QStringList bootlines = bootcontent.split("\n");
     QStringList::iterator itor = bootlines.begin();
-    while (itor != bootlines.end()) {
+    while(itor != bootlines.end()) {
         if (itor->contains("[operating systems]")) {
             ++itor;
-            while (itor != bootlines.end()) {
+            while(itor != bootlines.end()) {
                 if (!itor->contains("=")) {
                     bootlines.insert(itor, bootloaderOption);
                     break;
@@ -656,14 +683,15 @@ int WindowsBackend::InstallBootIni(QString &id)
     }
 
     itor = bootlines.begin();
-    while (itor != bootlines.end()) {
-        QString newline = (*itor).remove("\r") + "\r\n";
-        if (newline.contains("timeout=")) {
-            int time = newline.remove("timeout=").toInt();
-            if (0 == time) {
-                time = 5;
-            }
+    while(itor != bootlines.end()) {
+        QString newline = (*itor).remove("\r")+"\r\n";
+        if (newline.contains ("timeout=")) {
+            int time = newline.remove("timeout=").toInt ();
+            time = 0;
             newline = QString("timeout=%1\r\n").arg(time);
+        }
+        if (newline.contains ("default=")) {
+            newline = QString("default=%1\r\n").arg(bootloaderPath);
         }
         ++itor;
         if (itor == bootlines.end()) {
@@ -673,9 +701,10 @@ int WindowsBackend::InstallBootIni(QString &id)
     }
     bootini.close();
 
+    Xapi::SynExec("attrib", QString("+R +S +H %1").arg(bootiniPath));
+
     id = bootloaderOption;
 
-    Xapi::SynExec("attrib", QString("+R +S +H %1").arg(bootiniPath));
     return Success;
 }
 
