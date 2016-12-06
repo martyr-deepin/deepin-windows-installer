@@ -50,7 +50,7 @@ public:
             const QString &locale,
             const QString& installTarget,
             const QString& isoPath,
-            int installSize,
+            int installSize, int swapSize,
             QObject *parent = 0);
 
     void SetInstallParam(const QString &username,
@@ -58,7 +58,7 @@ public:
                          const QString &locale,
                          const QString& installTarget,
                          const QString& isoPath,
-                         int installSize);
+                         int installSize, int swapSize);
 
     int Go();
 
@@ -129,7 +129,8 @@ protected:
               const QString &locale,
               const QString& installTarget,
               const QString& isoPath,
-              int installSize);
+              int installSize,
+              int swapSize);
 
     void FetchMD5List();
 

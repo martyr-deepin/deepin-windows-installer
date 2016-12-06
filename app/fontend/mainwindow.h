@@ -123,6 +123,7 @@ private:
     QString     m_InstallLocale;
     QString     m_InstallDev;
     int         m_InstallSize;
+    int         m_SwapSize;   //M
     bool        m_DiskSizeEnough;
 
     bool        m_EnableClose;

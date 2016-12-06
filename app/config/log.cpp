@@ -17,19 +17,20 @@ void crashMessageOutput(QtMsgType type, const QMessageLogContext &context, const
     QString txt;
     switch (type) {
         case QtDebugMsg:
-            txt = QString("Debug: %1 %2 %3 %4").arg(context.function).arg(context.file).arg(context.line).arg(str);
+            txt = QString("[Debug: %1 %2 %3] %4");
             break;
         case QtWarningMsg:
-            txt = QString("Warning: %1 %2 %3 %4").arg(context.function).arg(context.file).arg(context.line).arg(str);
+            txt = QString("[Warning: %1 %2 %3] %4");
             break;
         case QtCriticalMsg:
-            txt = QString("Critical: %1 %2 %3 %4").arg(context.function).arg(context.file).arg(context.line).arg(str);
+            txt = QString("[Critical: %1 %2 %3] %4");
             break;
         case QtFatalMsg:
-            txt = QString("Fatal: %1 %2 %3 %4").arg(context.function).arg(context.file).arg(context.line).arg(str);
+            txt = QString("[Fatal: %1 %2 %3] %4");
             abort();
     }
 
+    txt = txt.arg(context.function).arg(/*context.file*/"").arg(context.line).arg(str);
     QFile outFile(g_LogPath);
     outFile.open(QIODevice::Text | QIODevice::WriteOnly | QIODevice::Append);
     QTextStream ts(&outFile);
@@ -38,7 +39,7 @@ void crashMessageOutput(QtMsgType type, const QMessageLogContext &context, const
 
     std::locale locale("");
     std::wcout.imbue(locale);
-    std::wcout<<"[debug]"<<str.toStdWString()<<std::endl;
+    std::wcout<<txt.toStdWString()<<std::endl;
 }
 
 void InstallLogHandler() {

@@ -8,13 +8,20 @@ namespace  DeepinInstaller
 
 class WindowsBackend: public Backend
 {
+    Q_OBJECT
 public:
+    enum BootMode{
+        SignleBoot,
+        MultiBoot,
+    };
+    Q_ENUM(BootMode)
+
     WindowsBackend(const QString &username,
                    const QString &password,
                    const QString &locale,
                    const QString &installTarget,
                    const QString &isoPath,
-                   int installSize,
+                   int installSize, int swapSize,
                    QObject *parent = 0);
 
 
@@ -45,14 +52,20 @@ public:
 private:
     bool VerfiyMD5(const QString &root, const QString md5file);
 
-    int InstallBCD(QString &id);
+    int InstallMultiBCD(QString &id);
     int UninstallBCD();
 
     int InstallUEFI(QString &id);
     int UninstallUEFI();
 
-    int InstallBootIni(QString &id);
+    int InstallMultiBootIni(QString &id);
     int UninstallBootIni();
+
+    int InstallSingleBCD();
+    int InstallSingleBootIni(QString &id);
+
+    void BackupBootloader(const QString& profile);
+    void RestoreBootloader(const QString& profile);
 
     bool m_isUninstall;
 };

@@ -175,7 +175,7 @@ void Execer::run(const QString &execPipeIn){
     Ret = RunApp(ExecPath, Param, execPipeIn);
     qDebug()<<"Exec: "<<ExecPath
             <<"Params: "<<Param
-            <<"Output: "<<Ret;
+            <<"Output: "<<Ret.split("\r\n");
 }
 
 

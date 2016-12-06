@@ -34,8 +34,9 @@ Backend::Backend(const QString &username,
         const QString& installTarget,
         const QString& isoPath,
         int installSize,
+        int swapSize,
         QObject *parent):QObject(parent){
-    Init(username, password, locale, installTarget, isoPath, installSize);
+    Init(username, password, locale, installTarget, isoPath, installSize, swapSize);
 
     QStringList sevenzFileList;
     sevenzFileList.append(":/blobs/sevenz/sevnz.exe");
@@ -49,8 +50,9 @@ void Backend::SetInstallParam(
         const QString &locale,
         const QString& installTarget,
         const QString& isoPath,
-        int installSize) {
-    Init(username, password, locale, installTarget, isoPath, installSize);
+        int installSize,
+        int swapSize) {
+    Init(username, password, locale, installTarget, isoPath, installSize, swapSize);
 }
 
 void Backend::Init(
@@ -59,7 +61,8 @@ void Backend::Init(
         const QString &locale,
         const QString& installTarget,
         const QString& isoPath,
-        int installSize) {
+        int installSize,
+        int swapSize) {
     m_Info.TargetDev = installTarget.left(2);
     m_Info.InstallPrefix = "deepin";
     m_Info.BootMethod = "casper";
@@ -69,8 +72,8 @@ void Backend::Init(
     m_Info.ImagePath = isoPath;
     m_Info.DistroName = "Deepin";
     //2GB for reseve
-    m_Info.RootSize = installSize * 1024 - 2.5 * 1024;
-    m_Info.SwapSize = 0.5 * 1024;
+    m_Info.RootSize = installSize * 1024;
+    m_Info.SwapSize = swapSize;
     m_Info.RootFlags = "rootflags=sync";
     m_Info.RootFilePath = QString("/%1/disks/root.disk").arg(m_Info.InstallPrefix);
     m_Info.SwapFilePath = QString("/%1/disks/swap.disk").arg(m_Info.InstallPrefix);
@@ -86,6 +89,8 @@ void Backend::Init(
     m_Info.ReleaseInfo = "Deepin";
 
     m_Progress=0;
+
+    qDebug() << property("BootMode");
 }
 
 int Backend::Go(){

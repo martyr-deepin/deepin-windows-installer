@@ -226,7 +226,7 @@ QWidget *MainWindow::InstallOptionBody()
         installSize->setMax(MiniInstallSize + 1);
     }
     installSize->setFixedSize(180, DefaultWidgetHeight);
-    layout->addSpacing(24);
+    layout->addSpacing(20);
     layout->addWidget(installSize);
     layout->setAlignment(installSize, Qt::AlignCenter);
     connect(this, SIGNAL(maxInstallSizeChage(int)),
@@ -236,6 +236,60 @@ QWidget *MainWindow::InstallOptionBody()
     layout->addSpacing(5);
 
     installSize->setValue(MiniInstallSize);
+
+
+    auto swapSize = new QSlider;
+    swapSize->setMinimum(MiniSwapSize);
+    swapSize->setMaximum(32);
+    swapSize->setOrientation(Qt::Horizontal);
+    swapSize->setFixedSize(130, DefaultWidgetHeight/2);
+
+
+    auto swapSizeLabel = new QLabel;
+    swapSizeLabel->setStyleSheet("QLabel{font-size:12px; color: grey;}");
+    swapSizeLabel->setText(QString("512M"));
+    swapSizeLabel->setFixedSize(40, DefaultWidgetHeight);
+
+    auto swapLayout = new QHBoxLayout;
+    swapLayout->setMargin(0);
+    swapLayout->setSpacing(10);
+
+    swapLayout->addStretch();
+    swapLayout->addWidget(swapSize, 0 , Qt::AlignCenter);
+    swapLayout->addWidget(swapSizeLabel, 0 , Qt::AlignCenter);
+    swapLayout->addStretch();
+
+    connect(swapSize, &QSlider::valueChanged, this, [=](int value){
+        m_SwapSize = value * 1024/2;
+        double size = static_cast<double>(value)/2;
+
+        auto text = QString("%1 G").arg(QString::number(size, 'f', 1));
+        if (size < 1) {
+            size = size * 1024;
+            text = QString("%1 M").arg(static_cast<int>(size));
+        }
+        swapSizeLabel->setText(text);
+    });
+
+    swapSize->setValue(4);
+
+    layout->addSpacing(20);
+    layout->addLayout(swapLayout);
+
+
+    auto bootMode = new DComboBox;
+    bootMode->setFixedSize(180, DefaultWidgetHeight);
+    bootMode->addItem(tr("Deepin Boot"));
+    bootMode->addItem(tr("Muti Boot"));
+
+    connect(bootMode,  static_cast<void (DComboBox::*)(int index)>(&DComboBox::currentIndexChanged),
+            this, [=](int index){
+        m_Backend->setProperty("BootMode", index);
+    });
+    bootMode->setCurrentIndex(0);
+
+    layout->addSpacing(20);
+    layout->addWidget(bootMode, 0 , Qt::AlignCenter);
 
     QLabel *hits = new QLabel;
     hits->setFixedWidth(240);
@@ -495,13 +549,15 @@ void MainWindow::goInstallOptionCheck()
         return;
     }
 
+
     m_Backend->SetInstallParam(
         m_Username,
         QByteArray(m_Password.toUtf8()).toBase64(),
         m_InstallLocale,
         m_InstallDev,
         "",
-        m_InstallSize
+        m_InstallSize,
+        m_SwapSize
     );
 
     connect(m_Backend, SIGNAL(Done(int)), this, SLOT(installDone(int)));

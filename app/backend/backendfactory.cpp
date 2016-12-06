@@ -21,7 +21,7 @@ Backend* BackendFactory::CreateBackend(BackendTpye type,
                                        const QString &locale,
                                        const QString &target,
                                        const QString &isoPath,
-                                       int installSize) {
+                                       int installSize, int swapSize) {
     switch(type) {
 #ifdef Q_OS_WIN32
     case Windows:
@@ -30,7 +30,8 @@ Backend* BackendFactory::CreateBackend(BackendTpye type,
                                   locale,
                                   target,
                                   isoPath,
-                                  installSize);
+                                  installSize,
+                                  swapSize);
 #endif
     default:
         return NULL;
@@ -38,7 +39,7 @@ Backend* BackendFactory::CreateBackend(BackendTpye type,
 }
 
 Backend* BackendFactory::CreateBackend(BackendTpye type) {
-    return CreateBackend(type, "", "", "", "", "", 0);
+    return CreateBackend(type, "", "", "", "", "", 0,0);
 }
 
 BackendFactory::~BackendFactory(){

@@ -21,7 +21,7 @@ public:
                            const QString &locale,
                            const QString &target,
                            const QString &isoPath,
-                           int installSize);
+                           int installSize, int swapSize);
 
     Backend* CreateBackend(BackendTpye type);
 
