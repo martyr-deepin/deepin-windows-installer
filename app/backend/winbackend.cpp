@@ -927,8 +927,9 @@ int WindowsBackend::InstallBootloader()
     case BOOT_INI:
         ret = this->InstallSingleBootIni(bootid);
         break;
+    case BCD_UEFI:
+        break;
     default:
-        ret = Failed;
         break;
     }
 
