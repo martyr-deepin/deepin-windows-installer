@@ -4,7 +4,7 @@ minimum_perc = 80
 mode = developer
 
 [deepin-windows-installer.deepin-windows-installer-pot]
-file_filter = app/po/<lang>.po
-source_file = app/po/deepin-windows-installer.pot
+file_filter = app/po/<lang>.ts
+source_file = app/po/deepin-windows-installer.ts
 source_lang = en
-type = PO
+type = QT

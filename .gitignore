@@ -4,6 +4,5 @@ build
 *.pro.user.*
 *.log
 .DS_Store
-*.ts
 *.qm
 app/data/build_env.h

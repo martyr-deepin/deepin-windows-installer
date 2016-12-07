@@ -226,7 +226,7 @@ QWidget *MainWindow::InstallOptionBody()
         installSize->setMax(MiniInstallSize + 1);
     }
     installSize->setFixedSize(180, DefaultWidgetHeight);
-    layout->addSpacing(20);
+    layout->addSpacing(10);
     layout->addWidget(installSize);
     layout->setAlignment(installSize, Qt::AlignCenter);
     connect(this, SIGNAL(maxInstallSizeChage(int)),
@@ -238,11 +238,34 @@ QWidget *MainWindow::InstallOptionBody()
     installSize->setValue(MiniInstallSize);
 
 
+    auto swapHits = new QLabel;
+    swapHits->setStyleSheet("QLabel{font-size:12px; color: grey;}");
+    swapHits->setText(QString(tr("Swap Size")));
+    swapHits->setFixedSize(180, DefaultWidgetHeight);
+
+    layout->addSpacing(10);
+    layout->addWidget(swapHits, 0 , Qt::AlignCenter);
+
+
     auto swapSize = new QSlider;
+    swapSize->setObjectName("SwapSize");
     swapSize->setMinimum(MiniSwapSize);
     swapSize->setMaximum(32);
     swapSize->setOrientation(Qt::Horizontal);
     swapSize->setFixedSize(130, DefaultWidgetHeight/2);
+
+    swapSize->setStyleSheet(""
+"#SwapSize::groove:horizontal {"
+"    position: absolute;"
+"    left: 0px; right: 0px;"
+"}"
+"#SwapSize::add-page:horizontal {"
+"    background-color: grey;"
+"}"
+"#SwapSize::sub-page:horizontal {"
+"    background: #2ca7f8;"
+"    background-color: rgb(49, 50, 52);"
+"}");
 
 
     auto swapSizeLabel = new QLabel;
@@ -273,14 +296,14 @@ QWidget *MainWindow::InstallOptionBody()
 
     swapSize->setValue(4);
 
-    layout->addSpacing(20);
+    layout->addSpacing(10);
     layout->addLayout(swapLayout);
 
 
     auto bootMode = new DComboBox;
     bootMode->setFixedSize(180, DefaultWidgetHeight);
     bootMode->addItem(tr("Deepin Boot"));
-    bootMode->addItem(tr("Muti Boot"));
+    bootMode->addItem(tr("Multi Boot"));
 
     connect(bootMode,  static_cast<void (DComboBox::*)(int index)>(&DComboBox::currentIndexChanged),
             this, [=](int index){
@@ -288,7 +311,7 @@ QWidget *MainWindow::InstallOptionBody()
     });
     bootMode->setCurrentIndex(0);
 
-    layout->addSpacing(20);
+    layout->addSpacing(10);
     layout->addWidget(bootMode, 0 , Qt::AlignCenter);
 
     QLabel *hits = new QLabel;

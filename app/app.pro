@@ -66,7 +66,7 @@ RESOURCES += \
     ui.qrc \
     data.qrc
 
-TRANSLATIONS += \
+TRANSLATIONS += deepin-system-installer.ts \
     po/en_US.ts \
     po/zh_CN.ts \
     po/zh_TW.ts \
