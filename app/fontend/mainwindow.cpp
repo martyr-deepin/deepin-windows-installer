@@ -12,44 +12,52 @@
 #include <xsys.h>
 #include <xutil.h>
 
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QDebug>
-#include <QMessageBox>
+#include "widget/waterprogress.h"
+#include "widget/dpushbutton.h"
+#include "widget/dtips.h"
+#include "widget/lineedit.h"
+#include "widget/stepedit.h"
+#include "widget/constant.h"
 
-#include <DWaterProgress>
-#include <DPushButton>
-#include <DLineEdit>
-#include <DComboBox>
-#include <DStepEdit>
-#include <DTips>
+#include <dcombobox.h>
+#include <dlineedit.h>
+#include <dslider.h>
 
 #include <QApplication>
 #include <QStandardPaths>
 #include <QProcess>
 #include <QPainter>
 #include <QKeyEvent>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QDebug>
+#include <QMessageBox>
+#include <QGridLayout>
 
-static const int DefaultWidgetHeight = 24;
-
+static const int DefaultWidgetWidth = 320;
+static const int DefaultWidgetHeight = 36;
 static const int DefaultMaxInstallSize = 64;
-
 static const QString FailIconURL = ":/fontend/images/fail.png";
 static const QString SuccessIconURL = ":/fontend/images/success.png";
 static const QString WarningIconURL = ":/fontend/images/warning.png";
 static QString PasswordHits;
 static QString RepeatPasswordHits;
 
+using namespace Dtk::Widget;
 using namespace DeepinInstaller;
 
 MainWindow::MainWindow(QWidget *parent) :
-    DeepinWidget::DMainWindow(parent)
+    DWindow(parent)
 {
     m_AcceptKey = false;
     PasswordHits = QObject::tr("Password can not be empty.");
     RepeatPasswordHits = QObject::tr("The two passwords do not match.");
 
-    setFixedSize(340, 520);
+    setTitle("");
+    setBackgroundColor(DSI::Widget::BackgroundBottonColor);
+    setWindowFlags(windowFlags() & ~Qt::WindowSystemMenuHint);
+    setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
+    setFixedSize(780, 550);
 
     connect(this, SIGNAL(install()), this, SLOT(goInstall()));
     connect(this, SIGNAL(uninstall()), this, SLOT(goUninstall()));
@@ -61,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     } else {
         emit install();
     }
+
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *k)
@@ -70,30 +79,51 @@ void MainWindow::keyReleaseEvent(QKeyEvent *k)
     }
 }
 
+void MainWindow::changeEvent(QEvent *e)
+{
+//if (e->type() == QEvent::WindowStateChange) {
+//    QWindowStateChangeEvent* event = static_cast< QWindowStateChangeEvent* >( e );
+
+//    if( event->oldState() & Qt::WindowMinimized )
+//    {
+//        qDebug() << "Window restored (to normal or maximized state)!";
+//    }
+//    else if( event->oldState() == Qt::WindowNoState && this->windowState() == Qt::WindowMaximized )
+//    {
+//        e->accept();
+//        toggleMaximizedWindow();
+//        qDebug() << "Window Maximized!";
+//        return;
+//    }
+//}
+    DWindow::changeEvent(e);
+}
+
 QWidget *MainWindow::InstallOptionBody()
 {
     QWidget *widget = new QWidget;
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->setSpacing(0);
-    layout->addSpacing(10);
+    widget->setFixedHeight(250);
+    auto widgetLayout = new QVBoxLayout(widget);
 
-    DLineEdit *usernameEdit = new DLineEdit(":/fontend/images/user.png", tr("Username"));
+    QWidget *gridWidget = new QWidget();
+    gridWidget->setFixedSize(680, 200);
+    auto layout = new QGridLayout(gridWidget);
+
+//    widgetLayout->addStretch();
+    widgetLayout->addWidget(gridWidget,0,Qt::AlignCenter);
+
+    auto *usernameEdit = new DSI::Widget::LineEdit(":/fontend/images/user.png", tr("Username"));
     usernameEdit->setMaxLength(32);
-    usernameEdit->setFixedSize(180, DefaultWidgetHeight);
-    layout->addWidget(usernameEdit);
-    layout->setAlignment(usernameEdit, Qt::AlignCenter);
+    usernameEdit->setFixedSize(DefaultWidgetWidth, DefaultWidgetHeight);
     connect(usernameEdit, SIGNAL(textChanged(QString)),
             this, SLOT(setUsername(QString)));
     connect(usernameEdit, SIGNAL(editingFinished()),
             this, SLOT(editUsernameFinish()));
     connect(usernameEdit, SIGNAL(editingBegin(QString)),
             this, SLOT(editUsernameBegin(QString)));
-
     connect(this, SIGNAL(usernameChanged(QString)),
             usernameEdit, SLOT(overwriteText(QString)));
-
-
-    DTips *usernameTips = new DTips(usernameEdit);
+    auto *usernameTips = new DTips(usernameEdit);
     connect(this, SIGNAL(showUsernameTips()),
             usernameTips, SLOT(pop()));
     connect(this, SIGNAL(hideUsernameTips()),
@@ -103,12 +133,33 @@ QWidget *MainWindow::InstallOptionBody()
 
     usernameEdit->setText(ToDeepinUsername(Xapi::Username()));
 
-    DLineEdit *password = new DLineEdit(":/fontend/images/lock.png", tr("Password"));
+    auto *hostnameEdit = new DSI::Widget::LineEdit(":/fontend/images/user.png", tr("Username"));
+    hostnameEdit->setMaxLength(32);
+    hostnameEdit->setFixedSize(DefaultWidgetWidth, DefaultWidgetHeight);
+    connect(hostnameEdit, &DSI::Widget::LineEdit::textChanged,
+            this, [=](const QString &text){
+        m_Hostname = text;
+    });
+    hostnameEdit->setText(Xapi::Hostname());
+
+//    connect(hostnameEdit, SIGNAL(editingFinished()),
+//            this, SLOT(editUsernameFinish()));
+//    connect(hostnameEdit, SIGNAL(editingBegin(QString)),
+//            this, SLOT(editUsernameBegin(QString)));
+//    connect(this, SIGNAL(usernameChanged(QString)),
+//            hostnameEdit, SLOT(overwriteText(QString)));
+//    auto *hostnameTips = new DTips(hostnameEdit);
+//    connect(this, SIGNAL(showUsernameTips()),
+//            hostnameTips, SLOT(pop()));
+//    connect(this, SIGNAL(hideUsernameTips()),
+//            hostnameTips, SLOT(pack()));
+//    connect(this, SIGNAL(setUsernameTips(QString)),
+//            hostnameTips, SLOT(setText(QString)));
+
+    auto *password = new DSI::Widget::LineEdit(":/fontend/images/lock.png", tr("Password"));
     password->setEchoMode(QLineEdit::Password);
-    password->setFixedSize(180, DefaultWidgetHeight);
-    layout->addSpacing(27);
-    layout->addWidget(password);
-    layout->setAlignment(password, Qt::AlignCenter);
+    password->setFixedSize(DefaultWidgetWidth, DefaultWidgetHeight);
+
     connect(password, SIGNAL(textChanged(QString)),
             this, SLOT(setPassword(QString)));
     connect(password, SIGNAL(editingFinished()),
@@ -126,12 +177,9 @@ QWidget *MainWindow::InstallOptionBody()
             passwordTips, SLOT(setText(QString)));
     setPassword("");
 
-    DLineEdit *repeatRassword = new DLineEdit(":/fontend/images/lock.png", tr("Repeat Password"));
+    auto *repeatRassword = new DSI::Widget::LineEdit(":/fontend/images/lock.png", tr("Repeat Password"));
     repeatRassword->setEchoMode(QLineEdit::Password);
-    repeatRassword->setFixedSize(180, DefaultWidgetHeight);
-    layout->addSpacing(27);
-    layout->addWidget(repeatRassword);
-    layout->setAlignment(repeatRassword, Qt::AlignCenter);
+    repeatRassword->setFixedSize(DefaultWidgetWidth, DefaultWidgetHeight);
     connect(repeatRassword, SIGNAL(textChanged(QString)),
             this, SLOT(setRepeatPassword(QString)));
     connect(repeatRassword, SIGNAL(editingFinished()),
@@ -151,11 +199,8 @@ QWidget *MainWindow::InstallOptionBody()
     setRepeatPassword("");
 
     QString defaultLocale = Xapi::Locale();
-    DComboBox *installLang = new DComboBox;
-    installLang->setFixedSize(180, DefaultWidgetHeight);
-    layout->addSpacing(27);
-    layout->addWidget(installLang);
-    layout->setAlignment(installLang, Qt::AlignCenter);
+    auto *installLang = new Dtk::Widget::DComboBox;
+    installLang->setFixedSize(DefaultWidgetWidth, DefaultWidgetHeight);
     installLang->setIconSize(QSize(130, 14));
     installLang->setContentsMargins(QMargins(0, 0, 0, 0));
     installLang->setMinimumContentsLength(0);
@@ -175,11 +220,15 @@ QWidget *MainWindow::InstallOptionBody()
 
     installLang->setCurrentIndex(defalutLangIndex);
 
+
+    //////////  partition //////////////////////
+    auto partition = new QWidget;
+    partition->setFixedSize(DefaultWidgetWidth, DefaultWidgetHeight);
+
+    auto partitionLayout = new QHBoxLayout(partition);
+
     DComboBox *installDev = new DComboBox;
-    installDev->setFixedSize(180, DefaultWidgetHeight);
-    layout->addSpacing(27);
-    layout->addWidget(installDev);
-    layout->setAlignment(installDev, Qt::AlignCenter);
+    installDev->setFixedSize(170, DefaultWidgetHeight);
     connect(installDev, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(installDevTextChanged(QString)));
 
@@ -218,69 +267,47 @@ QWidget *MainWindow::InstallOptionBody()
         installDev->addItem(QString("%1(%2GB)").arg(itor->Name).arg(itor->FreeSpace));
     }
 
-    DStepEdit *installSize = new DStepEdit;
+    auto installSize = new DSI::Widget::StepEdit;
     installSize->setMin(MiniInstallSize);
     if (!list.isEmpty()) {
         installSize->setMax(list.first().FreeSpace);
     } else {
         installSize->setMax(MiniInstallSize + 1);
     }
-    installSize->setFixedSize(180, DefaultWidgetHeight);
-    layout->addSpacing(10);
-    layout->addWidget(installSize);
-    layout->setAlignment(installSize, Qt::AlignCenter);
+    installSize->setFixedSize(140, DefaultWidgetHeight);
     connect(this, SIGNAL(maxInstallSizeChage(int)),
             installSize, SLOT(setMax(int)));
     connect(installSize, SIGNAL(valueChanged(int)),
             this, SLOT(setInstallSize(int)));
-    layout->addSpacing(5);
 
     installSize->setValue(MiniInstallSize);
 
+    partitionLayout->setMargin(0);
+    partitionLayout->setSpacing(0);
+    partitionLayout->addWidget(installDev,0,Qt::AlignCenter);
+    partitionLayout->addSpacing(5);
+    partitionLayout->addWidget(installSize,0,Qt::AlignCenter);
+
+
+    auto swapWidget = new QWidget;
+    swapWidget->setFixedSize(DefaultWidgetWidth, DefaultWidgetHeight);
 
     auto swapHits = new QLabel;
     swapHits->setStyleSheet("QLabel{font-size:12px; color: grey;}");
     swapHits->setText(QString(tr("Swap Size")));
-    swapHits->setFixedSize(180, DefaultWidgetHeight);
+    swapHits->setFixedSize(90, DefaultWidgetHeight);
 
-    layout->addSpacing(10);
-    layout->addWidget(swapHits, 0 , Qt::AlignCenter);
-
-
-    auto swapSize = new QSlider;
-    swapSize->setObjectName("SwapSize");
+    auto swapSize = new DSlider;
+    swapSize->setHandleType(DSlider::SharpHandler);
     swapSize->setMinimum(MiniSwapSize);
     swapSize->setMaximum(32);
     swapSize->setOrientation(Qt::Horizontal);
-    swapSize->setFixedSize(130, DefaultWidgetHeight/2);
-
-    swapSize->setStyleSheet(""
-"#SwapSize::groove:horizontal {"
-"    position: absolute;"
-"    left: 0px; right: 0px;"
-"}"
-"#SwapSize::add-page:horizontal {"
-"    background-color: grey;"
-"}"
-"#SwapSize::sub-page:horizontal {"
-"    background: #2ca7f8;"
-"    background-color: rgb(49, 50, 52);"
-"}");
-
+    swapSize->setFixedSize(160, DefaultWidgetHeight/2);
 
     auto swapSizeLabel = new QLabel;
     swapSizeLabel->setStyleSheet("QLabel{font-size:12px; color: grey;}");
     swapSizeLabel->setText(QString("512M"));
     swapSizeLabel->setFixedSize(40, DefaultWidgetHeight);
-
-    auto swapLayout = new QHBoxLayout;
-    swapLayout->setMargin(0);
-    swapLayout->setSpacing(10);
-
-    swapLayout->addStretch();
-    swapLayout->addWidget(swapSize, 0 , Qt::AlignCenter);
-    swapLayout->addWidget(swapSizeLabel, 0 , Qt::AlignCenter);
-    swapLayout->addStretch();
 
     connect(swapSize, &QSlider::valueChanged, this, [=](int value){
         m_SwapSize = value * 1024/2;
@@ -296,12 +323,16 @@ QWidget *MainWindow::InstallOptionBody()
 
     swapSize->setValue(4);
 
-    layout->addSpacing(10);
-    layout->addLayout(swapLayout);
-
+    auto swapLayout = new QHBoxLayout(swapWidget);
+    swapLayout->setMargin(0);
+    swapLayout->setSpacing(0);
+    swapLayout->addWidget(swapHits, 0 , Qt::AlignCenter);
+    swapLayout->addWidget(swapSize, 0 , Qt::AlignCenter);
+    swapLayout->addSpacing(10);
+    swapLayout->addWidget(swapSizeLabel, 0 , Qt::AlignCenter);
 
     auto bootMode = new DComboBox;
-    bootMode->setFixedSize(180, DefaultWidgetHeight);
+    bootMode->setFixedSize(DefaultWidgetWidth, DefaultWidgetHeight);
     bootMode->addItem(tr("Deepin Boot"));
     bootMode->addItem(tr("Multi Boot"));
 
@@ -311,23 +342,12 @@ QWidget *MainWindow::InstallOptionBody()
     });
     bootMode->setCurrentIndex(0);
 
-    layout->addSpacing(10);
-    layout->addWidget(bootMode, 0 , Qt::AlignCenter);
 
-    QLabel *hits = new QLabel;
-    hits->setFixedWidth(240);
-    hits->setWordWrap(true);
-    hits->setText("<p style='color:grey; font-size:10px;'>" +
-                  tr("This operation will not affect any of your data. Please use it freely.") +
-                  "</p>");
-    layout->addSpacing(10);
-    layout->addWidget(hits);
-    layout->setAlignment(hits, Qt::AlignCenter);
 
     //Disable if there is not enough disk size
     if (!m_DiskSizeEnough) {
         qDebug() << "Disable all control";
-        usernameEdit->setVisible(false);
+        hostnameEdit->setVisible(false);
         password->setVisible(false);
         repeatRassword->setVisible(false);
         usernameTips->pack();
@@ -345,7 +365,20 @@ QWidget *MainWindow::InstallOptionBody()
 
         return NoSpaceBody(errHits);
     }
-    widget->setLayout(layout);
+
+    layout->setVerticalSpacing(20);
+    layout->setHorizontalSpacing(40);
+    layout->addWidget(usernameEdit,0,0, Qt::AlignCenter);
+    layout->addWidget(hostnameEdit,1,0, Qt::AlignCenter);
+    layout->addWidget(password, 2,0, Qt::AlignCenter);
+    layout->addWidget(repeatRassword, 3,0, Qt::AlignCenter);
+    layout->addWidget(installLang, 0,1, Qt::AlignCenter);
+    layout->addWidget(partition, 1,1, Qt::AlignCenter);
+    layout->addWidget(swapWidget, 2,1, Qt::AlignCenter);
+    layout->addWidget(bootMode, 3,1, Qt::AlignCenter);
+
+//    layout->addWidget(hits);
+
     return widget;
 }
 
@@ -353,7 +386,7 @@ QWidget *MainWindow::InstallFooter()
 {
     DPushButton *start = new DPushButton(tr("Start"));
     connect(start, SIGNAL(clicked()), this, SLOT(goInstallOptionCheck()));
-    QList<DPushButton *> btlist;
+    QList<QPushButton *> btlist;
     btlist.append(start);
     return new DFooterWidget(btlist);
 }
@@ -362,7 +395,7 @@ QWidget *MainWindow::ExitFooter()
 {
     DPushButton *start = new DPushButton(tr("Exit"));
     connect(start, SIGNAL(clicked()), this, SLOT(close()));
-    QList<DPushButton *> btlist;
+    QList<QPushButton *> btlist;
     btlist.append(start);
     return new DFooterWidget(btlist);
 }
@@ -370,6 +403,7 @@ QWidget *MainWindow::ExitFooter()
 QWidget *HitsBodyWidget(const QString &icon, const QString &text)
 {
     QWidget *widget = new QWidget;
+    widget->setFixedHeight(250);
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setSpacing(20);
     layout->addSpacing(70);
@@ -386,7 +420,7 @@ QWidget *HitsBodyWidget(const QString &icon, const QString &text)
     textHits->setText(text);
     layout->addWidget(textHits);
     layout->setAlignment(textHits, Qt::AlignCenter);
-
+    layout->addStretch();
     widget->setLayout(layout);
     return widget;
 }
@@ -407,7 +441,7 @@ QWidget *MainWindow::InstallProcessBody()
     layout->setSpacing(20);
     layout->addSpacing(70);
 
-    DWaterProgress *iconHits = new DWaterProgress;
+    auto iconHits = new DSI::Widget::WaterProgress;
     layout->addWidget(iconHits);
     layout->setAlignment(iconHits, Qt::AlignCenter);
     connect(this, SIGNAL(progressChanged(int)),
@@ -433,7 +467,7 @@ QWidget *MainWindow::InstallProcessBody()
 
 QWidget *MainWindow::EmptyFooter()
 {
-    QList<DPushButton *> btlist;
+    QList<QPushButton *> btlist;
     return new DFooterWidget(btlist);
 }
 
@@ -462,7 +496,7 @@ QWidget *MainWindow::InstallSuccessFooter()
     DPushButton *restartnow = new DPushButton(tr("Restart Now"));
     connect(restartnow, SIGNAL(clicked()), this, SLOT(reboot()));
 
-    QList<DPushButton *> btlist;
+    QList<QPushButton *> btlist;
     btlist.append(restartlater);
     btlist.append(restartnow);
     return new DFooterWidget(btlist);
@@ -476,13 +510,11 @@ void MainWindow::EnableCloseButton(bool enable)
 DHeaderWidget *MainWindow::Header()
 {
     DHeaderWidget *m_Heaer = new DHeaderWidget;
-    if (m_EnableClose) {
-        connect(m_Heaer, SIGNAL(closeClicked()), this, SLOT(close()));
-        m_Heaer->enableClose(true);
-        return m_Heaer;
+    if (!m_EnableClose){
+        setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
+    }else {
+        setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
     }
-    disconnect(m_Heaer, SIGNAL(closeClicked()), this, SLOT(close()));
-    m_Heaer->enableClose(false);
     return m_Heaer;
 }
 
@@ -497,7 +529,7 @@ QWidget *MainWindow::FinishUnistallFooter()
     DPushButton *finish = new DPushButton(tr("Finished"));
     connect(finish, SIGNAL(clicked()), this, SLOT(unistallClear()));
 
-    QList<DPushButton *> btlist;
+    QList<QPushButton *> btlist;
     btlist.append(finish);
     return new DFooterWidget(btlist);
 }
@@ -507,7 +539,7 @@ QWidget *MainWindow::FinishFooter()
     DPushButton *finish = new DPushButton(tr("Finished"));
     connect(finish, SIGNAL(clicked()), this, SLOT(close()));
 
-    QList<DPushButton *> btlist;
+    QList<QPushButton *> btlist;
     btlist.append(finish);
     return new DFooterWidget(btlist);
 }
@@ -519,7 +551,7 @@ void MainWindow::goInstall()
     m_AcceptKey = true;
 
     QWidget *m_TopWidget = new QWidget(this);
-    setCentralWidget(m_TopWidget);
+    setUserWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
@@ -632,7 +664,7 @@ void MainWindow::goInstallProcess()
     EnableCloseButton(false);
 
     QWidget *m_TopWidget = new QWidget(this);
-    setCentralWidget(m_TopWidget);
+    setUserWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
@@ -648,7 +680,7 @@ void MainWindow::goInstallSuccess()
     EnableCloseButton(true);
 
     QWidget *m_TopWidget = new QWidget(this);
-    setCentralWidget(m_TopWidget);
+    setUserWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
@@ -663,7 +695,7 @@ void MainWindow::goInstallFailed()
 {
     EnableCloseButton(true);
     QWidget *m_TopWidget = new QWidget(this);
-    setCentralWidget(m_TopWidget);
+    setUserWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
@@ -692,7 +724,7 @@ QWidget *MainWindow::UninstallFooter()
     DPushButton *reinstall = new DPushButton(tr("Reinstall"));
     connect(reinstall, SIGNAL(clicked()), this, SLOT(goReInstall()));
 
-    QList<DPushButton *> btlist;
+    QList<QPushButton *> btlist;
     btlist.append(cancel);
     btlist.append(uninstall);
 
@@ -731,7 +763,7 @@ void MainWindow::goUninstall()
     EnableCloseButton(true);
 
     QWidget *m_TopWidget = new QWidget(this);
-    setCentralWidget(m_TopWidget);
+    setUserWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
@@ -753,7 +785,7 @@ void MainWindow::goUninstallProcess()
 {
     EnableCloseButton(false);
     QWidget *m_TopWidget = new QWidget(this);
-    setCentralWidget(m_TopWidget);
+    setUserWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
@@ -800,12 +832,17 @@ void MainWindow::reboot()
     this->close();
 }
 
+void MainWindow::setUserWidget(QWidget* userWidget)
+{
+    setContentWidget(userWidget);
+}
+
 void MainWindow::goUninstallSuccess()
 {
     EnableCloseButton(true);
 
     QWidget *m_TopWidget = new QWidget(this);
-    setCentralWidget(m_TopWidget);
+    setUserWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
@@ -821,7 +858,7 @@ void MainWindow::goUninstallFailed()
     EnableCloseButton(true);
 
     QWidget *m_TopWidget = new QWidget(this);
-    setCentralWidget(m_TopWidget);
+    setUserWidget(m_TopWidget);
 
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
@@ -841,6 +878,7 @@ void MainWindow::setUsername(const QString &value)
         if (1 == v.length() && !IsValidUsernameFirstChar(v, err)) {
             v = v.left(value.length() - 1);
             emit setUsernameTips(err);
+            qDebug() << err;
             emit showUsernameTips();
         } else {
             bool ret = IsValidUsernameChar(v.right(1), err);
@@ -851,9 +889,11 @@ void MainWindow::setUsername(const QString &value)
                 //                err = newerr;
                 //            }
                 emit setUsernameTips(err);
+                qDebug() << err;
                 emit showUsernameTips();
             } else if (!IsValidUsername(v, err)) {
                 emit setUsernameTips(err);
+                qDebug() << err;
                 emit showUsernameTips();
             } else {
                 emit hideUsernameTips();
@@ -879,6 +919,7 @@ void MainWindow::editUsernameFinish()
     bool ret = IsValidUsername(m_Username, err);
     if (!ret) {
         emit setUsernameTips(err);
+        qDebug() << err << m_Username;
         emit showUsernameTips();
     } else {
         emit hideUsernameTips();

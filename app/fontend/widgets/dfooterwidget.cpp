@@ -1,10 +1,11 @@
 #include "dfooterwidget.h"
 
-#include <DPushButton>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPushButton>
 
-DFooterWidget::DFooterWidget(const QList<DPushButton*> &btlist, QWidget *parent) :
-    QWidget(parent)
+DFooterWidget::DFooterWidget(QList<QPushButton *> btlist, QWidget *parent) :
+    QFrame(parent)
 {
     int width = 100;
     int sapce = 10;
@@ -13,19 +14,23 @@ DFooterWidget::DFooterWidget(const QList<DPushButton*> &btlist, QWidget *parent)
         sapce = 5;
     }
 
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->setMargin(0);
-    layout->setContentsMargins(0, 0, 0, 30);
-    layout->setSpacing(sapce);
-    layout->addStretch();
-    foreach (DPushButton* item, btlist) {
+    auto layout = new QVBoxLayout(this);
+    QHBoxLayout *btlayout = new QHBoxLayout;
+    btlayout->setMargin(0);
+    btlayout->setContentsMargins(0, 0, 0, 30);
+    btlayout->setSpacing(sapce);
+    btlayout->addStretch();
+    for (auto item: btlist) {
         item->setFixedHeight (30);
         item->setMinimumWidth (width);
-        layout->addWidget(item);
-        layout->setAlignment (item, Qt::AlignCenter);
+        btlayout->addWidget(item,0, Qt::AlignCenter);
     }
-    layout->addStretch();
-    this->setLayout(layout);
-    this->setFixedHeight(60);
+    btlayout->addStretch();
+    this->setFixedHeight(120);
+//    this->setStyleSheet("QFrame{border: 1px solid red;}");
 
+    layout->addSpacing(50);
+    layout->addLayout(btlayout);
+
+    layout->addStretch();
 }

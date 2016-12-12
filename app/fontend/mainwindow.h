@@ -1,25 +1,24 @@
 #pragma once
 
 #include <xutil.h>
-
-#include <DMainWindow>
+#include <DWindow>
 
 class DHeaderWidget;
-class DLineEdit;
+class DSLineEdit;
 class QLabel;
 
 namespace DeepinInstaller {
     class Backend;
 }
 
-class MainWindow : public DeepinWidget::DMainWindow
+class MainWindow : public Dtk::Widget::DWindow
 {
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
 
-    virtual void keyReleaseEvent(QKeyEvent *);
-
+    virtual void keyReleaseEvent(QKeyEvent *);   
+    virtual void changeEvent(QEvent *);
 signals:
     void install();
     void uninstall();
@@ -67,6 +66,8 @@ private slots:
     void reboot();
 
 private:
+    void setUserWidget(QWidget *);
+
     void EnableCloseButton(bool);
 
     DHeaderWidget* Header();
@@ -118,6 +119,7 @@ signals:
     //InstallOption
 private:
     QString     m_Username;
+    QString     m_Hostname;
     QString     m_Password;
     QString     m_RepeatPassword;
     QString     m_InstallLocale;

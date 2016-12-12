@@ -5,10 +5,9 @@
 #include <QDebug>
 #include <QTimer>
 
-#include "dconstant.h"
-#include "dwidget.h"
+#include "constant.h"
 
-DTips::DTips(DWidget *parent):
+DTips::DTips(QWidget *parent):
     QLabel(parent)
 {
     m_delayDrawTimer = new QTimer(this);
@@ -77,10 +76,10 @@ void DTips::paintEvent(QPaintEvent *e) {
     QRect shadowRect = QRect(rect.x() + 1, rect.y()+1, rect.width() - 2, rect.height() - 1);
     QPainterPath shadowBorder = DrawTipsPath(shadowRect, 4);
 
-    QPen borderPen(DeepinWidget::TipsBorderColor);
+    QPen borderPen(DSI::Widget::TipsBorderColor);
     painter.strokePath(border, borderPen);
 
-    painter.fillPath(shadowBorder, QBrush(DeepinWidget::TipsBackground));
+    painter.fillPath(shadowBorder, QBrush(DSI::Widget::TipsBackground));
 
     QLabel::paintEvent(e);
 }

@@ -1,5 +1,5 @@
-#include "dwaterprogress.h"
-#include "dconstant.h"
+#include "waterprogress.h"
+#include "constant.h"
 
 #include <QPainter>
 #include <QTimer>
@@ -8,7 +8,11 @@
 #include <QPushButton>
 #include <QtMath>
 
-DWaterProgress::DWaterProgress(QWidget *parent) :
+
+namespace DSI {
+namespace Widget {
+
+WaterProgress::WaterProgress(QWidget *parent) :
     QWidget(parent)
 {
     setFixedSize(100,100);
@@ -44,26 +48,26 @@ DWaterProgress::DWaterProgress(QWidget *parent) :
     this->setLayout(layout);
 }
 
-void DWaterProgress::setProgress(int p) {
+void WaterProgress::setProgress(int p) {
     m_Progresss = (p <= 100) ? p : 100;
     m_Progresss = (m_Progresss <= 0) ? 0: m_Progresss;
     m_YOffset = 90 - p;
     setText(m_Progresss);
 }
 
-void DWaterProgress::setText(int p) {
+void WaterProgress::setText(int p) {
     m_Text->setText(QString("%1%").arg(p));
 }
 
-void DWaterProgress::start(){
+void WaterProgress::start(){
     m_timer->start(66);
 }
 
-void DWaterProgress::stop(){
+void WaterProgress::stop(){
     m_timer->stop();
 }
 
-void DWaterProgress::updateProcess() {
+void WaterProgress::updateProcess() {
     m_ForntXOffset1 += 2;
     m_ForntXOffset2 += 2;
     if (m_ForntXOffset1 >= 100) {
@@ -109,7 +113,7 @@ void DWaterProgress::updateProcess() {
     this->update();
 }
 
-void DWaterProgress::paintEvent(QPaintEvent *) {
+void WaterProgress::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing);
 
@@ -134,8 +138,11 @@ void DWaterProgress::paintEvent(QPaintEvent *) {
     pop11.addEllipse (m_Pop11XOffset, m_Pop11YOffset, 11, 11);
     p.fillPath (pop11, QColor(77,208,255));
 
-    QPen borderPen(DeepinWidget::BackgroundBottonColor, 4);
+    QPen borderPen(DSI::Widget::BackgroundBottonColor, 4);
     p.setPen(borderPen);
     p.drawEllipse(0, 0, 100, 100);
 
+}
+
+}
 }

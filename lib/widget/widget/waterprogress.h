@@ -1,17 +1,17 @@
-#ifndef DWATERPROGRESS_H
-#define DWATERPROGRESS_H
-
 #include <QWidget>
 
 class QTimer;
 class QImage;
 class QLabel;
 
-class DWaterProgress : public QWidget
+namespace DSI {
+namespace Widget {
+
+class WaterProgress : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DWaterProgress(QWidget *parent = 0);
+    explicit WaterProgress(QWidget *parent = 0);
 
     virtual void paintEvent(QPaintEvent *);
 
@@ -52,4 +52,5 @@ private:
     int     m_Progresss;
 };
 
-#endif // DWATERPROGRESS_H
+}
+}

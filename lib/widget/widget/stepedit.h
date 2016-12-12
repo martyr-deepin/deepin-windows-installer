@@ -1,21 +1,21 @@
-#ifndef DSTEPEDIT_H
-#define DSTEPEDIT_H
+#pragma once
 
 #include <QLabel>
 
 class QLineEdit;
 
-class DStepEdit : public QLabel
+namespace DSI {
+namespace Widget {
+
+class StepEdit : public QLabel
 {
     Q_OBJECT
 public:
-    explicit DStepEdit(QWidget *parent = 0);
+    explicit StepEdit(QWidget *parent = 0);
 
     Q_PROPERTY(int value READ value WRITE setValue NOTIFY valueChanged USER true)
 
     int value();
-
-
 
 signals:
     void valueChanged(int);
@@ -40,4 +40,5 @@ private:
     int m_Min;
 };
 
-#endif // DSTEPEDIT_H
+}
+}

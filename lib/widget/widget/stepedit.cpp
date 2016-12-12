@@ -1,4 +1,4 @@
-#include "dstepedit.h"
+#include "stepedit.h"
 
 #include "dpushbutton.h"
 
@@ -8,8 +8,11 @@
 #include <QSizePolicy>
 #include <QDebug>
 
+namespace DSI {
+namespace Widget {
+
 static QString s_DStepEditStyle =
-"DStepEdit {"
+"#UIStepEdit {"
 "margin: 0px;"
 "border: 1px solid rgba(0, 0, 0, 255);"
 "border-bottom: 2px solid qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,"
@@ -44,29 +47,17 @@ static QString s_LabelStyle =
 "margin: 0px;"
 "color: grey;"
 "border: 0px solid rgba(0, 0, 0, 255);"
-"border-radius: 4px;"
+"border-radius: 0px;"
 "background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,"
 "stop:0 rgb(24, 24, 24),"
 "stop:1 rgb(32, 32, 32));"
 "}";
 
-static QString s_CenterButtoStyle =
-"QPushButton{"
-"color: #b4b4b4;"
-"font-size: 12px;"
-"border-image:url(:/images/setpedit_center.png);"
-"}";
 
-static QString s_TailButtoStyle =
-"QPushButton{"
-"color: #b4b4b4;"
-"font-size: 12px;"
-"border-image:url(:/images/setpedit_tail.png);"
-"}";
-
-DStepEdit::DStepEdit(QWidget *parent) :
+StepEdit::StepEdit(QWidget *parent) :
     QLabel(parent)
 {
+    setObjectName("UIStepEdit");
     m_Value = 0;
 
     m_LineEdit = new QLineEdit;
@@ -90,7 +81,8 @@ DStepEdit::DStepEdit(QWidget *parent) :
                       ":/images/stepedit/add-hover.png",
                       ":/images/stepedit/add-press.png");
     m_Add->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
-    m_Add->setFixedSize (25, 22);
+    m_Add->setFixedSize (41, 34);
+//    m_Add->setText("+");
     connect(m_Add, SIGNAL(clicked()), this, SLOT(add()));
 
     DPushButton *m_Sub = new DPushButton("");
@@ -98,7 +90,8 @@ DStepEdit::DStepEdit(QWidget *parent) :
                       ":/images/stepedit/sub-hover.png",
                       ":/images/stepedit/sub-press.png");
     m_Sub->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    m_Sub->setFixedSize (25, 22);
+    m_Sub->setFixedSize (41, 34);
+//    m_Sub->setText("-");
     connect(m_Sub, SIGNAL(clicked()), this, SLOT(sub()));
 
     QHBoxLayout *layout = new QHBoxLayout;
@@ -114,23 +107,23 @@ DStepEdit::DStepEdit(QWidget *parent) :
     this->setStyleSheet(s_DStepEditStyle);
 }
 
-void DStepEdit::add() {
+void StepEdit::add() {
     int step = (m_Max - m_Min) / 10;
     step = (step > 0) ? step:1;
     setValue(m_Value+step);
 }
 
-void DStepEdit::sub() {
+void StepEdit::sub() {
     int step = (m_Max - m_Min) / 10;
     step = (step > 0) ? step:1;
     setValue(m_Value-step);
 }
 
-int DStepEdit::value() {
+int StepEdit::value() {
     return m_Value;
 }
 
-void DStepEdit::setValue(int v){
+void StepEdit::setValue(int v){
     if (v > m_Max) {
         v = m_Max;
     }
@@ -143,7 +136,7 @@ void DStepEdit::setValue(int v){
     emit valueChanged(m_Value);
 }
 
-void DStepEdit::textValueChanged(QString text) {
+void StepEdit::textValueChanged(QString text) {
 //    if (text.isEmpty()) {
 //        setValue(m_Min);
 //        return;
@@ -151,16 +144,19 @@ void DStepEdit::textValueChanged(QString text) {
 //    setValue(text.toInt());
 }
 
-void DStepEdit::editfinished(){
+void StepEdit::editfinished(){
     setValue(m_LineEdit->text().toInt());
 }
 
-void DStepEdit::setMax(int max) {
+void StepEdit::setMax(int max) {
     m_Max = max;
     setValue(m_Value);
 }
 
-void DStepEdit::setMin(int min) {
+void StepEdit::setMin(int min) {
     m_Min = min;
     setValue(m_Value);
+}
+
+}
 }

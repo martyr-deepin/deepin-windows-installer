@@ -3,13 +3,11 @@
 
 #include <QLabel>
 
-class DWidget;
-
 class DTips : public QLabel
 {
     Q_OBJECT
 public:
-    explicit DTips(DWidget *parent);
+    explicit DTips(QWidget *parent);
 
     void paintEvent(QPaintEvent *);
 
@@ -32,7 +30,7 @@ protected:
     QTimer  *m_delayDrawTimer;
     QTimer  *m_posUpdateTimer;
 
-    DWidget *m_parentDWidget;
+    QWidget *m_parentDWidget;
 };
 
 

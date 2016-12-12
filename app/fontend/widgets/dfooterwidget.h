@@ -1,16 +1,16 @@
 #ifndef FOOTWIDGET_H
 #define FOOTWIDGET_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QList>
 
-class DPushButton;
+class QPushButton;
 
-class DFooterWidget : public QWidget
+class DFooterWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit DFooterWidget(const QList<DPushButton*> &btlist, QWidget *parent = 0);
+    explicit DFooterWidget( QList<QPushButton*> btlist, QWidget *parent = 0);
 
 signals:
 

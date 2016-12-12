@@ -2,7 +2,6 @@
 
 #include "../../backend/backend.h"
 
-#include <DCloseButton>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -10,38 +9,33 @@
 DHeaderWidget::DHeaderWidget(QWidget *parent) :
     QWidget(parent)
 {
-    QHBoxLayout *btlayout = new QHBoxLayout();
-    m_CloseButton = new DCloseButton();
-    connect(m_CloseButton, SIGNAL(clicked()), this, SIGNAL(closeClicked()));
-    btlayout->setMargin(0);
-    btlayout->addWidget(m_CloseButton);
-    btlayout->setAlignment(m_CloseButton, Qt::AlignRight);
+    setFixedHeight(150);
+    auto headLayout = new QVBoxLayout(this);
 
-    QVBoxLayout *logolayout = new QVBoxLayout();
     QLabel *logolabel = new QLabel();
     logolabel->setPixmap(QPixmap(":/fontend/images/logo.png"));
-    logolayout->addStretch();
-    logolayout->addWidget(logolabel);
-    logolayout->setAlignment(logolabel, Qt::AlignCenter);
-    logolayout->addSpacing(10);
-    QLabel *versionlabel = new QLabel(QString("<a style='color:white; font-size:14px;font-weight:bold;'>%1 </a><a style='color:white; font-size:8px;'>%2</a>").arg(DeepinInstaller::AppTitle()).arg(DeepinInstaller::Version));
-    versionlabel->setIndent(2);
-    logolayout->addSpacing(2);
-    logolayout->addWidget(versionlabel);
-    logolayout->setAlignment(versionlabel, Qt::AlignCenter);
-    logolayout->addStretch();
 
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->setMargin(0);
-    layout->setSpacing(0);
-    layout->addLayout(btlayout);
-    layout->addLayout(logolayout);
-    this->setLayout(layout);
-    this->setFixedHeight(80);
+    QLabel *title = new QLabel(tr("Install deepin"));
+    title->setStyleSheet("QLabel{font-size:24px;color:grey;}");
+
+    QLabel *hits = new QLabel;
+    hits->setFixedWidth(400);
+    hits->setWordWrap(true);
+    hits->setAlignment(Qt::AlignCenter);
+    hits->setText("<p style='color:grey; font-size:10px;'>" +
+                  tr("This operation will not affect any of your data. Please use it freely.") +
+                  "</p>");
+  headLayout->addWidget(logolabel, 0, Qt::AlignCenter);
+  headLayout->addStretch();
+  headLayout->addWidget(title, 0, Qt::AlignCenter);
+  headLayout->addStretch();
+  headLayout->addWidget(hits, 0, Qt::AlignCenter);
+  headLayout->addStretch();
+
 }
 
 
 void DHeaderWidget::enableClose(bool enable)
 {
-    m_CloseButton->enableClose(enable);
+//    m_CloseButton->enableClose(enable);
 }
