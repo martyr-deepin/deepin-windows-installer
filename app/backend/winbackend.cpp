@@ -268,14 +268,15 @@ int UnpackBootXXXX(const QString &bootxxxx);
 
 WindowsBackend::WindowsBackend(
     const QString &username,
-    const QString &locale,
+    const QString &hostname,
     const QString &password,
+    const QString &locale,
     const QString &installTarget,
     const QString &isoPath,
     int installSize,
     int swapSize,
     QObject *parent):
-    Backend(username, password, locale, installTarget, isoPath, installSize, swapSize, parent)
+    Backend(username, hostname, password, locale, installTarget, isoPath, installSize, swapSize, parent)
 {
     m_BasePersent = 0;
     m_BaseRange = 10;
@@ -1032,6 +1033,12 @@ int WindowsBackend::CreateConfig()
     QString content = configTemplate.readAll();
     configTemplate.close();
 
+
+    auto bootMode = static_cast<BootMode>(property("BootMode").toInt());
+    QString noWindowsBoot = "no";
+    if (bootMode == SignleBoot)
+        noWindowsBoot = "yes";
+
     QString loopdev = "/dev/loop5";
     QMap<QString, QString> configInfo;
     configInfo.insert("bootloader", loopdev);
@@ -1048,6 +1055,7 @@ int WindowsBackend::CreateConfig()
     configInfo.insert("root_disk", loopdev);
     configInfo.insert("root_file", m_Info.RootFilePath);
     configInfo.insert("swap_file", m_Info.SwapFilePath);
+    configInfo.insert("no_win", noWindowsBoot);
 
     QMap<QString, QString>::iterator iter;
     iter = configInfo.begin();

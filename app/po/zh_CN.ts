@@ -116,37 +116,37 @@
         <translation>是否移除旧的安装？</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="711"/>
+        <location filename="../fontend/mainwindow.cpp" line="712"/>
         <source>You have installed %1.</source>
         <translation>已经安装了%1。</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="718"/>
+        <location filename="../fontend/mainwindow.cpp" line="719"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="721"/>
+        <location filename="../fontend/mainwindow.cpp" line="722"/>
         <source>Uninstall</source>
         <translation>卸载</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="724"/>
+        <location filename="../fontend/mainwindow.cpp" line="725"/>
         <source>Reinstall</source>
         <translation>重新安装</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="740"/>
+        <location filename="../fontend/mainwindow.cpp" line="741"/>
         <source>Being uninstalled. Please wait... </source>
         <translation>正在卸载，请稍后...</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="748"/>
+        <location filename="../fontend/mainwindow.cpp" line="749"/>
         <source>Uninstalled Successfully. </source>
         <translation>卸载成功。</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="756"/>
+        <location filename="../fontend/mainwindow.cpp" line="757"/>
         <source>Uninstallation Failed.</source>
         <translation>卸载失败。</translation>
     </message>

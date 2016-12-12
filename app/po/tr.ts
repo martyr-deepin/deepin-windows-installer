@@ -116,37 +116,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="711"/>
+        <location filename="../fontend/mainwindow.cpp" line="712"/>
         <source>You have installed %1.</source>
         <translation>%1 kuruldu.</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="718"/>
+        <location filename="../fontend/mainwindow.cpp" line="719"/>
         <source>Cancel</source>
         <translation>Vazgeç</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="721"/>
+        <location filename="../fontend/mainwindow.cpp" line="722"/>
         <source>Uninstall</source>
         <translation>Kaldır</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="724"/>
+        <location filename="../fontend/mainwindow.cpp" line="725"/>
         <source>Reinstall</source>
         <translation>Tekrar kur</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="740"/>
+        <location filename="../fontend/mainwindow.cpp" line="741"/>
         <source>Being uninstalled. Please wait... </source>
         <translation>Kakdırma başlatıldı. Lütfen bekleyin...</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="748"/>
+        <location filename="../fontend/mainwindow.cpp" line="749"/>
         <source>Uninstalled Successfully. </source>
         <translation>Kaldırma Başarılı.</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="756"/>
+        <location filename="../fontend/mainwindow.cpp" line="757"/>
         <source>Uninstallation Failed.</source>
         <translation>Kaldıma Başarısız.</translation>
     </message>

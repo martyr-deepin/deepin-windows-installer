@@ -28,7 +28,9 @@ extern QString ToDeepinHostname(const QString& username);
 
 static QString BlobAppSevenZ = "sevnz.exe";
 
-Backend::Backend(const QString &username,
+Backend::Backend(
+        const QString &username,
+        const QString &hostname,
         const QString &password,
         const QString &locale,
         const QString& installTarget,
@@ -36,7 +38,7 @@ Backend::Backend(const QString &username,
         int installSize,
         int swapSize,
         QObject *parent):QObject(parent){
-    Init(username, password, locale, installTarget, isoPath, installSize, swapSize);
+    Init(username, hostname, password, locale, installTarget, isoPath, installSize, swapSize);
 
     QStringList sevenzFileList;
     sevenzFileList.append(":/blobs/sevenz/sevnz.exe");
@@ -46,17 +48,19 @@ Backend::Backend(const QString &username,
 
 void Backend::SetInstallParam(
         const QString &username,
+        const QString &hostname,
         const QString &password,
         const QString &locale,
         const QString& installTarget,
         const QString& isoPath,
         int installSize,
         int swapSize) {
-    Init(username, password, locale, installTarget, isoPath, installSize, swapSize);
+    Init(username, hostname, password, locale, installTarget, isoPath, installSize, swapSize);
 }
 
 void Backend::Init(
         const QString &username,
+        const QString &hostname,
         const QString &password,
         const QString &locale,
         const QString& installTarget,
@@ -83,7 +87,7 @@ void Backend::Init(
 
     m_Info.Username = ToDeepinUsername(username);
     m_Info.Password = password;
-    m_Info.Hostname = ToDeepinHostname(Xapi::Hostname());
+    m_Info.Hostname = ToDeepinHostname(hostname);
     m_Info.Timezone = Xapi::Timezone();
     m_Info.Version = Version;
     m_Info.ReleaseInfo = "Deepin";

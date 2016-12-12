@@ -17,11 +17,13 @@ public:
     Q_ENUM(BootMode)
 
     WindowsBackend(const QString &username,
+                   const QString &hostname,
                    const QString &password,
                    const QString &locale,
                    const QString &installTarget,
                    const QString &isoPath,
-                   int installSize, int swapSize,
+                   int installSize,
+                   int swapSize,
                    QObject *parent = 0);
 
 

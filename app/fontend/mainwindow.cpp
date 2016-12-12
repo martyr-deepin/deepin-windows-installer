@@ -604,9 +604,9 @@ void MainWindow::goInstallOptionCheck()
         return;
     }
 
-
     m_Backend->SetInstallParam(
         m_Username,
+        m_Hostname,
         QByteArray(m_Password.toUtf8()).toBase64(),
         m_InstallLocale,
         m_InstallDev,

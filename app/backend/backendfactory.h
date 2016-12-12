@@ -17,6 +17,7 @@ public:
 
     Backend* CreateBackend(BackendTpye type,
                            const QString &username,
+                           const QString &hostname,
                            const QString &password,
                            const QString &locale,
                            const QString &target,

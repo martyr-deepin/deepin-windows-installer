@@ -17,15 +17,18 @@ BackendFactory& BackendFactory::Instance() {
 
 Backend* BackendFactory::CreateBackend(BackendTpye type,
                                        const QString &username,
+                                       const QString &hostname,
                                        const QString &password,
                                        const QString &locale,
                                        const QString &target,
                                        const QString &isoPath,
-                                       int installSize, int swapSize) {
+                                       int installSize,
+                                       int swapSize) {
     switch(type) {
 #ifdef Q_OS_WIN32
     case Windows:
         return new WindowsBackend(username,
+                                  hostname,
                                   password,
                                   locale,
                                   target,
@@ -39,7 +42,7 @@ Backend* BackendFactory::CreateBackend(BackendTpye type,
 }
 
 Backend* BackendFactory::CreateBackend(BackendTpye type) {
-    return CreateBackend(type, "", "", "", "", "", 0,0);
+    return CreateBackend(type, "", "", "", "", "", "", 0,0);
 }
 
 BackendFactory::~BackendFactory(){

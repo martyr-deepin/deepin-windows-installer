@@ -45,7 +45,9 @@ public:
         Success,
         Failed,
     };
-    explicit Backend(const QString &username,
+    explicit Backend(
+            const QString &username,
+            const QString &hostname,
             const QString &password,
             const QString &locale,
             const QString& installTarget,
@@ -54,6 +56,7 @@ public:
             QObject *parent = 0);
 
     void SetInstallParam(const QString &username,
+                         const QString &hostname,
                          const QString &password,
                          const QString &locale,
                          const QString& installTarget,
@@ -125,6 +128,7 @@ public slots:
 
 protected:
     void Init(const QString &username,
+              const QString &hostname,
               const QString &password,
               const QString &locale,
               const QString& installTarget,
