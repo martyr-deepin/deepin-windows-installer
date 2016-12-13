@@ -13,14 +13,10 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    widget/dpushbutton.cpp \
-    widget/dtips.cpp \
     widget/stepedit.cpp \
     widget/lineedit.cpp \
     widget/waterprogress.cpp
 HEADERS += \
-    widget/dpushbutton.h \
-    widget/dtips.h \
     widget/constant.h \
     widget/stepedit.h \
     widget/lineedit.h \

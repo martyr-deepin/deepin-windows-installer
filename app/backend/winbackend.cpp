@@ -897,6 +897,9 @@ int WindowsBackend::InstallBootloader()
     Xapi::CpFile(":/data/bootloader/wubildr", nativeTarget + "/wubildr");
     Xapi::CpFile(":/data/bootloader/wubildr.mbr", nativeTarget + "/wubildr.mbr");
 
+    Xapi::SynExec("attrib", QString("+S +H %1").arg(nativeTarget + "/wubildr"));
+    Xapi::SynExec("attrib", QString("+S +H %1").arg(nativeTarget + "/wubildr.mbr"));
+
     this->Increment(1);
     //Test for win7 first
     this->BackupBootloader("orig");
@@ -1017,6 +1020,11 @@ int WindowsBackend::MigrationData()
     Migration migrationer(m_Info.InstallPath);
     migrationer.run();
     ret = Success;
+
+    // change attrib
+    qDebug() << "change attrib of install path" << m_Info.InstallPath;
+    Xapi::SynExec("attrib", QString("+S +H %1").arg(m_Info.InstallPath));
+
     return ret;
 }
 

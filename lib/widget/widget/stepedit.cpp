@@ -1,6 +1,6 @@
 #include "stepedit.h"
 
-#include "dpushbutton.h"
+#include "../../app/fontend/widget/pushbutton.h"
 
 #include <QHBoxLayout>
 #include <QLineEdit>
@@ -76,7 +76,7 @@ StepEdit::StepEdit(QWidget *parent) :
     m_Util->setText("G");
     m_Util->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    DPushButton *m_Add = new DPushButton("");
+    PushButton *m_Add = new PushButton("");
     m_Add->setImages (":/images/stepedit/add-normal.png",
                       ":/images/stepedit/add-hover.png",
                       ":/images/stepedit/add-press.png");
@@ -85,7 +85,7 @@ StepEdit::StepEdit(QWidget *parent) :
 //    m_Add->setText("+");
     connect(m_Add, SIGNAL(clicked()), this, SLOT(add()));
 
-    DPushButton *m_Sub = new DPushButton("");
+    PushButton *m_Sub = new PushButton("");
     m_Sub->setImages (":/images/stepedit/sub-normal.png",
                       ":/images/stepedit/sub-hover.png",
                       ":/images/stepedit/sub-press.png");

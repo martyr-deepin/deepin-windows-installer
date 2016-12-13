@@ -30,30 +30,35 @@ SOURCES += \
     config/config.cpp \
     backend/backendfactory.cpp \
     config/log.cpp \
-    fontend/widgets/dheaderwidget.cpp \
-    fontend/widgets/dfooterwidget.cpp \
+    fontend/widget/dheaderwidget.cpp \
+    fontend/widget/dfooterwidget.cpp \
     backend/utils.cpp \
-    backend/migration.cpp
+    backend/migration.cpp \
+    fontend/widget/hint.cpp \
+    fontend/widget/pushbutton.cpp
 
 HEADERS += \
     backend/backend.h \
     fontend/mainwindow.h \
     backend/backendfactory.h \
-    fontend/widgets/dheaderwidget.h \
-    fontend/widgets/dfooterwidget.h \
+    fontend/widget/dheaderwidget.h \
+    fontend/widget/dfooterwidget.h \
     backend/utils.h \
     config/log.h \
     config/config.h \
     backend/progressreporter.h \
     backend/migration.h \
     data/version.h \
-    data/build_env.h
+    data/build_env.h \
+    fontend/widget/hint.h \
+    fontend/widget/pushbutton.h
 
 RESOURCES += \
     bootloader.qrc \
     blobs.qrc \
     ui.qrc \
-    data.qrc
+    data.qrc \
+    fontend/theme/theme.qrc
 
 TRANSLATIONS += deepin-system-installer.ts \
     po/en_US.ts \

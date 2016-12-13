@@ -1,13 +1,15 @@
-#ifndef DTIPS_H
-#define DTIPS_H
+#pragma once
 
 #include <QLabel>
 
-class DTips : public QLabel
+namespace DSI {
+namespace Widget {
+
+class Hint : public QLabel
 {
     Q_OBJECT
 public:
-    explicit DTips(QWidget *parent);
+    explicit Hint(QWidget *parent);
 
     void paintEvent(QPaintEvent *);
 
@@ -34,5 +36,5 @@ protected:
 };
 
 
-
-#endif // DTIPS_H
+}
+}

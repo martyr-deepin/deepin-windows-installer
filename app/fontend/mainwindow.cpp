@@ -1,28 +1,5 @@
 #include "mainwindow.h"
 
-#include "widgets/dheaderwidget.h"
-#include "widgets/dfooterwidget.h"
-
-#include "../backend/winbackend.h"
-#include "../backend/backendfactory.h"
-#include "../backend/utils.h"
-
-#include "../config/config.h"
-
-#include <xsys.h>
-#include <xutil.h>
-
-#include "widget/waterprogress.h"
-#include "widget/dpushbutton.h"
-#include "widget/dtips.h"
-#include "widget/lineedit.h"
-#include "widget/stepedit.h"
-#include "widget/constant.h"
-
-#include <dcombobox.h>
-#include <dlineedit.h>
-#include <dslider.h>
-
 #include <QApplication>
 #include <QStandardPaths>
 #include <QProcess>
@@ -34,6 +11,27 @@
 #include <QMessageBox>
 #include <QGridLayout>
 
+#include <dcombobox.h>
+#include <dlineedit.h>
+#include <dslider.h>
+
+#include <xsys.h>
+#include <xutil.h>
+
+#include "../backend/winbackend.h"
+#include "../backend/backendfactory.h"
+#include "../backend/utils.h"
+#include "../config/config.h"
+
+#include "widget/dheaderwidget.h"
+#include "widget/dfooterwidget.h"
+#include "widget/waterprogress.h"
+#include "widget/pushbutton.h"
+#include "widget/hint.h"
+#include "widget/lineedit.h"
+#include "widget/stepedit.h"
+#include "widget/constant.h"
+
 static const int DefaultWidgetWidth = 320;
 static const int DefaultWidgetHeight = 36;
 static const int DefaultMaxInstallSize = 64;
@@ -44,6 +42,7 @@ static QString PasswordHits;
 static QString RepeatPasswordHits;
 
 using namespace Dtk::Widget;
+using namespace DSI::Widget;
 using namespace DeepinInstaller;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -123,7 +122,7 @@ QWidget *MainWindow::InstallOptionBody()
             this, SLOT(editUsernameBegin(QString)));
     connect(this, SIGNAL(usernameChanged(QString)),
             usernameEdit, SLOT(overwriteText(QString)));
-    auto *usernameTips = new DTips(usernameEdit);
+    auto *usernameTips = new Hint(usernameEdit);
     connect(this, SIGNAL(showUsernameTips()),
             usernameTips, SLOT(pop()));
     connect(this, SIGNAL(hideUsernameTips()),
@@ -167,7 +166,7 @@ QWidget *MainWindow::InstallOptionBody()
     connect(password, SIGNAL(editingBegin(QString)),
             this, SLOT(editPasswordBegin(QString)));
 
-    DTips *passwordTips = new DTips(password);
+    Hint *passwordTips = new Hint(password);
     passwordTips->setText(PasswordHits);
     connect(this, SIGNAL(showPasswordTips()),
             passwordTips, SLOT(pop()));
@@ -187,7 +186,7 @@ QWidget *MainWindow::InstallOptionBody()
     connect(repeatRassword, SIGNAL(editingBegin(QString)),
             this, SLOT(editRepeatPasswordBegin(QString)));
 
-    DTips *repeatPasswordTips = new DTips(repeatRassword);
+    Hint *repeatPasswordTips = new Hint(repeatRassword);
     repeatPasswordTips->setText(RepeatPasswordHits);
     connect(this, SIGNAL(showRepeatPasswordTips()),
             repeatPasswordTips, SLOT(pop()));
@@ -384,7 +383,7 @@ QWidget *MainWindow::InstallOptionBody()
 
 QWidget *MainWindow::InstallFooter()
 {
-    DPushButton *start = new DPushButton(tr("Start"));
+    PushButton *start = new PushButton(tr("Start"));
     connect(start, SIGNAL(clicked()), this, SLOT(goInstallOptionCheck()));
     QList<QPushButton *> btlist;
     btlist.append(start);
@@ -393,7 +392,7 @@ QWidget *MainWindow::InstallFooter()
 
 QWidget *MainWindow::ExitFooter()
 {
-    DPushButton *start = new DPushButton(tr("Exit"));
+    PushButton *start = new PushButton(tr("Exit"));
     connect(start, SIGNAL(clicked()), this, SLOT(close()));
     QList<QPushButton *> btlist;
     btlist.append(start);
@@ -490,10 +489,10 @@ QWidget *MainWindow::InstallFailedBody()
 
 QWidget *MainWindow::InstallSuccessFooter()
 {
-    DPushButton *restartlater = new DPushButton(tr("Restart Later"));
+    PushButton *restartlater = new PushButton(tr("Restart Later"));
     connect(restartlater, SIGNAL(clicked()), this, SLOT(close()));
 
-    DPushButton *restartnow = new DPushButton(tr("Restart Now"));
+    PushButton *restartnow = new PushButton(tr("Restart Now"));
     connect(restartnow, SIGNAL(clicked()), this, SLOT(reboot()));
 
     QList<QPushButton *> btlist;
@@ -526,7 +525,7 @@ void MainWindow::unistallClear()
 
 QWidget *MainWindow::FinishUnistallFooter()
 {
-    DPushButton *finish = new DPushButton(tr("Finished"));
+    PushButton *finish = new PushButton(tr("Finished"));
     connect(finish, SIGNAL(clicked()), this, SLOT(unistallClear()));
 
     QList<QPushButton *> btlist;
@@ -536,7 +535,7 @@ QWidget *MainWindow::FinishUnistallFooter()
 
 QWidget *MainWindow::FinishFooter()
 {
-    DPushButton *finish = new DPushButton(tr("Finished"));
+    PushButton *finish = new PushButton(tr("Finished"));
     connect(finish, SIGNAL(clicked()), this, SLOT(close()));
 
     QList<QPushButton *> btlist;
@@ -715,13 +714,13 @@ QWidget *MainWindow::UninstallBody()
 
 QWidget *MainWindow::UninstallFooter()
 {
-    DPushButton *cancel = new DPushButton(tr("Cancel"));
+    PushButton *cancel = new PushButton(tr("Cancel"));
     connect(cancel, SIGNAL(clicked()), this, SLOT(close()));
 
-    DPushButton *uninstall = new DPushButton(tr("Uninstall"));
+    PushButton *uninstall = new PushButton(tr("Uninstall"));
     connect(uninstall, SIGNAL(clicked()), this, SLOT(goUninstallPre()));
 
-    DPushButton *reinstall = new DPushButton(tr("Reinstall"));
+    PushButton *reinstall = new PushButton(tr("Reinstall"));
     connect(reinstall, SIGNAL(clicked()), this, SLOT(goReInstall()));
 
     QList<QPushButton *> btlist;

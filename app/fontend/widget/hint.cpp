@@ -1,13 +1,21 @@
-#include "dtips.h"
-#include <QPropertyAnimation>
-#include <QSizePolicy>
-#include <QPainter>
+#include "hint.h"
+
 #include <QDebug>
+#include <QSizePolicy>
+#include <QPropertyAnimation>
+#include <QPainter>
 #include <QTimer>
 
-#include "constant.h"
+#include <dthememanager.h>
 
-DTips::DTips(QWidget *parent):
+#include "widget/constant.h"
+
+using namespace Dtk::Widget;
+
+namespace DSI {
+namespace Widget {
+
+Hint::Hint(QWidget *parent):
     QLabel(parent)
 {
     m_delayDrawTimer = new QTimer(this);
@@ -21,16 +29,8 @@ DTips::DTips(QWidget *parent):
 
     m_parentDWidget = parent;
     m_drawing = false;
-    QString qss =
-        "DTips { "
-        "color:#ebab4c;"
-        "font-size: 10px;"
-        "margin-top: 8px;"
-        "margin-left: 8px;"
-        "margin-right: 8px;"
-        "}";
-    this->setStyleSheet(qss);
-    this->setFixedHeight(8 + 24);
+
+    this->setFixedHeight(32);
     this->setMinimumWidth(40);
     this->setAttribute(Qt::WA_TranslucentBackground, true);
     this->setAttribute(Qt::WA_ShowWithoutActivating, true);
@@ -38,6 +38,8 @@ DTips::DTips(QWidget *parent):
     this->setFocusPolicy(Qt::NoFocus);
     this->setFrameStyle(Qt::FramelessWindowHint);
     this->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    D_THEME_INIT_WIDGET(Hint);
 }
 
 QPainterPath DrawTipsPath(const QRect& rect, int radius) {
@@ -65,7 +67,7 @@ QPainterPath DrawTipsPath(const QRect& rect, int radius) {
     return border;
 }
 
-void DTips::paintEvent(QPaintEvent *e) {
+void Hint::paintEvent(QPaintEvent *e) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -85,17 +87,17 @@ void DTips::paintEvent(QPaintEvent *e) {
 }
 
 
-void DTips::pop() {
+void Hint::pop() {
     if (!m_drawing)
         m_delayDrawTimer->start(50);
 }
 
-void DTips::pack() {
+void Hint::pack() {
     m_delayDrawTimer->stop();
     this->hide();
 }
 
-void DTips::doPop() {
+void Hint::doPop() {
     m_delayDrawTimer->stop();
     if (m_drawing){
         return;
@@ -123,12 +125,12 @@ void DTips::doPop() {
     connect(movie, SIGNAL(finished()), this, SLOT(popDone()));
 }
 
-void DTips::popDone(){
+void Hint::popDone(){
     m_drawing = false;
     emit poped();
 }
 
-void DTips::updateGeometry(){
+void Hint::updateGeometry(){
     if (!this->isVisible() || m_drawing) {
         return;
     }
@@ -141,4 +143,8 @@ void DTips::updateGeometry(){
                             pos.y() + szLabel.height() - 6,
                             sz.width(),
                             sz.height()));
+}
+
+
+}
 }
