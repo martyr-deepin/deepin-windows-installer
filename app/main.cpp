@@ -20,7 +20,8 @@
 #include <QThread>
 #include <QMessageBox>
 
-bool processArgs(QApplication &app) {
+bool processArgs(QApplication &app)
+{
     QCoreApplication::setApplicationName("Deepin System Installer");
     QCoreApplication::setApplicationVersion("1.0");
 
@@ -30,15 +31,15 @@ bool processArgs(QApplication &app) {
 
     // A boolean option with multiple names (-u, --uninstall)
     QCommandLineOption uninstallOption(
-                QStringList() << "u" << "uninstall",
-                "uninstall install system.");
+        QStringList() << "u" << "uninstall",
+        "uninstall install system.");
     parser.addOption(uninstallOption);
 
     // An option with a value
     QCommandLineOption targetDirectoryOption(
-                QStringList() << "t" << "target-directory",
-                "install directory.",
-                "directory.");
+        QStringList() << "t" << "target-directory",
+        "install directory.",
+        "directory.");
     parser.addOption(targetDirectoryOption);
 
     // Process the actual command line arguments given by the user
@@ -47,7 +48,8 @@ bool processArgs(QApplication &app) {
     bool uninstall = parser.isSet(uninstallOption);
     QString targetDir = parser.value(targetDirectoryOption);
 
-    if (uninstall) {
+    if (uninstall)
+    {
         QThread::sleep(4);
         Xapi::RmDir(targetDir);
     }
@@ -56,17 +58,20 @@ bool processArgs(QApplication &app) {
 
 bool g_showCrashDialog = false;
 
-LONG WINAPI OurCrashHandler(EXCEPTION_POINTERS * /*ExceptionInfo*/) {
+LONG WINAPI OurCrashHandler(EXCEPTION_POINTERS * /*ExceptionInfo*/)
+{
     return g_showCrashDialog ? EXCEPTION_CONTINUE_SEARCH : EXCEPTION_EXECUTE_HANDLER;
 }
 
-LONG WINAPI RedirectedSetUnhandledExceptionFilter(EXCEPTION_POINTERS * /*ExceptionInfo*/) {
+LONG WINAPI RedirectedSetUnhandledExceptionFilter(EXCEPTION_POINTERS * /*ExceptionInfo*/)
+{
     // When the CRT calls SetUnhandledExceptionFilter with NULL parameter
     // our handler will not get removed.
     return 0;
 }
 
-int main(int argc, char**argv) {
+int main(int argc, char **argv)
+{
     ::SetUnhandledExceptionFilter(OurCrashHandler);
     //CAPIHook apiHook("kernel32.dll", "SetUnhandledExceptionFilter", (PROC)RedirectedSetUnhandledExceptionFilter);
 
@@ -75,7 +80,8 @@ int main(int argc, char**argv) {
     QApplication app(argc, argv);
     InstallLogHandler();
 
-    if (processArgs(app)) {
+    if (processArgs(app))
+    {
         return 0;
     }
 
@@ -85,11 +91,11 @@ int main(int argc, char**argv) {
     LoadTranslate(app);
 
     MainWindow w;
-    w.setWindowTitle (DeepinInstaller::AppTitle());
+    w.setWindowTitle(DeepinInstaller::AppTitle());
     w.setWindowIcon(QIcon(":/data/deepin-system-installer.png"));
     w.show();
 
     int ret = app.exec();
-    qDebug()<<"app.exec() return with"<<ret;
+    qDebug() << "app.exec() return with" << ret;
     return 0;
 }

@@ -17,5 +17,6 @@
         <file>po/tr.qm</file>
         <file>po/zh_CN.qm</file>
         <file>po/zh_TW.qm</file>
+        <file>fontend/images/dialog_warning.png</file>
     </qresource>
 </RCC>

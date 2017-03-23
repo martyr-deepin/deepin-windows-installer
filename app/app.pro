@@ -10,7 +10,6 @@ TARGET = deepin-system-installer
 TEMPLATE = app
 
 win32-msvc* {
-system(..\tools\importPo.bat app.pro)
 
 SOURCES += \
     backend/winbackend.cpp

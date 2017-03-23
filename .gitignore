@@ -4,5 +4,4 @@ build
 *.pro.user.*
 *.log
 .DS_Store
-*.ts
 *.qm

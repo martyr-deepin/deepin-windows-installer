@@ -1,5 +1,5 @@
 ECHO on
-PATH = D:\Dev\QtStatic\5.3\vs2010\bin\;%PATH%
+SET PATH=D:\Develop\Qt\Qt5.8.0\5.8\mingw53_32\bin\;%PATH%
 SET PROFILE=%1
 SET ProName=%PROFILE:~0,-4%
 SET TsFile=po/%ProName%.ts
