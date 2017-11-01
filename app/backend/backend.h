@@ -160,7 +160,7 @@ protected:
 
 typedef int (Backend::*InstallAction)(void);
 
-const QString Version = "v1.0";
+const QString Version = "v1.2";
 
 const QString AppTitle();
 

@@ -58,78 +58,78 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="422"/>
+        <location filename="../fontend/mainwindow.cpp" line="424"/>
         <source>1. Head to the Control Panel and click on Power Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="431"/>
+        <location filename="../fontend/mainwindow.cpp" line="433"/>
         <source>2. Click the link of the left - hand side &quot;Choose what the power buttons do&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="440"/>
+        <location filename="../fontend/mainwindow.cpp" line="442"/>
         <source>3. Click the &quot;Change settings that are currently unavailable&quot; link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="449"/>
+        <location filename="../fontend/mainwindow.cpp" line="451"/>
         <source>4. Untick the &quot;Turn on fast start - up(recommended)&quot; box under Shut - down settings and click on Save changes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="463"/>
+        <location filename="../fontend/mainwindow.cpp" line="465"/>
         <source>Installation Failed.</source>
         <translation>Échec de l&apos;installation.</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="470"/>
+        <location filename="../fontend/mainwindow.cpp" line="472"/>
         <source>Restart Later</source>
         <translation>Redémarrer plus tard</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="473"/>
+        <location filename="../fontend/mainwindow.cpp" line="475"/>
         <source>Restart Now</source>
         <translation>Redémarrer maintenant</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="509"/>
-        <location filename="../fontend/mainwindow.cpp" line="519"/>
+        <location filename="../fontend/mainwindow.cpp" line="511"/>
+        <location filename="../fontend/mainwindow.cpp" line="521"/>
         <source>Finished</source>
         <translation>Terminé</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="692"/>
+        <location filename="../fontend/mainwindow.cpp" line="694"/>
         <source>You have installed %1.</source>
         <translation>Vous avez installé %1.</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="699"/>
+        <location filename="../fontend/mainwindow.cpp" line="701"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="702"/>
+        <location filename="../fontend/mainwindow.cpp" line="704"/>
         <source>Uninstall</source>
         <translation>Désinstaller</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="705"/>
+        <location filename="../fontend/mainwindow.cpp" line="707"/>
         <source>Reinstall</source>
         <translation>Réinstaller</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="718"/>
+        <location filename="../fontend/mainwindow.cpp" line="720"/>
         <source>Being uninstalled. Please wait... </source>
         <translation>Désinstallation en cours.Veuillez patienter...</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="726"/>
+        <location filename="../fontend/mainwindow.cpp" line="728"/>
         <source>Uninstalled Successfully. </source>
         <translation>Désinstallation terminée.</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="734"/>
+        <location filename="../fontend/mainwindow.cpp" line="736"/>
         <source>Uninstallation Failed.</source>
         <translation>Échec de la désinstallation.</translation>
     </message>

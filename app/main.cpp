@@ -23,7 +23,7 @@
 bool processArgs(QApplication &app)
 {
     QCoreApplication::setApplicationName("Deepin System Installer");
-    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setApplicationVersion("1.2");
 
     QCommandLineParser parser;
     parser.addHelpOption();

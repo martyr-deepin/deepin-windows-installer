@@ -11,7 +11,7 @@ QFont CurrentFont();
 
 namespace DeepinInstaller {
 
-const unsigned int MiniInstallSize = 10; //GB
+const unsigned int MiniInstallSize = 20; //GB
 
 }
 

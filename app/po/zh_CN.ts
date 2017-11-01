@@ -41,7 +41,7 @@
     <message>
         <location filename="../fontend/mainwindow.cpp" line="346"/>
         <source>Being installed. Please wait... </source>
-        <translation>正在安装，请稍后...</translation>
+        <translation>正在安装，请稍后... </translation>
     </message>
     <message>
         <source>Installed Successfully. You need to restart your computer to experience %1.</source>
@@ -58,78 +58,78 @@
         <translation>请按照以下方式关闭快速启动：</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="422"/>
+        <location filename="../fontend/mainwindow.cpp" line="424"/>
         <source>1. Head to the Control Panel and click on Power Options</source>
         <translation>1.找到并打开控制面板中的“电源选项”</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="431"/>
+        <location filename="../fontend/mainwindow.cpp" line="433"/>
         <source>2. Click the link of the left - hand side &quot;Choose what the power buttons do&quot;</source>
-        <translation>在“电源选项”中点击“选择电源按钮的功能”</translation>
+        <translation>2.在“电源选项”中点击“选择电源按钮的功能”</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="440"/>
+        <location filename="../fontend/mainwindow.cpp" line="442"/>
         <source>3. Click the &quot;Change settings that are currently unavailable&quot; link</source>
         <translation>3.在设置中选择“更改当前不可用的设置”</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="449"/>
+        <location filename="../fontend/mainwindow.cpp" line="451"/>
         <source>4. Untick the &quot;Turn on fast start - up(recommended)&quot; box under Shut - down settings and click on Save changes</source>
         <translation>4.取消“启用快速启动”前面的对勾，然后保存设置</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="463"/>
+        <location filename="../fontend/mainwindow.cpp" line="465"/>
         <source>Installation Failed.</source>
         <translation>安装失败。</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="470"/>
+        <location filename="../fontend/mainwindow.cpp" line="472"/>
         <source>Restart Later</source>
         <translation>稍后重启</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="473"/>
+        <location filename="../fontend/mainwindow.cpp" line="475"/>
         <source>Restart Now</source>
         <translation>现在重启</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="509"/>
-        <location filename="../fontend/mainwindow.cpp" line="519"/>
+        <location filename="../fontend/mainwindow.cpp" line="511"/>
+        <location filename="../fontend/mainwindow.cpp" line="521"/>
         <source>Finished</source>
         <translation>完成</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="692"/>
+        <location filename="../fontend/mainwindow.cpp" line="694"/>
         <source>You have installed %1.</source>
         <translation>已经安装了%1。</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="699"/>
+        <location filename="../fontend/mainwindow.cpp" line="701"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="702"/>
+        <location filename="../fontend/mainwindow.cpp" line="704"/>
         <source>Uninstall</source>
         <translation>卸载</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="705"/>
+        <location filename="../fontend/mainwindow.cpp" line="707"/>
         <source>Reinstall</source>
         <translation>重新安装</translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="718"/>
+        <location filename="../fontend/mainwindow.cpp" line="720"/>
         <source>Being uninstalled. Please wait... </source>
-        <translation>正在卸载，请稍后...</translation>
+        <translation>正在卸载，请稍后... </translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="726"/>
+        <location filename="../fontend/mainwindow.cpp" line="728"/>
         <source>Uninstalled Successfully. </source>
-        <translation>卸载成功。</translation>
+        <translation>卸载成功。 </translation>
     </message>
     <message>
-        <location filename="../fontend/mainwindow.cpp" line="734"/>
+        <location filename="../fontend/mainwindow.cpp" line="736"/>
         <source>Uninstallation Failed.</source>
         <translation>卸载失败。</translation>
     </message>
