@@ -56,12 +56,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_Backend = BackendFactory::Instance().CreateBackend(BackendFactory::Windows);
     m_Languages = XUtils::LoadSupportLanguage();
-    if (m_Backend->HasInstalled())
-    {
+    if (m_Backend->HasInstalled()) {
         emit uninstall();
-    }
-    else
-    {
+    } else {
         emit install();
     }
 //    goInstallSuccess();
@@ -69,8 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::keyReleaseEvent(QKeyEvent *k)
 {
-    if (m_AcceptKey && (k->key() == Qt::Key_Return || k->key() == Qt::Key_Enter))
-    {
+    if (m_AcceptKey && (k->key() == Qt::Key_Return || k->key() == Qt::Key_Enter)) {
         this->goInstallOptionCheck();
     }
 }
@@ -167,11 +163,9 @@ QWidget *MainWindow::InstallOptionBody()
     QVector<XUtils::Language>::Iterator langItor = m_Languages.begin();
     int langIndex = 0;
     int defalutLangIndex = 0;
-    for (; langItor != m_Languages.end(); ++langItor)
-    {
+    for (; langItor != m_Languages.end(); ++langItor) {
         installLang->addItem(QIcon(":/data/langicon/" + langItor->Locale + ".png"), "");
-        if (defaultLocale.toLower() == langItor->Locale.toLower())
-        {
+        if (defaultLocale.toLower() == langItor->Locale.toLower()) {
             defalutLangIndex = langIndex;
         }
         ++langIndex;
@@ -190,12 +184,14 @@ QWidget *MainWindow::InstallOptionBody()
     connect(installDev, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(installDevTextChanged(QString)));
 
+    // Begin dump disk info
+
     QString partitionTableFiter = "GPT,MBR";
     BootloaderType bootloader = WindowsBootLoaderType();
     PartitonStyle styleFiter = MBRPartition;
     QString style = "MBR";
-    if (BCD_UEFI == bootloader)
-    {
+    qDebug() << "bootload" << bootloader;
+    if (BCD_UEFI == bootloader) {
         styleFiter = GPTPartition;
         style = "GPT";
     }
@@ -206,26 +202,21 @@ QWidget *MainWindow::InstallOptionBody()
     QList<DiskInfo> alldisklist = GetLocalDiskList(0, "NTFS", partitionTableFiter);
     QList<DiskInfo> list;
     QList<DiskInfo>::iterator itor;
-    for (itor = alldisklist.begin(); itor != alldisklist.end(); ++itor)
-    {
-        if (styleFiter == itor->Style)
-        {
-            if (itor->FreeSpace > MiniInstallSize && ! itor->Encrypt)
-            {
+    for (itor = alldisklist.begin(); itor != alldisklist.end(); ++itor) {
+        if (styleFiter == itor->Style) {
+            qDebug() << "get disk" << itor->Name << itor->FreeSpace << itor->Encrypt;
+            if (itor->FreeSpace > MiniInstallSize && ! itor->Encrypt) {
                 qDebug() << "Add  Disk" << itor->Name;
                 list.push_back(*itor);
             }
-        }
-        else
-        {
+        } else {
+         qDebug() << "hasMismatchPartitionStyle disk:" << itor->Name << itor->FreeSpace << itor->Encrypt;
             hasMismatchPartitionStyle = true;
         }
     }
 
-    for (itor = list.begin(); itor != list.end(); ++itor)
-    {
-        if (itor->FreeSpace > MiniInstallSize)
-        {
+    for (itor = list.begin(); itor != list.end(); ++itor) {
+        if (itor->FreeSpace > MiniInstallSize) {
             m_DiskSizeEnough = true;
         }
         installDev->addItem(QString("%1(%2GB)").arg(itor->Name).arg(itor->FreeSpace));
@@ -233,12 +224,9 @@ QWidget *MainWindow::InstallOptionBody()
 
     DStepEdit *installSize = new DStepEdit;
     installSize->setMin(MiniInstallSize);
-    if (!list.isEmpty())
-    {
+    if (!list.isEmpty()) {
         installSize->setMax(list.first().FreeSpace);
-    }
-    else
-    {
+    } else {
         installSize->setMax(MiniInstallSize + 1);
     }
     installSize->setFixedSize(180, DefaultWidgetHeight);
@@ -264,8 +252,7 @@ QWidget *MainWindow::InstallOptionBody()
     layout->setAlignment(hits, Qt::AlignCenter);
 
     //Disable if there is not enough disk size
-    if (!m_DiskSizeEnough)
-    {
+    if (!m_DiskSizeEnough) {
         qDebug() << "Disable all control";
         usernameEdit->setVisible(false);
         password->setVisible(false);
@@ -275,16 +262,13 @@ QWidget *MainWindow::InstallOptionBody()
         installLang->setVisible(false);
         installDev->setVisible(false);
         installSize->setVisible(false);
-        if (!hasMismatchPartitionStyle)
-        {
+        if (!hasMismatchPartitionStyle) {
             style = "";
-        }
-        else
-        {
+        } else {
             style = " " + style;
         }
 
-        QString errHits = tr("Please ensure that there is at least one%1 disk having more than 10GB free space.").arg(style);
+        QString errHits = tr("Please ensure that there is at least one%1 disk having more than %2GB free space.").arg(MiniInstallSize).arg(style);
 
         return NoSpaceBody(errHits);
     }
@@ -489,8 +473,7 @@ void MainWindow::EnableCloseButton(bool enable)
 DHeaderWidget *MainWindow::Header()
 {
     DHeaderWidget *m_Heaer = new DHeaderWidget;
-    if (m_EnableClose)
-    {
+    if (m_EnableClose) {
         connect(m_Heaer, SIGNAL(closeClicked()), this, SLOT(close()));
         m_Heaer->enableClose(true);
         return m_Heaer;
@@ -538,12 +521,9 @@ void MainWindow::goInstall()
     QVBoxLayout *m_topLayout = new QVBoxLayout();
     m_topLayout->addWidget(Header());
     m_topLayout->addWidget(InstallOptionBody());
-    if (m_DiskSizeEnough)
-    {
+    if (m_DiskSizeEnough) {
         m_topLayout->addWidget(InstallFooter());
-    }
-    else
-    {
+    } else {
         m_topLayout->addWidget(ExitFooter());
     }
 
@@ -563,21 +543,18 @@ void MainWindow::goInstallOptionCheck()
     //checkusername
     QString err;
     bool ret = IsValidUsername(m_Username, err);
-    if (!ret)
-    {
+    if (!ret) {
         setUsername(m_Username);
         return;
     }
     //checkPassword
-    if (m_Password.isEmpty())
-    {
+    if (m_Password.isEmpty()) {
         emit setPasswordTips(PasswordHits);
         emit showPasswordTips();
         return;
     }
 
-    if (m_Password != m_RepeatPassword)
-    {
+    if (m_Password != m_RepeatPassword) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();
         return;
@@ -607,12 +584,9 @@ void MainWindow::goInstallOptionCheck()
 void MainWindow::installDone(int ret)
 {
     qDebug() << "installDone";
-    if (Backend::Success == ret)
-    {
+    if (Backend::Success == ret) {
         goInstallSuccess();
-    }
-    else
-    {
+    } else {
         m_Backend->AsyncUninstall();
         goInstallFailed();
     }
@@ -622,8 +596,7 @@ void MainWindow::installDone(int ret)
 void MainWindow::uninstallDone(int ret)
 {
     qDebug() << "uninstallDone";
-    if (Backend::Success == ret)
-    {
+    if (Backend::Success == ret) {
         goUninstallSuccess();
         return;
     }
@@ -633,8 +606,7 @@ void MainWindow::uninstallDone(int ret)
 void MainWindow::reinstallDone(int ret)
 {
     qDebug() << "reinstallDone";
-    if (Backend::Success == ret)
-    {
+    if (Backend::Success == ret) {
         goInstall();
         return;
     }
@@ -779,8 +751,7 @@ void MainWindow::goUninstallProcess()
 void MainWindow::installDevTextChanged(const QString &devtext)
 {
     int freeSize = devtext.right(devtext.length() - 3).split("GB").first().toInt();
-    if (freeSize > (DefaultMaxInstallSize))
-    {
+    if (freeSize > (DefaultMaxInstallSize)) {
         freeSize = DefaultMaxInstallSize;
     }
     setInstallDev(devtext.left(2));
@@ -790,8 +761,7 @@ void MainWindow::installDevTextChanged(const QString &devtext)
 void MainWindow::installLanguageChanged(int index)
 {
 //    qDebug()<<"Set index"<<index<<"/"<<m_Languages.size();
-    if ((index < 0) || (index >= m_Languages.size()))
-    {
+    if ((index < 0) || (index >= m_Languages.size())) {
         index = 0;
     }
 
@@ -851,19 +821,14 @@ void MainWindow::setUsername(const QString &value)
 {
     QString v = value.toLower();
     QString err;
-    if (!v.isEmpty())
-    {
-        if (1 == v.length() && !IsValidUsernameFirstChar(v, err))
-        {
+    if (!v.isEmpty()) {
+        if (1 == v.length() && !IsValidUsernameFirstChar(v, err)) {
             v = v.left(value.length() - 1);
             emit setUsernameTips(err);
             emit showUsernameTips();
-        }
-        else
-        {
+        } else {
             bool ret = IsValidUsernameChar(v.right(1), err);
-            if (!ret)
-            {
+            if (!ret) {
                 v = v.left(value.length() - 1);
                 //            QString newerr;
                 //            if (!IsValidUsername(v, newerr)) {
@@ -871,14 +836,10 @@ void MainWindow::setUsername(const QString &value)
                 //            }
                 emit setUsernameTips(err);
                 emit showUsernameTips();
-            }
-            else if (!IsValidUsername(v, err))
-            {
+            } else if (!IsValidUsername(v, err)) {
                 emit setUsernameTips(err);
                 emit showUsernameTips();
-            }
-            else
-            {
+            } else {
                 emit hideUsernameTips();
             }
         }
@@ -891,8 +852,7 @@ void MainWindow::setUsername(const QString &value)
 
 void MainWindow::editUsernameBegin(const QString &v)
 {
-    if (v.isEmpty())
-    {
+    if (v.isEmpty()) {
         emit hideUsernameTips();
     }
 }
@@ -901,13 +861,10 @@ void MainWindow::editUsernameFinish()
 {
     QString err;
     bool ret = IsValidUsername(m_Username, err);
-    if (!ret)
-    {
+    if (!ret) {
         emit setUsernameTips(err);
         emit showUsernameTips();
-    }
-    else
-    {
+    } else {
         emit hideUsernameTips();
     }
 }
@@ -916,25 +873,18 @@ void MainWindow::setPassword(const QString &v)
 {
     m_Password = v;
 
-    if (!m_RepeatPassword.isEmpty())
-    {
-        if (m_Password != m_RepeatPassword)
-        {
+    if (!m_RepeatPassword.isEmpty()) {
+        if (m_Password != m_RepeatPassword) {
             emit setRepeatPasswordTips(RepeatPasswordHits);
             emit showRepeatPasswordTips();
-        }
-        else
-        {
+        } else {
             emit hideRepeatPasswordTips();
         }
-    }
-    else
-    {
+    } else {
         emit hideRepeatPasswordTips();
     }
 
-    if (v.isEmpty())
-    {
+    if (v.isEmpty()) {
         return;
     }
 
@@ -943,41 +893,31 @@ void MainWindow::setPassword(const QString &v)
 
 void MainWindow::editPasswordBegin(const QString &v)
 {
-    if (v.isEmpty())
-    {
+    if (v.isEmpty()) {
         emit hidePasswordTips();
     }
     //Check Repeat password
-    if (m_Password != m_RepeatPassword)
-    {
+    if (m_Password != m_RepeatPassword) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();
-    }
-    else
-    {
+    } else {
         emit hideRepeatPasswordTips();
     }
 }
 
 void MainWindow::editPasswordFinish()
 {
-    if (m_Password.isEmpty())
-    {
+    if (m_Password.isEmpty()) {
         emit setPasswordTips(PasswordHits);
         emit showPasswordTips();
-    }
-    else
-    {
+    } else {
         emit hidePasswordTips();
     }
     //Check Repeat password
-    if (m_RepeatPassword != m_Password)
-    {
+    if (m_RepeatPassword != m_Password) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();
-    }
-    else
-    {
+    } else {
         emit hideRepeatPasswordTips();
     }
 }
@@ -986,49 +926,38 @@ void MainWindow::setRepeatPassword(const QString &v)
 {
     m_RepeatPassword = v;
 
-    if (m_RepeatPassword.isEmpty())
-    {
+    if (m_RepeatPassword.isEmpty()) {
         emit hideRepeatPasswordTips();
         return;
     }
 
-    if (0 != m_Password.indexOf(m_RepeatPassword))
-    {
+    if (0 != m_Password.indexOf(m_RepeatPassword)) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();
-    }
-    else
-    {
+    } else {
         emit hideRepeatPasswordTips();
     }
 }
 
 void MainWindow::editRepeatPasswordBegin(const QString &v)
 {
-    if (v.isEmpty())
-    {
+    if (v.isEmpty()) {
         emit hideRepeatPasswordTips();
     }
-    if (0 != m_Password.indexOf(m_RepeatPassword))
-    {
+    if (0 != m_Password.indexOf(m_RepeatPassword)) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();
-    }
-    else
-    {
+    } else {
         emit hideRepeatPasswordTips();
     }
 }
 
 void MainWindow::editRepeatPasswordFinish()
 {
-    if (m_Password != m_RepeatPassword)
-    {
+    if (m_Password != m_RepeatPassword) {
         emit setRepeatPasswordTips(RepeatPasswordHits);
         emit showRepeatPasswordTips();
-    }
-    else
-    {
+    } else {
         emit hideRepeatPasswordTips();
     }
 }

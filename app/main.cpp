@@ -1,6 +1,6 @@
 #include <QApplication>
 
-#include "Windows.h"
+#include <Windows.h>
 #include "fontend/mainwindow.h"
 
 #include "backend/backendfactory.h"
@@ -15,7 +15,6 @@
 #include <QStandardPaths>
 #include <QCommandLineParser>
 #include <QProcess>
-#include <Windows.h>
 #include <QMessageBox>
 #include <QThread>
 #include <QMessageBox>
