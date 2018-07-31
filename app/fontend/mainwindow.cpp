@@ -210,7 +210,7 @@ QWidget *MainWindow::InstallOptionBody()
                 list.push_back(*itor);
             }
         } else {
-         qDebug() << "hasMismatchPartitionStyle disk:" << itor->Name << itor->FreeSpace << itor->Encrypt;
+            qDebug() << "hasMismatchPartitionStyle disk:" << itor->Name << itor->FreeSpace << itor->Encrypt;
             hasMismatchPartitionStyle = true;
         }
     }
@@ -268,7 +268,8 @@ QWidget *MainWindow::InstallOptionBody()
             style = " " + style;
         }
 
-        QString errHits = tr("Please ensure that there is at least one%1 disk having more than %2GB free space.").arg(MiniInstallSize).arg(style);
+        QString errHits = tr("Please ensure that there is at least one%1 disk"
+                             " having more than %2GB free space.").arg(style).arg(MiniInstallSize);
 
         return NoSpaceBody(errHits);
     }
